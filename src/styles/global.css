@@ -1,0 +1,345 @@
+/* 权益平台 - 全局样式 */
+
+@import './variables.css';
+
+/* ========== 重置样式 ========== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-layout);
+}
+
+/* ========== 通用工具类 ========== */
+
+/* 文本 */
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-gold { color: var(--color-gold); }
+.text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
+.text-error { color: var(--color-error); }
+.text-gray { color: var(--color-text-tertiary); }
+
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+/* 布局 */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+.flex-1 { flex: 1; }
+
+/* 间距 */
+.p-xs { padding: var(--spacing-xs); }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+
+.m-xs { margin: var(--spacing-xs); }
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+.m-xl { margin: var(--spacing-xl); }
+
+/* ========== 通用组件样式 ========== */
+
+/* 卡片 */
+.card {
+  background: var(--color-bg-base);
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+  box-shadow: var(--card-shadow);
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.card-clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.card-clickable:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* 按钮 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--spacing-lg);
+  height: var(--button-height-md);
+  border: none;
+  border-radius: var(--button-radius);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-out);
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn-primary {
+  background: var(--color-primary-gradient);
+  color: white;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background: var(--color-secondary-gradient);
+  color: white;
+}
+
+.btn-gold {
+  background: var(--color-gold-gradient);
+  color: white;
+}
+
+.btn-sm {
+  height: var(--button-height-sm);
+  padding: 0 var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+.btn-lg {
+  height: var(--button-height-lg);
+  padding: 0 var(--spacing-2xl);
+  font-size: var(--font-size-lg);
+}
+
+/* 标签 */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.tag-primary {
+  background: rgba(255, 107, 53, 0.1);
+  color: var(--color-primary);
+}
+
+.tag-secondary {
+  background: rgba(24, 144, 255, 0.1);
+  color: var(--color-secondary);
+}
+
+.tag-gold {
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--color-gold-dark);
+}
+
+.tag-success {
+  background: rgba(82, 196, 26, 0.1);
+  color: var(--color-success);
+}
+
+.tag-warning {
+  background: rgba(250, 173, 20, 0.1);
+  color: var(--color-warning);
+}
+
+.tag-error {
+  background: rgba(245, 34, 45, 0.1);
+  color: var(--color-error);
+}
+
+/* 角标 */
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: var(--color-error);
+  color: white;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-medium);
+}
+
+/* 分割线 */
+.divider {
+  height: 1px;
+  background: var(--color-divider);
+  margin: var(--spacing-lg) 0;
+}
+
+/* ========== 动画类 ========== */
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.slide-enter-from {
+  transform: translateX(100%);
+}
+
+.slide-leave-to {
+  transform: translateX(-100%);
+}
+
+.scale-enter-active,
+.scale-leave-active {
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.scale-enter-from,
+.scale-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+/* ========== 骨架屏动画 ========== */
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-container) 0%,
+    var(--color-border-light) 50%,
+    var(--color-bg-container) 100%
+  );
+  background-size: 200px 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+/* ========== 滚动条样式 ========== */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-quaternary);
+}
+
+/* ========== 响应式断点 ========== */
+
+@media (max-width: 640px) {
+  :root {
+    --font-size-base: 14px;
+  }
+}
+
+@media (min-width: 641px) {
+  :root {
+    --font-size-base: 15px;
+  }
+}
+
+/* ========== 安全区域适配 ========== */
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* ========== 文本省略 ========== */
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ellipsis-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+

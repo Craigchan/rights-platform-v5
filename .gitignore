@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+.vite/
+
+# Logs
+*.log
+logs/
+.logs/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+.cache/
+.temp/
+
+# MCP and browser data
+.mcp/
+.browser_data_dir/
+.secrets/
+.pki/
+
+# Backup files
+*.tar.gz
+*.bak
+*.backup
+*.broken*
+
+# User specific
+.user_env
+
+.nvm/
+.npm/
+.config/
+.local/

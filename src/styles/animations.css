@@ -1,0 +1,495 @@
+/* 权益平台 - 动画效果库 */
+
+@import './variables.css';
+
+/* ========== 页面切换动画 ========== */
+
+/* 滑动进入/退出 */
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(-30%);
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.slide-left-enter-from {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(30%);
+}
+
+/* 淡入淡出 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* 缩放 */
+.scale-enter-active,
+.scale-leave-active {
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.scale-enter-from,
+.scale-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+/* 从底部滑入 */
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+/* ========== 列表动画 ========== */
+
+.list-enter-active,
+.list-leave-active {
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.list-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.list-move {
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+/* ========== 加载动画 ========== */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+/* ========== 骨架屏动画 ========== */
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-container) 0%,
+    var(--color-border-light) 50%,
+    var(--color-bg-container) 100%
+  );
+  background-size: 200px 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+/* ========== 涟漪效果 ========== */
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+}
+
+.ripple-effect:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+/* ========== 数字滚动动画 ========== */
+
+@keyframes number-roll {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.number-roll {
+  display: inline-block;
+  animation: number-roll 0.5s ease-out;
+}
+
+/* ========== 抽奖转盘动画 ========== */
+
+@keyframes lottery-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.lottery-spinning {
+  animation: lottery-spin 0.1s linear infinite;
+}
+
+@keyframes lottery-slow-down {
+  0% {
+    animation-duration: 0.1s;
+  }
+  50% {
+    animation-duration: 0.3s;
+  }
+  100% {
+    animation-duration: 0.8s;
+  }
+}
+
+/* 九宫格抽奖高亮动画 */
+@keyframes lottery-highlight {
+  0%, 100% {
+    background: var(--color-bg-base);
+    box-shadow: none;
+  }
+  50% {
+    background: var(--color-gold-gradient);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+}
+
+.lottery-highlight {
+  animation: lottery-highlight 0.3s ease-in-out;
+}
+
+/* ========== 礼花动画 ========== */
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100%) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: var(--color-gold);
+  animation: confetti-fall 3s ease-out forwards;
+}
+
+/* ========== 摇一摇动画 ========== */
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* ========== 呼吸灯动画 ========== */
+
+@keyframes breathing {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+}
+
+.breathing {
+  animation: breathing 2s ease-in-out infinite;
+}
+
+/* ========== 进度条动画 ========== */
+
+@keyframes progress-fill {
+  from {
+    width: 0%;
+  }
+}
+
+.progress-fill {
+  animation: progress-fill 1s ease-out forwards;
+}
+
+/* ========== 卡片翻转动画 ========== */
+
+.flip-enter-active {
+  animation: flip-in 0.6s ease-out;
+}
+
+.flip-leave-active {
+  animation: flip-out 0.6s ease-out;
+}
+
+@keyframes flip-in {
+  from {
+    transform: rotateY(90deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes flip-out {
+  from {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: rotateY(-90deg);
+    opacity: 0;
+  }
+}
+
+/* ========== 弹跳进入动画 ========== */
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.bounce-in {
+  animation: bounce-in 0.5s ease-out;
+}
+
+/* ========== 滑动提示动画 ========== */
+
+@keyframes swipe-hint {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-10px);
+  }
+}
+
+.swipe-hint {
+  animation: swipe-hint 1.5s ease-in-out infinite;
+}
+
+/* ========== 下拉刷新动画 ========== */
+
+@keyframes pull-refresh {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.pull-refresh-icon {
+  animation: pull-refresh 1s linear infinite;
+}
+
+/* ========== 点赞动画 ========== */
+
+@keyframes like-burst {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.like-burst {
+  animation: like-burst 0.4s ease-out;
+}
+
+/* ========== 消息提示动画 ========== */
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.toast-enter-active {
+  animation: toast-in 0.3s ease-out;
+}
+
+.toast-leave-active {
+  animation: toast-out 0.3s ease-out;
+}
+
+/* ========== 工具类 ========== */
+
+.animate-delay-100 {
+  animation-delay: 0.1s;
+}
+
+.animate-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animate-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animate-delay-400 {
+  animation-delay: 0.4s;
+}
+
+.animate-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animate-duration-fast {
+  animation-duration: var(--duration-fast);
+}
+
+.animate-duration-base {
+  animation-duration: var(--duration-base);
+}
+
+.animate-duration-slow {
+  animation-duration: var(--duration-slow);
+}
+
