@@ -133,8 +133,9 @@
     <div class="activity-section">
       <div class="section-title">
         <span>精选推荐</span>
-        <span class="section-subtitle">基于您的位置和偏好推荐</span>
+        <a-button type="link" size="small" @click="handleViewMoreRecommend">查看更多 ></a-button>
       </div>
+      <div class="section-subtitle">基于您的位置和偏好推荐</div>
       <!-- Tab导航 -->
       <div class="recommend-tabs">
         <div 
@@ -432,6 +433,24 @@ const handleRecommendItemClick = (item: any) => {
   } else {
     // 其他情况，跳转到活动详情页
     router.push(`/activity-detail/${item.id}`)
+  }
+}
+
+// 处理查看更多推荐
+const handleViewMoreRecommend = () => {
+  // 根据当前 tab 跳转到对应页面
+  if (currentRecommendTab.value === 'nearby') {
+    // 附近优惠 -> 商家地图
+    router.push('/nearby')
+  } else if (currentRecommendTab.value === 'points') {
+    // 积分可兑 -> 积分商城
+    router.push('/points-mall')
+  } else if (currentRecommendTab.value === 'products') {
+    // 热门商品 -> 积分商城
+    router.push('/points-mall')
+  } else {
+    // 热门活动 -> 活动中心
+    router.push('/activity-center')
   }
 }
 
@@ -907,7 +926,7 @@ onUnmounted(() => {
 .section-subtitle {
   font-size: 12px;
   color: #999;
-  margin-left: 8px;
+  margin-bottom: 12px;
 }
 
 /* 推荐Tab */
