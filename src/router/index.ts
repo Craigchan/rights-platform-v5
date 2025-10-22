@@ -39,6 +39,12 @@ const router = createRouter({
       component: () => import('../views/EarnPoints.vue')
     },
     {
+      path: '/check-in',
+      name: 'CheckIn',
+      component: () => import('../views/MapCheckIn.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/product-detail',
       name: 'ProductDetail',
       component: () => import('../views/ProductDetail.vue'),
@@ -67,6 +73,7 @@ const router = createRouter({
     },
     {
       path: '/business-circle',
+      alias: '/activity-center',
       name: 'ActivityCenter',
       component: () => import('../views/ActivityCenter.vue')
     },
