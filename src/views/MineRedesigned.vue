@@ -252,7 +252,7 @@ const highFrequencyFeatures = ref([
   { name: '中奖记录', path: '/lottery-records', icon: TrophyOutlined, color: '#FA8C16' },
   { name: '我的收藏', path: '/favorites', icon: HeartOutlined, color: '#FF4D4F' },
   { name: '浏览历史', path: '/history', icon: ClockCircleOutlined, color: '#8C8C8C' },
-  { name: '收货地址管理', path: '/address-management', icon: EnvironmentOutlined, color: '#52C41A' }
+  { name: '收货地址管理', path: '/address', icon: EnvironmentOutlined, color: '#52C41A' }
 ])
 
 const moreFeatures = ref([
