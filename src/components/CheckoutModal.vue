@@ -374,7 +374,7 @@ const handleConfirm = async () => {
     
     // 跳转到订单详情
     setTimeout(() => {
-      router.push(`/order-detail?id=${orderId}`)
+      router.push(`/order-detail/${orderId}`)
     }, 500)
     
   } catch (error: any) {
