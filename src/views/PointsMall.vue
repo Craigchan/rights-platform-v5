@@ -344,7 +344,7 @@ const filteredProducts = computed(() => {
 
 // 方法
 const showPointsDetail = () => {
-  message.info('积分明细功能')
+  router.push('/points-detail')
 }
 
 const showRedemptionRecord = () => {
