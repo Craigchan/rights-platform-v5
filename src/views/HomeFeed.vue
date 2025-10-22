@@ -16,7 +16,12 @@
     <!-- 轮播广告 -->
     <div class="banner-section">
       <a-carousel autoplay :autoplay-speed="4000">
-        <div v-for="banner in banners" :key="banner.id" class="banner-item">
+        <div 
+          v-for="banner in banners" 
+          :key="banner.id" 
+          class="banner-item"
+          @click="handleBannerClick(banner)"
+        >
           <img :src="banner.image" :alt="banner.title" class="banner-image" />
         </div>
       </a-carousel>
@@ -109,19 +114,22 @@ const banners = [
     id: 1,
     title: '家电以旧换新',
     subtitle: '最高补贴2000元',
-    image: 'https://picsum.photos/seed/banner-appliance/750/300'
+    image: 'https://picsum.photos/seed/banner-appliance/750/300',
+    route: '/gov-subsidy' // 跳转到政府补贴页面
   },
   {
     id: 2,
     title: '政府消费券',
     subtitle: '满200减50元',
-    image: 'https://picsum.photos/seed/banner-voucher/750/300'
+    image: 'https://picsum.photos/seed/banner-voucher/750/300',
+    route: '/voucher-center' // 跳转到领券中心
   },
   {
     id: 3,
     title: '积分抽奖',
     subtitle: '100积分抽大奖',
-    image: 'https://picsum.photos/seed/banner-lottery/750/300'
+    image: 'https://picsum.photos/seed/banner-lottery/750/300',
+    route: '/lottery-center' // 跳转到抽奖中心
   }
 ]
 
@@ -161,6 +169,12 @@ const goToDiscover = () => {
 const handleFunctionClick = (item: any) => {
   if (item.route) {
     router.push(item.route)
+  }
+}
+
+const handleBannerClick = (banner: any) => {
+  if (banner.route) {
+    router.push(banner.route)
   }
 }
 
@@ -223,9 +237,15 @@ onMounted(() => {
 }
 
 .banner-item {
-  position: relative;
+  width: 100%;
   height: 180px;
   overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.banner-item:active {
+  transform: scale(0.98);
 }
 
 .banner-image {
