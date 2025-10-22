@@ -13,8 +13,38 @@
       </div>
     </div>
 
+    <!-- 轮播广告 -->
+    <div class="banner-section">
+      <a-carousel autoplay :autoplay-speed="4000">
+        <div v-for="banner in banners" :key="banner.id" class="banner-item">
+          <img :src="banner.image" :alt="banner.title" class="banner-image" />
+        </div>
+      </a-carousel>
+    </div>
+
+    <!-- 金刚区 -->
+    <div class="function-section">
+      <div class="function-grid">
+        <div 
+          v-for="item in functions" 
+          :key="item.id"
+          class="function-item"
+          @click="handleFunctionClick(item)"
+        >
+          <div class="function-icon-wrapper">
+            <div class="function-icon" :style="{ background: item.gradient }">
+              <component :is="item.icon" />
+            </div>
+            <span v-if="item.badge" class="function-badge">{{ item.badge }}</span>
+          </div>
+          <span class="function-name">{{ item.name }}</span>
+        </div>
+      </div>
+    </div>
+
     <!-- 智能推荐卡片流 -->
     <div class="feed-container">
+      <div class="feed-title">为您推荐</div>
       <div v-for="card in feedCards" :key="card.id" class="feed-card">
         <component 
           :is="getCardComponent(card.component)" 
@@ -39,7 +69,17 @@ import { useFeedStore } from '../stores/feedStore'
 import { 
   EnvironmentOutlined, 
   DownOutlined, 
-  SearchOutlined 
+  SearchOutlined,
+  SafetyOutlined,
+  TagsOutlined,
+  ShopOutlined,
+  TrophyOutlined,
+  SafetyCertificateOutlined,
+  GiftOutlined,
+  CrownOutlined,
+  ShoppingOutlined,
+  StarOutlined,
+  FireOutlined
 } from '@ant-design/icons-vue'
 import SubsidyCard from '../components/feed/SubsidyCard.vue'
 import CouponCard from '../components/feed/CouponCard.vue'
@@ -54,6 +94,42 @@ const feedStore = useFeedStore()
 
 const feedCards = computed(() => feedStore.generateFeedCards)
 const hasMore = computed(() => false) // TODO: 实现分页加载
+
+// 轮播广告数据
+const banners = [
+  {
+    id: 1,
+    title: '家电以旧换新',
+    subtitle: '最高补贴2000元',
+    image: 'https://picsum.photos/seed/banner-appliance/750/300'
+  },
+  {
+    id: 2,
+    title: '政府消费券',
+    subtitle: '满200减50元',
+    image: 'https://picsum.photos/seed/banner-voucher/750/300'
+  },
+  {
+    id: 3,
+    title: '积分抽奖',
+    subtitle: '100积分抽大奖',
+    image: 'https://picsum.photos/seed/banner-lottery/750/300'
+  }
+]
+
+// 金刚区功能
+const functions = [
+  { id: 1, name: '政府补贴', icon: SafetyOutlined, gradient: 'linear-gradient(135deg, #1890FF 0%, #0050B3 100%)', badge: '', route: '/gov-subsidy' },
+  { id: 2, name: '消费券', icon: TagsOutlined, gradient: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)', badge: '新', route: '/voucher-center' },
+  { id: 3, name: '商圈活动', icon: ShopOutlined, gradient: 'linear-gradient(135deg, #52C41A 0%, #389E0D 100%)', badge: '', route: '/local-vouchers' },
+  { id: 4, name: '玩赚积分', icon: TrophyOutlined, gradient: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)', badge: '', route: '/earn-points' },
+  { id: 5, name: '实名认证', icon: SafetyCertificateOutlined, gradient: 'linear-gradient(135deg, #722ED1 0%, #531DAB 100%)', badge: '', route: '/id-verification' },
+  { id: 6, name: '领券中心', icon: GiftOutlined, gradient: 'linear-gradient(135deg, #EB2F96 0%, #C41D7F 100%)', badge: '热', route: '/voucher-center' },
+  { id: 7, name: '我的会员', icon: CrownOutlined, gradient: 'linear-gradient(135deg, #FA8C16 0%, #D46B08 100%)', badge: '', route: '/membership' },
+  { id: 8, name: '苏品苏货', icon: ShoppingOutlined, gradient: 'linear-gradient(135deg, #13C2C2 0%, #08979C 100%)', badge: '', route: '/jiangsu-products' },
+  { id: 9, name: '老字号', icon: StarOutlined, gradient: 'linear-gradient(135deg, #FA541C 0%, #D4380D 100%)', badge: '', route: '/heritage-brands' },
+  { id: 10, name: '国货潮品', icon: FireOutlined, gradient: 'linear-gradient(135deg, #F5222D 0%, #CF1322 100%)', badge: '', route: '/trending-products' }
+]
 
 const getCardComponent = (componentName: string) => {
   const components: Record<string, any> = {
@@ -72,8 +148,13 @@ const selectCity = () => {
 }
 
 const goSearch = () => {
-  // TODO: 实现搜索功能
-  console.log('打开搜索')
+  router.push('/search')
+}
+
+const handleFunctionClick = (item: any) => {
+  if (item.route) {
+    router.push(item.route)
+  }
 }
 
 onMounted(() => {
@@ -128,8 +209,94 @@ onMounted(() => {
   cursor: pointer;
 }
 
+/* 轮播广告 */
+.banner-section {
+  margin-bottom: 16px;
+  background: white;
+}
+
+.banner-item {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 金刚区 */
+.function-section {
+  background: white;
+  padding: 20px 16px;
+  margin-bottom: 12px;
+}
+
+.function-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px 12px;
+}
+
+.function-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.function-item:active {
+  transform: scale(0.95);
+}
+
+.function-icon-wrapper {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.function-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.function-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #FF4D4F;
+  color: white;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  line-height: 1;
+}
+
+.function-name {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+/* Feed卡片流 */
 .feed-container {
-  padding: 16px;
+  padding: 0 16px;
+}
+
+.feed-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 20px 0 16px;
 }
 
 .feed-card {
