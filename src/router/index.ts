@@ -161,6 +161,12 @@ const router = createRouter({
       meta: { hideTabBar: true }
     },
     {
+      path: '/merchant/:id',
+      name: 'MerchantDetail',
+      component: () => import('../views/MerchantDetail.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/merchant-coupon-list',
       name: 'MerchantCouponList',
       component: () => import('../views/MerchantCouponList.vue'),
