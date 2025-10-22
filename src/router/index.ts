@@ -429,6 +429,12 @@ const router = createRouter({
       name: 'MatchCalendar',
       component: () => import('../views/MatchCalendar.vue'),
       meta: { hideTabBar: true }
+    },
+    {
+      path: '/nearby',
+      name: 'Nearby',
+      component: () => import('../views/Nearby.vue'),
+      meta: { hideTabBar: true }
     }
   ]
 })
