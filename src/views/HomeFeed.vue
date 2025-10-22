@@ -24,6 +24,13 @@
 
     <!-- 金刚区 -->
     <div class="function-section">
+      <div class="section-header">
+        <h2 class="section-title">快捷入口</h2>
+        <div class="more-link" @click="goToDiscover">
+          <span>更多功能</span>
+          <RightOutlined />
+        </div>
+      </div>
       <div class="function-grid">
         <div 
           v-for="item in functions" 
@@ -79,7 +86,8 @@ import {
   CrownOutlined,
   ShoppingOutlined,
   StarOutlined,
-  FireOutlined
+  FireOutlined,
+  RightOutlined
 } from '@ant-design/icons-vue'
 import SubsidyCard from '../components/feed/SubsidyCard.vue'
 import CouponCard from '../components/feed/CouponCard.vue'
@@ -117,18 +125,13 @@ const banners = [
   }
 ]
 
-// 金刚区功能
+// 金刚区功能 - 精简为5个核心功能
 const functions = [
   { id: 1, name: '政府补贴', icon: SafetyOutlined, gradient: 'linear-gradient(135deg, #1890FF 0%, #0050B3 100%)', badge: '', route: '/gov-subsidy' },
-  { id: 2, name: '消费券', icon: TagsOutlined, gradient: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)', badge: '新', route: '/voucher-center' },
-  { id: 3, name: '商圈活动', icon: ShopOutlined, gradient: 'linear-gradient(135deg, #52C41A 0%, #389E0D 100%)', badge: '', route: '/local-vouchers' },
+  { id: 2, name: '领券中心', icon: GiftOutlined, gradient: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)', badge: '热', route: '/voucher-center' },
+  { id: 3, name: '积分商城', icon: ShopOutlined, gradient: 'linear-gradient(135deg, #52C41A 0%, #389E0D 100%)', badge: '', route: '/points-mall' },
   { id: 4, name: '玩赚积分', icon: TrophyOutlined, gradient: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)', badge: '', route: '/earn-points' },
-  { id: 5, name: '实名认证', icon: SafetyCertificateOutlined, gradient: 'linear-gradient(135deg, #722ED1 0%, #531DAB 100%)', badge: '', route: '/id-verification' },
-  { id: 6, name: '领券中心', icon: GiftOutlined, gradient: 'linear-gradient(135deg, #EB2F96 0%, #C41D7F 100%)', badge: '热', route: '/voucher-center' },
-  { id: 7, name: '我的会员', icon: CrownOutlined, gradient: 'linear-gradient(135deg, #FA8C16 0%, #D46B08 100%)', badge: '', route: '/membership' },
-  { id: 8, name: '苏品苏货', icon: ShoppingOutlined, gradient: 'linear-gradient(135deg, #13C2C2 0%, #08979C 100%)', badge: '', route: '/jiangsu-products' },
-  { id: 9, name: '老字号', icon: StarOutlined, gradient: 'linear-gradient(135deg, #FA541C 0%, #D4380D 100%)', badge: '', route: '/heritage-brands' },
-  { id: 10, name: '国货潮品', icon: FireOutlined, gradient: 'linear-gradient(135deg, #F5222D 0%, #CF1322 100%)', badge: '', route: '/trending-products' }
+  { id: 5, name: '附近优惠', icon: EnvironmentOutlined, gradient: 'linear-gradient(135deg, #13C2C2 0%, #08979C 100%)', badge: '', route: '/nearby' }
 ]
 
 const getCardComponent = (componentName: string) => {
@@ -149,6 +152,10 @@ const selectCity = () => {
 
 const goSearch = () => {
   router.push('/search')
+}
+
+const goToDiscover = () => {
+  router.push('/discover')
 }
 
 const handleFunctionClick = (item: any) => {
@@ -234,10 +241,42 @@ onMounted(() => {
   margin-bottom: 12px;
 }
 
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.more-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #999;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.more-link:hover {
+  color: #FF6B35;
+}
+
+.more-link:active {
+  transform: scale(0.95);
+}
+
 .function-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 16px 12px;
+  gap: 20px 16px;
 }
 
 .function-item {
@@ -258,15 +297,16 @@ onMounted(() => {
 }
 
 .function-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 28px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s;
 }
 
 .function-badge {
@@ -282,9 +322,10 @@ onMounted(() => {
 }
 
 .function-name {
-  font-size: 12px;
+  font-size: 13px;
   color: #666;
   text-align: center;
+  font-weight: 500;
 }
 
 /* Feed卡片流 */
