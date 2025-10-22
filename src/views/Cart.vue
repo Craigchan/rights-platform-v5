@@ -209,6 +209,13 @@
         </div>
       </div>
     </a-drawer>
+
+    <!-- 结算 Modal -->
+    <CheckoutModal 
+      v-model="showCheckoutModal"
+      :items="cartStore.selectedItems"
+      @success="handleCheckoutSuccess"
+    />
   </div>
 </template>
 
@@ -217,6 +224,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message, Modal } from 'ant-design-vue'
 import { useCartStore } from '@/stores/cart'
+import CheckoutModal from '@/components/CheckoutModal.vue'
 import {
   LeftOutlined,
   DeleteOutlined,
@@ -235,6 +243,9 @@ const cartStore = useCartStore()
 // 优惠券相关
 const showCouponDrawer = ref(false)
 const selectedCoupon = ref<any>(null)
+
+// 结算 Modal
+const showCheckoutModal = ref(false)
 
 // 模拟优惠券数据
 const availableCoupons = ref([
@@ -360,32 +371,17 @@ const handleCheckout = () => {
     return
   }
   
-  // 准备结算数据
-  const checkoutData = {
-    items: cartStore.selectedItems.map(item => ({
-      id: item.id,
-      productId: item.productId,
-      name: item.name,
-      image: item.image,
-      price: item.price,
-      points: item.points,
-      quantity: item.quantity,
-      spec: item.spec || '默认规格'
-    })),
-    coupon: selectedCoupon.value,
-    usePoints: false,
-    pointsDiscount: 0,
-    subtotal: cartStore.totalPrice,
-    totalPoints: cartStore.totalPoints,
-    totalDiscount: selectedCoupon.value ? selectedCoupon.value.discount : 0,
-    finalPrice: cartStore.totalPrice - (selectedCoupon.value ? selectedCoupon.value.discount : 0)
-  }
-  
-  // 保存到 localStorage
-  localStorage.setItem('checkoutData', JSON.stringify(checkoutData))
-  
-  // 跳转到结算页面
-  router.push('/checkout')
+  // 打开结算 Modal
+  showCheckoutModal.value = true
+}
+
+// 结算成功回调
+const handleCheckoutSuccess = (orderId: string) => {
+  // 清空已选中的商品
+  cartStore.selectedItems.forEach(item => {
+    cartStore.removeItem(item.id)
+  })
+  message.success('已清空已兑换的商品')
 }
 </script>
 

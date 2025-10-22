@@ -439,6 +439,13 @@
         </div>
       </div>
     </a-modal>
+
+    <!-- 快速结算 Modal -->
+    <CheckoutModal 
+      v-model="showQuickCheckoutModal"
+      :items="quickCheckoutItems"
+      @success="handleQuickCheckoutSuccess"
+    />
   </div>
 </template>
 
@@ -447,6 +454,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useCartStore } from '@/stores/cart'
+import CheckoutModal from '@/components/CheckoutModal.vue'
 import {
   LeftOutlined,
   ShareAltOutlined,
@@ -560,6 +568,29 @@ const isFavorited = ref(false)
 
 // 兑换弹窗
 const redeemModalVisible = ref(false)
+
+// 快速结算 Modal
+const showQuickCheckoutModal = ref(false)
+
+// 快速结算商品列表
+const quickCheckoutItems = computed(() => {
+  if (!selectedColor.value || !selectedSize.value) return []
+  
+  const colorName = productData.value.colors.find(c => c.id === selectedColor.value)?.name || ''
+  const sizeName = productData.value.sizes.find(s => s.id === selectedSize.value)?.name || ''
+  
+  return [{
+    id: Date.now(),
+    productId: productData.value.id,
+    name: productData.value.name,
+    image: productImages.value[0],
+    color: productImages.value[0],
+    price: selectedExchangeType.value === 'mixed' ? productData.value.mixedCash : 0,
+    points: selectedExchangeType.value === 'mixed' ? productData.value.mixedPoints : productData.value.purePoints,
+    quantity: 1,
+    spec: `${colorName} ${sizeName}`
+  }]
+})
 
 // 优惠券相关
 const couponDrawerVisible = ref(false)
@@ -766,24 +797,25 @@ const handleAddToCart = () => {
 }
 
 const confirmRedeem = () => {
-  // 检查必填项
-  if (productData.value.type === 'physical' && !selectedAddress.value) {
-    message.error('请选择收货地址')
+  // 检查规格选择
+  if (!selectedColor.value) {
+    message.warning('请选择颜色')
+    return
+  }
+  if (!selectedSize.value) {
+    message.warning('请选择尺寸')
     return
   }
   
-  // 模拟兑换流程
+  // 关闭兑换弹窗，打开快速结算 Modal
   redeemModalVisible.value = false
-  
-  // 如果是积分+现金，这里应该跳转到支付页面
-  if (selectedExchangeType.value === 'mixed') {
-    message.loading('正在跳转支付...', 1)
-    setTimeout(() => {
-      completeRedeem()
-    }, 1000)
-  } else {
-    completeRedeem()
-  }
+  showQuickCheckoutModal.value = true
+}
+
+// 快速结算成功回调
+const handleQuickCheckoutSuccess = (orderId: string) => {
+  orderNumber.value = orderId
+  successModalVisible.value = true
 }
 
 const completeRedeem = () => {
