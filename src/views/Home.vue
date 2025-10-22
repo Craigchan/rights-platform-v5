@@ -423,9 +423,9 @@ const goToTrendyProducts = () => {
 
 // 处理推荐项点击
 const handleRecommendItemClick = (item: any) => {
-  // 如果是附近优惠tab，跳转到商户详情页
+  // 如果是附近优惠tab，跳转到商家地图页面
   if (currentRecommendTab.value === 'nearby') {
-    router.push(`/merchant-detail/${item.id}`)
+    router.push('/nearby')
   } else if (currentRecommendTab.value === 'points' || currentRecommendTab.value === 'products') {
     // 积分兑换或热门商品，跳转到商品详情页
     router.push(`/product-detail?id=${item.id}`)
