@@ -40,6 +40,11 @@ const router = createRouter({
       component: () => import('../views/Mine.vue')
     },
     {
+      path: '/mine-redesigned',
+      name: 'MineRedesigned',
+      component: () => import('../views/MineRedesigned.vue')
+    },
+    {
       path: '/earn-points',
       name: 'EarnPoints',
       component: () => import('../views/EarnPoints.vue')
