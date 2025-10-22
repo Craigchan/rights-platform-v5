@@ -381,7 +381,7 @@ const goToPoints = () => {
 }
 
 const goToVouchers = () => {
-  router.push('/my-vouchers')
+  router.push('/vouchers')
 }
 
 const goToFavorites = () => {
