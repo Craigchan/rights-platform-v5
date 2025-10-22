@@ -2,6 +2,7 @@
   <div class="nearby-page">
     <!-- 顶部导航栏 -->
     <div class="top-bar">
+      <LeftOutlined class="back-btn" @click="goBack" />
       <div class="location-info">
         <EnvironmentFilled class="location-icon" />
         <span class="location-text">{{ currentLocation }}</span>
@@ -209,7 +210,8 @@ import {
   DownOutlined,
   CaretDownOutlined,
   StarFilled,
-  GiftOutlined
+  GiftOutlined,
+  LeftOutlined
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
@@ -383,6 +385,10 @@ const goToMerchantDetail = (id: number) => {
     query: { id }
   })
 }
+
+const goBack = () => {
+  router.back()
+}
 </script>
 
 <style scoped>
@@ -402,7 +408,20 @@ const goToMerchantDetail = (id: number) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.back-btn {
+  font-size: 18px;
+  color: #333;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.back-btn:active {
+  opacity: 0.6;
 }
 
 .location-info {
