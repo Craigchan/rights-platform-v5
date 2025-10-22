@@ -44,6 +44,9 @@ import {
 import SubsidyCard from '../components/feed/SubsidyCard.vue'
 import CouponCard from '../components/feed/CouponCard.vue'
 import RecommendCard from '../components/feed/RecommendCard.vue'
+import NearbyCard from '../components/feed/NearbyCard.vue'
+import PointsTaskCard from '../components/feed/PointsTaskCard.vue'
+import ActivityCard from '../components/feed/ActivityCard.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -56,7 +59,10 @@ const getCardComponent = (componentName: string) => {
   const components: Record<string, any> = {
     SubsidyCard,
     CouponCard,
-    RecommendCard
+    RecommendCard,
+    NearbyCard,
+    PointsTaskCard,
+    ActivityCard
   }
   return components[componentName] || 'div'
 }

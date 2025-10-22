@@ -19,6 +19,7 @@ export const useFeedStore = defineStore('feed', () => {
     const cards: FeedCard[] = []
 
     // 优先级1: 未完成的政府补贴申请 (最高优先级)
+    // 调整为60%概率显示，便于测试
     if (hasUnfinishedSubsidy()) {
       cards.push({
         id: 'subsidy-unfinished',
@@ -63,32 +64,30 @@ export const useFeedStore = defineStore('feed', () => {
     })
 
     // 优先级4: 附近的优惠商家 (基于地理位置)
-    if (userStore.location) {
-      cards.push({
-        id: 'nearby-merchants',
-        type: 'nearby',
-        component: 'NearbyCard',
-        data: {
-          merchants: getNearbyMerchants(),
-          city: userStore.city
-        },
-        priority: 70
-      })
-    }
+    // 总是显示，使用用户当前城市
+    cards.push({
+      id: 'nearby-merchants',
+      type: 'nearby',
+      component: 'NearbyCard',
+      data: {
+        merchants: getNearbyMerchants(),
+        city: userStore.city || '南京'
+      },
+      priority: 70
+    })
 
-    // 优先级5: 积分任务 (每日首次访问显示)
-    if (!hasSeenPointsTaskToday()) {
-      cards.push({
-        id: 'points-tasks',
-        type: 'points',
-        component: 'PointsTaskCard',
-        data: {
-          tasks: getDailyTasks(),
-          todayPoints: getTodayPoints()
-        },
-        priority: 60
-      })
-    }
+    // 优先级5: 积分任务
+    // 总是显示，不再检查是否已查看
+    cards.push({
+      id: 'points-tasks',
+      type: 'points',
+      component: 'PointsTaskCard',
+      data: {
+        tasks: getDailyTasks(),
+        todayPoints: getTodayPoints()
+      },
+      priority: 60
+    })
 
     // 优先级6: 热门活动
     cards.push({
@@ -108,7 +107,7 @@ export const useFeedStore = defineStore('feed', () => {
   // 检查是否有未完成的补贴申请
   const hasUnfinishedSubsidy = (): boolean => {
     // TODO: 实际实现应该从后端API获取
-    return Math.random() > 0.7 // 模拟30%的用户有未完成申请
+    return Math.random() > 0.4 // 调整为60%概率，便于测试
   }
 
   // 获取即将过期的优惠券
