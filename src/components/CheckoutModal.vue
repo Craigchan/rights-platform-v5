@@ -366,16 +366,44 @@ const handleConfirm = async () => {
     
     const orderId = `${Date.now()}`
     
-    message.success('兑换成功！')
+    // 关闭 Modal
     visible.value = false
     
     // 触发成功事件
     emit('success', orderId)
     
-    // 跳转到订单详情
-    setTimeout(() => {
-      router.push(`/order-detail/${orderId}`)
-    }, 500)
+    // 判断是否需要支付
+    const needPayment = finalPrice.value > 0
+    
+    if (needPayment) {
+      // 需要支付 -> 跳转收银台
+      message.success('订单创建成功，请完成支付')
+      
+      // 准备收银台数据
+      const cashierData = {
+        orderNo: orderId,
+        itemCount: props.items.length,
+        address: selectedAddress.value.address,
+        points: totalPoints.value,
+        couponDiscount: couponDiscount.value,
+        payAmount: finalPrice.value
+      }
+      
+      setTimeout(() => {
+        router.push({
+          path: '/cashier',
+          query: {
+            data: encodeURIComponent(JSON.stringify(cashierData))
+          }
+        })
+      }, 500)
+    } else {
+      // 纯积分兑换 -> 直接完成
+      message.success('兑换成功！')
+      setTimeout(() => {
+        router.push(`/order-detail/${orderId}`)
+      }, 500)
+    }
     
   } catch (error: any) {
     message.error(error.message || '兑换失败，请重试')

@@ -103,6 +103,12 @@ const router = createRouter({
       meta: { hideTabBar: true }
     },
     {
+      path: '/cashier',
+      name: 'Cashier',
+      component: () => import('../views/Cashier.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/logistics/:id',
       name: 'Logistics',
       component: () => import('../views/Logistics.vue'),
