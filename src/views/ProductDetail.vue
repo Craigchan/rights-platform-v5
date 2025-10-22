@@ -450,11 +450,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useCartStore } from '@/stores/cart'
-import CheckoutModal from '@/components/CheckoutModal.vue'
+
+// 异步加载大型组件
+const CheckoutModal = defineAsyncComponent(() =>
+  import('@/components/CheckoutModal.vue')
+)
 import {
   LeftOutlined,
   ShareAltOutlined,

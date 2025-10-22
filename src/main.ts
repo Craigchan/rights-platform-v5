@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import Antd from 'ant-design-vue'
+// Ant Design Vue 组件已通过 unplugin-vue-components 按需引入
 import 'ant-design-vue/dist/reset.css'
 import './style.css'
 import './styles/variables.css'
@@ -16,7 +16,7 @@ const pinia = createPinia()
 
 app.use(pinia)
 app.use(router)
-app.use(Antd)
+// Ant Design Vue 已自动按需引入，无需全局注册
 
 // 初始化 stores
 const cartStore = useCartStore()

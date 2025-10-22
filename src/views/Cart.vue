@@ -220,11 +220,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import { message, Modal } from 'ant-design-vue'
 import { useCartStore } from '@/stores/cart'
-import CheckoutModal from '@/components/CheckoutModal.vue'
+
+// 异步加载大型组件
+const CheckoutModal = defineAsyncComponent(() =>
+  import('@/components/CheckoutModal.vue')
+)
 import {
   LeftOutlined,
   DeleteOutlined,
