@@ -1,0 +1,38 @@
+/**
+ * 图片懒加载样式
+ */
+
+/* 加载中状态 */
+img.lazy-loading {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
+}
+
+/* 加载完成状态 */
+img.lazy-loaded {
+  filter: blur(0);
+  animation: fadeIn 0.3s ease;
+}
+
+/* 加载失败状态 */
+img.lazy-error {
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+
+/* 淡入动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 懒加载图片默认样式 */
+img[v-lazy] {
+  background-color: #f0f0f0;
+  min-height: 100px;
+}
+
