@@ -360,6 +360,30 @@ const handleCheckout = () => {
     return
   }
   
+  // 准备结算数据
+  const checkoutData = {
+    items: cartStore.selectedItems.map(item => ({
+      id: item.id,
+      productId: item.productId,
+      name: item.name,
+      image: item.image,
+      price: item.price,
+      points: item.points,
+      quantity: item.quantity,
+      spec: item.spec || '默认规格'
+    })),
+    coupon: selectedCoupon.value,
+    usePoints: false,
+    pointsDiscount: 0,
+    subtotal: cartStore.totalPrice,
+    totalPoints: cartStore.totalPoints,
+    totalDiscount: selectedCoupon.value ? selectedCoupon.value.discount : 0,
+    finalPrice: cartStore.totalPrice - (selectedCoupon.value ? selectedCoupon.value.discount : 0)
+  }
+  
+  // 保存到 localStorage
+  localStorage.setItem('checkoutData', JSON.stringify(checkoutData))
+  
   // 跳转到结算页面
   router.push('/checkout')
 }
