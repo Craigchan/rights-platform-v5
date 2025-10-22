@@ -206,9 +206,15 @@
           <span>收藏</span>
         </div>
       </div>
-      <a-button type="primary" size="large" class="redeem-btn" @click="handleRedeem">
-        立即兑换 ({{ currentRedeemPoints }})
-      </a-button>
+      <div class="action-buttons">
+        <a-button size="large" class="cart-btn" @click="handleAddToCart">
+          <ShoppingCartOutlined />
+          加入购物车
+        </a-button>
+        <a-button type="primary" size="large" class="redeem-btn" @click="handleRedeem">
+          立即兑换
+        </a-button>
+      </div>
     </div>
 
     <!-- 兑换确认弹窗 -->
@@ -434,6 +440,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
+import { useCartStore } from '@/stores/cart'
 import {
   LeftOutlined,
   ShareAltOutlined,
@@ -444,11 +451,13 @@ import {
   RightOutlined,
   EnvironmentOutlined,
   CheckCircleFilled,
-  PlusOutlined
+  PlusOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
+const cartStore = useCartStore()
 
 // 当前图片索引
 const currentImageIndex = ref(0)
@@ -695,6 +704,59 @@ const getColorName = (colorId: number) => {
 
 const getSizeName = (sizeId: number) => {
   return productData.value.sizes?.find(s => s.id === sizeId)?.name || ''
+}
+
+// 加入购物车
+const handleAddToCart = () => {
+  // 验证规格选择
+  if (productData.value.hasSpecs) {
+    if (productData.value.colors && !selectedColor.value) {
+      message.warning('请选择颜色')
+      return
+    }
+    if (productData.value.sizes && !selectedSize.value) {
+      message.warning('请选择尺寸')
+      return
+    }
+  }
+
+  // 获取当前选择的价格
+  const points = selectedExchangeType.value === 'pure' 
+    ? productData.value.purePoints 
+    : productData.value.mixedPoints
+  
+  const price = selectedExchangeType.value === 'pure'
+    ? 0
+    : productData.value.mixedCash
+
+  // 构建规格描述
+  let spec = ''
+  if (selectedColor.value) {
+    spec += getColorName(selectedColor.value)
+  }
+  if (selectedSize.value) {
+    spec += (spec ? ' / ' : '') + getSizeName(selectedSize.value)
+  }
+  if (!spec) {
+    spec = '默认规格'
+  }
+
+  // 加入购物车
+  cartStore.addItem({
+    id: Date.now(), // 使用时间戳作为唯一ID
+    productId: productData.value.id,
+    name: productData.value.name,
+    image: productImages.value[0],
+    price: price,
+    points: points,
+    stock: 999 // 模拟库存
+  })
+
+  // 提示成功
+  message.success({
+    content: '已加入购物车',
+    duration: 2
+  })
 }
 
 const confirmRedeem = () => {
@@ -1245,11 +1307,32 @@ onMounted(() => {
   color: #FF6B35;
 }
 
+.action-buttons {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+}
+
+.cart-btn {
+  flex: 1;
+  height: 44px;
+  border-radius: 22px;
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid #FF6B35;
+  color: #FF6B35;
+}
+
+.cart-btn:hover {
+  border-color: #FF8C61;
+  color: #FF8C61;
+}
+
 .redeem-btn {
   flex: 1;
   height: 44px;
   border-radius: 22px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
 }
 

@@ -8,7 +8,13 @@
       :class="{ active: isActive(item.path) }"
       @click="navigate(item.path)"
     >
-      <component :is="item.icon" class="tab-icon" />
+      <div class="tab-icon-wrapper">
+        <component :is="item.icon" class="tab-icon" />
+        <!-- 购物车角标 -->
+        <span v-if="item.path === '/mine' && cartStore.totalItems > 0" class="cart-badge">
+          {{ cartStore.totalItems > 99 ? '99+' : cartStore.totalItems }}
+        </span>
+      </div>
       <span class="tab-label">{{ item.label }}</span>
     </div>
 
@@ -23,8 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useCartStore } from '@/stores/cart'
 import { 
   HomeOutlined, 
   CompassOutlined,
@@ -34,6 +41,12 @@ import {
 
 const router = useRouter()
 const route = useRoute()
+const cartStore = useCartStore()
+
+// 初始化购物车数据
+onMounted(() => {
+  cartStore.init()
+})
 
 const currentPath = computed(() => route.path)
 const hideTabBar = computed(() => route.meta.hideTabBar === true)
@@ -113,6 +126,33 @@ const handleFabClick = () => {
 
 .tab-item:active {
   transform: scale(0.95);
+}
+
+.tab-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: #FF4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(255, 68, 68, 0.3);
 }
 
 /* 悬浮操作按钮样式 */

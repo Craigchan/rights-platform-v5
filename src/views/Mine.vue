@@ -52,6 +52,12 @@
         <span class="section-more" @click="goToOrders">查看全部 <RightOutlined /></span>
       </div>
       <div class="order-status-row">
+        <div class="order-status-item" @click="goToCart">
+          <a-badge :count="cartStore.totalItems">
+            <ShoppingCartOutlined class="status-icon" />
+          </a-badge>
+          <div class="status-name">购物车</div>
+        </div>
         <div class="order-status-item" @click="goToOrderStatus('pending')">
           <a-badge :count="2">
             <WalletOutlined class="status-icon" />
@@ -267,15 +273,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
+import { useCartStore } from '@/stores/cart'
 import {
   SettingOutlined,
   RightOutlined,
   CheckCircleFilled,
   WalletOutlined,
   ShoppingOutlined,
+  ShoppingCartOutlined,
   CarOutlined,
   CheckCircleOutlined,
   CustomerServiceOutlined,
@@ -298,8 +306,14 @@ import {
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
+const cartStore = useCartStore()
 const showMemberModal = ref(false)
 const showLogoutModal = ref(false)
+
+// 初始化购物车数据
+onMounted(() => {
+  cartStore.init()
+})
 
 // 导航方法
 const goToSettings = () => {
@@ -319,6 +333,10 @@ const goToVouchers = () => {
 
 const goToOrders = () => {
   router.push('/orders')
+}
+
+const goToCart = () => {
+  router.push('/cart')
 }
 
 const goToLottery = () => {
