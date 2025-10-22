@@ -1,5 +1,10 @@
 <template>
-  <div class="mine-page-redesigned">
+  <PullToRefresh :on-refresh="handleRefresh">
+    <!-- 骨架屏加载状态 -->
+    <MineSkeleton v-if="isLoading" />
+    
+    <!-- 实际内容 -->
+    <div v-else class="mine-page-redesigned">
     <!-- 1. 用户信息卡 -->
     <div class="section-card user-info-card">
       <div class="user-header">
@@ -166,7 +171,8 @@
         退出登录
       </a-button>
     </div>
-  </div>
+    </div>
+  </PullToRefresh>
 </template>
 
 <script setup lang="ts">
@@ -205,8 +211,13 @@ import {
   DeleteOutlined
 } from '@ant-design/icons-vue'
 import CountUp from '@/components/CountUp.vue'
+import PullToRefresh from '@/components/PullToRefresh.vue'
+import MineSkeleton from '@/components/MineSkeleton.vue'
 
 const router = useRouter()
+
+// 加载状态
+const isLoading = ref(true)
 
 // 用户信息
 const userInfo = ref({
@@ -397,13 +408,24 @@ const toggleSettings = () => {
   showSettings.value = !showSettings.value
 }
 
+const handleRefresh = async () => {
+  console.log('刷新数据')
+  // 模拟刷新延迟
+  await new Promise(resolve => setTimeout(resolve, 1500))
+  // 实际应用中这里调用API重新获取数据
+  console.log('刷新完成')
+}
+
 const handleLogout = () => {
   console.log('退出登录')
   // 实现退出登录逻辑
 }
 
-onMounted(() => {
+onMounted(async () => {
   console.log('MineRedesigned mounted')
+  // 模拟加载延迟
+  await new Promise(resolve => setTimeout(resolve, 800))
+  isLoading.value = false
 })
 </script>
 
