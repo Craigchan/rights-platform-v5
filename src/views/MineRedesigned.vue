@@ -445,6 +445,20 @@ onMounted(async () => {
   margin-bottom: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
+  animation: slideInUp 0.4s ease-out;
+  animation-fill-mode: both;
+  
+  // 为每个卡片添加延迟,实现依次出现效果
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+  &:nth-child(5) { animation-delay: 0.5s; }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
 }
 
 .card-header {
@@ -801,18 +815,45 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #F5F5F5;
+        background: linear-gradient(135deg, #FFE8E0 0%, #FFF5F2 100%);
         border-radius: 50%;
-        transition: background 0.2s;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        
+        // 添加光晕效果
+        &::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
         
         .status-icon {
           font-size: 24px;
           color: #FF6B35;
+          transition: transform 0.3s;
         }
       }
       
       &:hover .status-icon-wrapper {
-        background: #FFE8E0;
+        background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        transform: translateY(-2px);
+        
+        &::before {
+          opacity: 1;
+        }
+        
+        .status-icon {
+          color: #FFFFFF;
+          transform: scale(1.1);
+        }
       }
       
       .status-label {
@@ -918,6 +959,90 @@ onMounted(async () => {
   .mine-page-redesigned {
     max-width: 600px;
     margin: 0 auto;
+  }
+}
+
+// ========== 深色模式 ==========
+@media (prefers-color-scheme: dark) {
+  .mine-page-redesigned {
+    background: #141414;
+  }
+  
+  .section-card {
+    background: #1F1F1F;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+  }
+  
+  .card-header .card-title,
+  .user-nickname,
+  .status-label,
+  .feature-label,
+  .empty-title {
+    color: #E8E8E8;
+  }
+  
+  .user-phone,
+  .stat-label,
+  .feature-desc,
+  .empty-description {
+    color: #A6A6A6;
+  }
+  
+  .feature-item {
+    background: #2A2A2A;
+    
+    &:hover {
+      background: #333333;
+    }
+  }
+  
+  .progress-bar {
+    background: #2A2A2A;
+  }
+}
+
+// ========== 动画效果 ==========
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
   }
 }
 </style>
