@@ -429,12 +429,6 @@ const router = createRouter({
       name: 'MatchCalendar',
       component: () => import('../views/MatchCalendar.vue'),
       meta: { hideTabBar: true }
-    },
-    {
-      path: '/merchant-detail/:id?',
-      name: 'MerchantDetail',
-      component: () => import('../views/MerchantDetail.vue'),
-      meta: { hideTabBar: true }
     }
   ]
 })
