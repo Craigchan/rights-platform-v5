@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useUserStore } from './user'
+import { getImageUrl } from '../config/images'
 
 export interface FeedCard {
   id: string
@@ -124,9 +125,9 @@ export const useFeedStore = defineStore('feed', () => {
   const getRecommendedProducts = () => {
     // TODO: 基于用户浏览历史和偏好推荐
     return [
-      { id: 1, name: '智能电饭煲', price: 299, image: '/images/products/appliances-1.jpg' },
-      { id: 2, name: '蓝牙耳机', price: 199, image: '/images/products/electronics-1.jpg' },
-      { id: 3, name: '运动鞋', price: 399, image: '/images/products/fashion-1.jpg' }
+      { id: 1, name: '智能电饭煲', price: 299, image: getImageUrl('products', 'smartCooker', 640) },
+      { id: 2, name: '蓝牙耳机', price: 199, image: getImageUrl('products', 'headphones', 640) },
+      { id: 3, name: '运动鞋', price: 399, image: getImageUrl('products', 'sneakers', 640) }
     ]
   }
 
@@ -172,9 +173,9 @@ export const useFeedStore = defineStore('feed', () => {
   // 获取热门活动
   const getHotActivities = () => {
     return [
-      { id: 1, name: '德基广场周年庆', tag: '全场5折起', image: '/images/activities/deji.jpg' },
-      { id: 2, name: '南京欢乐谷嘉年华', tag: '门票买一送一', image: '/images/activities/happyvalley.jpg' },
-      { id: 3, name: '新街口美食节', tag: '满100减30', image: '/images/activities/food.jpg' }
+      { id: 1, name: '德基广场周年庆', tag: '全场5折起', image: getImageUrl('activities', 'dejiPlaza', 640) },
+      { id: 2, name: '南京欢乐谷嘉年华', tag: '门票买一送一', image: getImageUrl('activities', 'happyValley', 640) },
+      { id: 3, name: '新街口美食节', tag: '满100减30', image: getImageUrl('activities', 'foodFestival', 640) }
     ]
   }
 

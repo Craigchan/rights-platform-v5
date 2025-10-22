@@ -12,7 +12,11 @@
         class="product-item"
         @click="viewProduct(product)"
       >
-        <img :src="product.image" :alt="product.name" class="product-image" />
+        <SafeImage 
+          :src="product.image" 
+          :alt="product.name" 
+          class="product-image"
+        />
         <div class="product-info">
           <div class="product-name">{{ product.name }}</div>
           <div class="product-price">¥{{ product.price }}</div>
@@ -24,6 +28,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import SafeImage from '../common/SafeImage.vue'
 
 interface Product {
   id: number
