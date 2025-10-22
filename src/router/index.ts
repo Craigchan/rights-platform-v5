@@ -45,6 +45,12 @@ const router = createRouter({
       meta: { hideTabBar: true }
     },
     {
+      path: '/product/:id',
+      name: 'ProductDetailById',
+      component: () => import('../views/ProductDetail.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/voucher-center',
       name: 'VoucherCenter',
       component: () => import('../views/VoucherCenter.vue')
@@ -66,6 +72,7 @@ const router = createRouter({
     },
     {
       path: '/activity-detail/:id',
+      alias: '/activity/:id',
       name: 'ActivityDetail',
       component: () => import('../views/ActivityDetail.vue'),
       meta: { hideTabBar: true }
@@ -115,6 +122,12 @@ const router = createRouter({
       path: '/gov-subsidy',
       name: 'GovSubsidy',
       component: () => import('../views/GovSubsidy.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
+      path: '/subsidy-help',
+      name: 'SubsidyHelp',
+      component: () => import('../views/SubsidyHelp.vue'),
       meta: { hideTabBar: true }
     },
     {
