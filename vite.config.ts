@@ -89,7 +89,7 @@ export default defineConfig({
   },
   // 预览配置
   preview: {
-    port: 5001,
+    port: 5002,
     host: true,
     allowedHosts: [
       '.manusvm.computer',
