@@ -66,7 +66,7 @@ const viewMerchant = (merchant: Merchant) => {
 }
 
 const viewMore = () => {
-  router.push('/local-vouchers')
+  router.push('/nearby')
 }
 </script>
 
