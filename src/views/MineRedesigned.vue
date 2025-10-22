@@ -246,9 +246,9 @@ const orderStatuses = ref([
 // 常用功能
 const highFrequencyFeatures = ref([
   { name: '我的票券', path: '/my-tickets', icon: TagOutlined, color: '#FF6B35' },
-  { name: '积分明细', path: '/points-history', icon: WalletOutlined, color: '#FFD700' },
+  { name: '积分明细', path: '/points-detail', icon: WalletOutlined, color: '#FFD700' },
   { name: '兑换记录', path: '/exchange-records', icon: GiftOutlined, color: '#FF6B35' },
-  { name: '我的票根', path: '/my-stubs', icon: PictureOutlined, color: '#1890ff' },
+  { name: '我的票根', path: '/my-tickets', icon: PictureOutlined, color: '#1890ff' },
   { name: '中奖记录', path: '/lottery-records', icon: TrophyOutlined, color: '#FA8C16' },
   { name: '我的收藏', path: '/favorites', icon: HeartOutlined, color: '#FF4D4F' },
   { name: '浏览历史', path: '/history', icon: ClockCircleOutlined, color: '#8C8C8C' },
@@ -367,7 +367,7 @@ const handleMemberClick = () => {
 }
 
 const goToSettings = () => {
-  router.push('/settings')
+  router.push('/account-settings')
 }
 
 const goToAuth = () => {
@@ -377,7 +377,7 @@ const goToAuth = () => {
 }
 
 const goToPoints = () => {
-  router.push('/points-history')
+  router.push('/points-detail')
 }
 
 const goToVouchers = () => {
