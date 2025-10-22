@@ -86,5 +86,14 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     // 启用 CSS 代码分割
     cssCodeSplit: true
+  },
+  // 预览配置
+  preview: {
+    host: true,
+    allowedHosts: [
+      '.manusvm.computer',
+      'localhost',
+      '127.0.0.1'
+    ]
   }
 })

@@ -55,7 +55,7 @@ const hideTabBar = computed(() => route.meta.hideTabBar === true)
 const tabs = [
   { path: '/', label: '首页', icon: HomeOutlined },
   { path: '/discover', label: '发现', icon: CompassOutlined },
-  { path: '/mine', label: '我的', icon: UserOutlined }
+  { path: '/mine-redesigned', label: '我的', icon: UserOutlined }
 ]
 
 const isActive = (path: string) => {
