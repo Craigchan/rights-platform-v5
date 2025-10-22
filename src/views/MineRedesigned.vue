@@ -245,7 +245,7 @@ const orderStatuses = ref([
 
 // 常用功能
 const highFrequencyFeatures = ref([
-  { name: '我的票券', path: '/my-tickets', icon: TagOutlined, color: '#FF6B35' },
+  { name: '我的票券', path: '/vouchers', icon: TagOutlined, color: '#FF6B35' },
   { name: '积分明细', path: '/points-detail', icon: WalletOutlined, color: '#FFD700' },
   { name: '兑换记录', path: '/exchange-records', icon: GiftOutlined, color: '#FF6B35' },
   { name: '我的票根', path: '/my-tickets', icon: PictureOutlined, color: '#1890ff' },
