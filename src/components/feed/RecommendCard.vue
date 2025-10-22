@@ -95,11 +95,10 @@ const viewProduct = (product: Product) => {
 
 .product-image {
   width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
   border-radius: 8px;
   margin-bottom: 8px;
   background: #f5f5f5;
+  overflow: hidden;
 }
 
 .product-info {

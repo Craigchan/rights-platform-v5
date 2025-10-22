@@ -79,20 +79,19 @@ const handleError = () => {
 .safe-image-wrapper {
   position: relative;
   width: 100%;
-  height: 100%;
+  display: block;
   overflow: hidden;
 }
 
 .safe-image {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
   display: block;
 }
 
 .image-skeleton {
   width: 100%;
-  height: 100%;
+  padding-bottom: 100%; /* 1:1 aspect ratio */
   background: linear-gradient(
     90deg,
     #f0f0f0 25%,
@@ -114,7 +113,8 @@ const handleError = () => {
 
 .image-error {
   width: 100%;
-  height: 100%;
+  padding-bottom: 100%; /* 1:1 aspect ratio */
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
