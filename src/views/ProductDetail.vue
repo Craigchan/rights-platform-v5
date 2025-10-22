@@ -194,6 +194,12 @@
       </ul>
     </div>
 
+    <!-- 悬浮购物车按钮 -->
+    <div class="floating-cart-btn" @click="goToCart" v-if="cartStore.totalItems > 0">
+      <ShoppingCartOutlined class="cart-icon" />
+      <span class="cart-count">{{ cartStore.totalItems > 99 ? '99+' : cartStore.totalItems }}</span>
+    </div>
+
     <!-- 7. 底部操作栏 -->
     <div class="bottom-action-bar">
       <div class="action-icons">
@@ -796,7 +802,14 @@ const continueShopping = () => {
   router.push('/points-mall')
 }
 
+const goToCart = () => {
+  router.push('/cart')
+}
+
 onMounted(() => {
+  // 初始化购物车数据
+  cartStore.init()
+  
   // 可以根据路由参数加载不同的商品数据
   const productId = route.query.id
   console.log('Product ID:', productId)
@@ -1334,6 +1347,68 @@ onMounted(() => {
   border-radius: 22px;
   font-size: 15px;
   font-weight: 600;
+}
+
+/* 悬浮购物车按钮 */
+.floating-cart-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 100px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C61 100%);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  transition: all 0.3s;
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-cart-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.5);
+}
+
+.floating-cart-btn:active {
+  transform: scale(0.95);
+}
+
+.floating-cart-btn .cart-icon {
+  font-size: 26px;
+  color: #fff;
+}
+
+.floating-cart-btn .cart-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  background: #FF4444;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(255, 68, 68, 0.4);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 /* 兑换确认弹窗 */
