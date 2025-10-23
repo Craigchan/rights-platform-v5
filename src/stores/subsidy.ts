@@ -117,6 +117,16 @@ export const useSubsidyStore = defineStore('subsidy', () => {
     myApplications.value.filter(app => app.status === 'completed' || app.status === 'claimed')
   )
 
+  // 统计数据
+  const statistics = computed(() => ({
+    total: myApplications.value.length,
+    pending: myApplications.value.filter(app => app.status === 'pending').length,
+    completed: myApplications.value.filter(app => app.status === 'completed' || app.status === 'claimed').length,
+    totalAmount: myApplications.value
+      .filter(app => app.status === 'claimed')
+      .reduce((sum, app) => sum + app.subsidyAmount, 0)
+  }))
+
   // 创建补贴申请
   const createApplication = (subsidyType: SubsidyApplication['type']) => {
     const subsidy = availableSubsidies.value.find(s => s.type === subsidyType)
@@ -232,6 +242,7 @@ export const useSubsidyStore = defineStore('subsidy', () => {
     // 计算属性
     pendingApplications,
     completedApplications,
+    statistics,
 
     // 方法
     createApplication,
