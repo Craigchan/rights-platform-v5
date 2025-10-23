@@ -46,7 +46,14 @@
               <h3 class="goods-name">{{ item.name }}</h3>
               <p class="goods-spec">{{ item.spec }}</p>
               <div class="goods-footer">
-                <span class="goods-price">¥{{ item.price.toFixed(2) }}</span>
+                <div class="goods-price-group">
+                  <span class="goods-points" v-if="item.points > 0">
+                    {{ item.points.toLocaleString() }}积分
+                  </span>
+                  <span class="goods-cash" v-if="item.price > 0">
+                    + ¥{{ item.price.toFixed(2) }}
+                  </span>
+                </div>
                 <span class="goods-quantity">x{{ item.quantity }}</span>
               </div>
             </div>
@@ -135,11 +142,15 @@
 
       <!-- 价格明细 -->
       <div class="price-section">
-        <div class="price-item">
+        <div class="price-item" v-if="checkoutData.totalPoints > 0">
+          <span class="price-label">积分</span>
+          <span class="price-value points-color">{{ checkoutData.totalPoints.toLocaleString() }}积分</span>
+        </div>
+        <div class="price-item" v-if="checkoutData.subtotal > 0">
           <span class="price-label">商品金额</span>
           <span class="price-value">¥{{ checkoutData.subtotal.toFixed(2) }}</span>
         </div>
-        <div class="price-item">
+        <div class="price-item" v-if="deliveryFee > 0">
           <span class="price-label">运费</span>
           <span class="price-value">¥{{ deliveryFee.toFixed(2) }}</span>
         </div>
@@ -149,7 +160,14 @@
         </div>
         <div class="price-item total">
           <span class="price-label">实付款</span>
-          <span class="price-value final">¥{{ totalAmount.toFixed(2) }}</span>
+          <div class="price-value-group">
+            <span class="price-value final points-color" v-if="checkoutData.totalPoints > 0">
+              {{ checkoutData.totalPoints.toLocaleString() }}积分
+            </span>
+            <span class="price-value final" v-if="totalAmount > 0">
+              {{ checkoutData.totalPoints > 0 ? ' + ' : '' }}¥{{ totalAmount.toFixed(2) }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -158,7 +176,14 @@
     <div class="bottom-bar">
       <div class="bottom-left">
         <div class="total-label">合计:</div>
-        <div class="total-price">¥{{ totalAmount.toFixed(2) }}</div>
+        <div class="total-price-group">
+          <span class="total-points" v-if="checkoutData.totalPoints > 0">
+            {{ checkoutData.totalPoints.toLocaleString() }}积分
+          </span>
+          <span class="total-cash" v-if="totalAmount > 0">
+            {{ checkoutData.totalPoints > 0 ? ' + ' : '' }}¥{{ totalAmount.toFixed(2) }}
+          </span>
+        </div>
       </div>
       <a-button 
         type="primary" 
@@ -562,6 +587,23 @@ const handlePaymentFailure = (error: any) => {
         align-items: center;
         justify-content: space-between;
 
+        .goods-price-group {
+          display: flex;
+          align-items: baseline;
+          gap: 4px;
+          
+          .goods-points {
+            font-size: 15px;
+            font-weight: 600;
+            color: #FF6B35;
+          }
+          
+          .goods-cash {
+            font-size: 14px;
+            color: #FF6B35;
+          }
+        }
+
         .goods-price {
           font-size: 16px;
           font-weight: bold;
@@ -692,6 +734,16 @@ const handlePaymentFailure = (error: any) => {
         font-size: 20px;
         font-weight: bold;
       }
+      
+      &.points-color {
+        color: #FF6B35;
+      }
+    }
+    
+    .price-value-group {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
     }
 
     &.discount {
@@ -725,12 +777,31 @@ const handlePaymentFailure = (error: any) => {
     .total-label {
       font-size: 13px;
       color: #666;
+      margin-bottom: 4px;
     }
 
     .total-price {
       font-size: 20px;
       font-weight: bold;
       color: #FF4444;
+    }
+    
+    .total-price-group {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      
+      .total-points {
+        font-size: 18px;
+        font-weight: 700;
+        color: #FF6B35;
+      }
+      
+      .total-cash {
+        font-size: 18px;
+        font-weight: 700;
+        color: #FF4444;
+      }
     }
   }
 }

@@ -2,13 +2,15 @@
   <div id="app" :class="{ 'no-tabbar': hideTabBar }">
     <router-view />
     <TabBar />
+    <BackToTop />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import TabBar from './components/TabBar.vue'
+import TabBar from './components/TabBarV2.vue'
+import BackToTop from './components/BackToTop.vue'
 
 const route = useRoute()
 const hideTabBar = computed(() => route.meta.hideTabBar === true)

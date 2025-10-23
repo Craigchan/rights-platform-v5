@@ -1,5 +1,12 @@
 <template>
   <div class="vouchers-page">
+    <!-- 顶部导航栏 -->
+    <div class="navbar">
+      <LeftOutlined class="back-icon" @click="goBack" />
+      <span class="navbar-title">我的优惠券</span>
+      <div class="navbar-right"></div>
+    </div>
+
     <!-- 顶部Tab分类区 -->
     <div class="tabs-container">
       <div 
@@ -184,6 +191,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { 
+  LeftOutlined,
   DownOutlined, 
   UpOutlined, 
   WarningOutlined, 
@@ -195,6 +203,11 @@ import {
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
+
+// 返回上一页
+const goBack = () => {
+  router.back()
+}
 
 // Tab配置
 const tabs = [
@@ -460,6 +473,38 @@ const goToHome = () => {
   min-height: 100vh;
   background: #f5f5f5;
   padding-bottom: 80px;
+}
+
+/* 顶部导航栏 */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  background: #fff;
+  padding: 0 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.back-icon {
+  font-size: 18px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.back-icon:hover {
+  color: #1890ff;
+}
+
+.navbar-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.navbar-right {
+  width: 18px;
 }
 
 /* 顶部Tab分类区 */

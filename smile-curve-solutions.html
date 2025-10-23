@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>笑脸曲线方案对比 - 圆滑版</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 375px;
+      margin: 0 auto 30px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .label {
+      text-align: center;
+      padding: 10px;
+      background: #333;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .banner-wrapper {
+      position: relative;
+      background: #f5f5f5;
+    }
+
+    .banner {
+      background: linear-gradient(180deg, #E94444 0%, #F25555 50%, #FF6B6B 100%);
+      padding: 60px 20px 80px;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+
+    .banner h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .banner p {
+      font-size: 13px;
+      opacity: 0.95;
+    }
+
+    .function-grid {
+      background: #f5f5f5;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .function-item {
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-size: 24px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* 方案A: 三次贝塞尔曲线 - 更圆滑 */
+    .solution-a .banner {
+      clip-path: url(#smoothCurveA);
+    }
+
+    /* 方案B: 使用border-radius的椭圆 */
+    .solution-b .banner {
+      clip-path: url(#smoothCurveB);
+    }
+
+    /* 方案C: 使用伪元素创建圆弧 */
+    .solution-c .banner {
+      border-radius: 0 0 50% 50% / 0 0 60px 60px;
+    }
+
+    /* 方案D: SVG mask方案 */
+    .solution-d .banner-wrapper {
+      -webkit-mask: url(#maskCurveD);
+      mask: url(#maskCurveD);
+    }
+
+    /* 方案E: 纯CSS radial-gradient */
+    .solution-e .banner::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: radial-gradient(ellipse 200% 100% at 50% 0%, transparent 0%, transparent 50%, #f5f5f5 50%);
+    }
+
+    h2 {
+      text-align: center;
+      margin: 30px 0 20px;
+      color: #333;
+    }
+
+    .description {
+      max-width: 375px;
+      margin: 0 auto 15px;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .description strong {
+      color: #E94444;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center; margin-bottom: 30px; color: #E94444;">笑脸曲线方案对比 - 圆滑版</h1>
+
+  <!-- 方案A: 三次贝塞尔曲线 -->
+  <h2>方案A: 三次贝塞尔曲线 (两个控制点)</h2>
+  <div class="description">
+    <strong>优点:</strong> 曲线更圆滑,无棱角<br>
+    <strong>特点:</strong> 使用C命令,两个控制点精确控制曲线形状
+  </div>
+  <div class="container solution-a">
+    <div class="label">方案A - 三次贝塞尔曲线</div>
+    <div class="banner-wrapper">
+      <div class="banner">
+        <h1>领取国补正当时</h1>
+        <p>绿色智能家电和3C·最高补贴2000元</p>
+      </div>
+      <div class="function-grid">
+        <div class="function-item"><div class="icon">🎁</div>优惠券</div>
+        <div class="function-item"><div class="icon">💰</div>政府补贴</div>
+        <div class="function-item"><div class="icon">⭐</div>打新股</div>
+        <div class="function-item"><div class="icon">✨</div>货心选</div>
+        <div class="function-item"><div class="icon">💎</div>基金</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 方案B: 椭圆曲线 -->
+  <h2>方案B: 椭圆弧线 (完美圆滑)</h2>
+  <div class="description">
+    <strong>优点:</strong> 完美的椭圆弧,最圆滑<br>
+    <strong>特点:</strong> 使用椭圆弧(A命令),数学上完美的曲线
+  </div>
+  <div class="container solution-b">
+    <div class="label">方案B - 椭圆弧线</div>
+    <div class="banner-wrapper">
+      <div class="banner">
+        <h1>领取国补正当时</h1>
+        <p>绿色智能家电和3C·最高补贴2000元</p>
+      </div>
+      <div class="function-grid">
+        <div class="function-item"><div class="icon">🎁</div>优惠券</div>
+        <div class="function-item"><div class="icon">💰</div>政府补贴</div>
+        <div class="function-item"><div class="icon">⭐</div>打新股</div>
+        <div class="function-item"><div class="icon">✨</div>货心选</div>
+        <div class="function-item"><div class="icon">💎</div>基金</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 方案C: border-radius -->
+  <h2>方案C: CSS border-radius (最简单)</h2>
+  <div class="description">
+    <strong>优点:</strong> 纯CSS,兼容性最好,代码最简单<br>
+    <strong>特点:</strong> 使用border-radius创建椭圆底部
+  </div>
+  <div class="container solution-c">
+    <div class="label">方案C - border-radius</div>
+    <div class="banner-wrapper">
+      <div class="banner">
+        <h1>领取国补正当时</h1>
+        <p>绿色智能家电和3C·最高补贴2000元</p>
+      </div>
+      <div class="function-grid">
+        <div class="function-item"><div class="icon">🎁</div>优惠券</div>
+        <div class="function-item"><div class="icon">💰</div>政府补贴</div>
+        <div class="function-item"><div class="icon">⭐</div>打新股</div>
+        <div class="function-item"><div class="icon">✨</div>货心选</div>
+        <div class="function-item"><div class="icon">💎</div>基金</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 方案E: radial-gradient遮罩 -->
+  <h2>方案E: Radial Gradient 遮罩</h2>
+  <div class="description">
+    <strong>优点:</strong> 纯CSS,性能好,圆滑自然<br>
+    <strong>特点:</strong> 使用径向渐变创建圆弧遮罩
+  </div>
+  <div class="container solution-e">
+    <div class="label">方案E - Radial Gradient</div>
+    <div class="banner-wrapper">
+      <div class="banner">
+        <h1>领取国补正当时</h1>
+        <p>绿色智能家电和3C·最高补贴2000元</p>
+      </div>
+      <div class="function-grid">
+        <div class="function-item"><div class="icon">🎁</div>优惠券</div>
+        <div class="function-item"><div class="icon">💰</div>政府补贴</div>
+        <div class="function-item"><div class="icon">⭐</div>打新股</div>
+        <div class="function-item"><div class="icon">✨</div>货心选</div>
+        <div class="function-item"><div class="icon">💎</div>基金</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG定义 -->
+  <svg width="0" height="0" style="position: absolute;">
+    <defs>
+      <!-- 方案A: 三次贝塞尔曲线 - 深度40%,圆滑 -->
+      <clipPath id="smoothCurveA" clipPathUnits="objectBoundingBox">
+        <!-- 使用C命令(三次贝塞尔),两个控制点 -->
+        <path d="M 0 0 L 1 0 L 1 0.6 C 0.85 0.85, 0.65 1, 0.5 1 C 0.35 1, 0.15 0.85, 0 0.6 Z" />
+      </clipPath>
+
+      <!-- 方案B: 椭圆弧 - 完美圆滑 -->
+      <clipPath id="smoothCurveB" clipPathUnits="objectBoundingBox">
+        <!-- 使用A命令(椭圆弧) -->
+        <path d="M 0 0 L 1 0 L 1 0.6 A 0.5 0.4 0 0 1 0 0.6 Z" />
+      </clipPath>
+
+      <!-- 方案D: SVG mask -->
+      <mask id="maskCurveD" maskUnits="objectBoundingBox">
+        <rect x="0" y="0" width="1" height="0.6" fill="white"/>
+        <ellipse cx="0.5" cy="0.6" rx="0.5" ry="0.4" fill="white"/>
+      </mask>
+    </defs>
+  </svg>
+
+  <div style="text-align: center; margin-top: 40px; padding: 20px; background: white; border-radius: 8px; max-width: 375px; margin-left: auto; margin-right: auto;">
+    <h3 style="margin-bottom: 15px; color: #E94444;">💡 推荐方案</h3>
+    <p style="line-height: 1.8; color: #666;">
+      <strong>方案B (椭圆弧)</strong> 或 <strong>方案C (border-radius)</strong><br>
+      曲线最圆滑,深度明显,兼容性好
+    </p>
+  </div>
+</body>
+</html>
+

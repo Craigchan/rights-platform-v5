@@ -6,6 +6,16 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
+      component: () => import('../views/HomeFeed.vue')
+    },
+    {
+      path: '/home-v2',
+      name: 'HomeV2',
+      component: () => import('../views/HomeFeed.vue')
+    },
+    {
+      path: '/home-old',
+      name: 'HomeOld',
       component: () => import('../views/Home.vue')
     },
     {
@@ -19,9 +29,31 @@ const router = createRouter({
       component: () => import('../views/Vouchers.vue')
     },
     {
+      path: '/discover',
+      name: 'Discover',
+      component: () => import('../views/Discover.vue')
+    },
+    {
+      path: '/search',
+      name: 'Search',
+      component: () => import('../views/Search.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/mine',
       name: 'Mine',
       component: () => import('../views/Mine.vue')
+    },
+    {
+      path: '/mine-redesigned',
+      name: 'MineRedesigned',
+      component: () => import('../views/MineRedesigned.vue')
+    },
+    {
+      path: '/notifications',
+      name: 'Notifications',
+      component: () => import('../views/Notifications.vue'),
+      meta: { hideTabBar: true }
     },
     {
       path: '/earn-points',
@@ -29,8 +61,20 @@ const router = createRouter({
       component: () => import('../views/EarnPoints.vue')
     },
     {
+      path: '/check-in',
+      name: 'CheckIn',
+      component: () => import('../views/MapCheckIn.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/product-detail',
       name: 'ProductDetail',
+      component: () => import('../views/ProductDetail.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
+      path: '/product/:id',
+      name: 'ProductDetailById',
       component: () => import('../views/ProductDetail.vue'),
       meta: { hideTabBar: true }
     },
@@ -51,11 +95,13 @@ const router = createRouter({
     },
     {
       path: '/business-circle',
+      alias: '/activity-center',
       name: 'ActivityCenter',
       component: () => import('../views/ActivityCenter.vue')
     },
     {
       path: '/activity-detail/:id',
+      alias: '/activity/:id',
       name: 'ActivityDetail',
       component: () => import('../views/ActivityDetail.vue'),
       meta: { hideTabBar: true }
@@ -70,6 +116,12 @@ const router = createRouter({
       path: '/order-detail/:id',
       name: 'OrderDetail',
       component: () => import('../views/OrderDetail.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
+      path: '/cashier',
+      name: 'Cashier',
+      component: () => import('../views/Cashier.vue'),
       meta: { hideTabBar: true }
     },
     {
@@ -108,6 +160,12 @@ const router = createRouter({
       meta: { hideTabBar: true }
     },
     {
+      path: '/subsidy-help',
+      name: 'SubsidyHelp',
+      component: () => import('../views/SubsidyHelp.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/local-vouchers',
       name: 'LocalVouchers',
       component: () => import('../views/LocalVouchers.vue'),
@@ -135,6 +193,18 @@ const router = createRouter({
       path: '/merchant-offer-detail',
       name: 'MerchantOfferDetail',
       component: () => import('../views/MerchantOfferDetailEnhanced.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
+      path: '/merchant/:id',
+      name: 'MerchantDetail',
+      component: () => import('../views/MerchantDetail.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
+      path: '/merchant-payment/:merchantId',
+      name: 'MerchantPayment',
+      component: () => import('../views/MerchantPayment.vue'),
       meta: { hideTabBar: true }
     },
     {
@@ -389,10 +459,26 @@ const router = createRouter({
       meta: { hideTabBar: true }
     },
     {
-      path: '/merchant-detail/:id?',
-      name: 'MerchantDetail',
-      component: () => import('../views/MerchantDetail.vue'),
+      path: '/nearby',
+      name: 'Nearby',
+      component: () => import('../views/Nearby.vue'),
       meta: { hideTabBar: true }
+    },
+    {
+      path: '/error',
+      name: 'Error',
+      component: () => import('../views/ErrorPage.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
+      path: '/404',
+      name: 'NotFound',
+      component: () => import('../views/NotFound.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/404'
     }
   ]
 })

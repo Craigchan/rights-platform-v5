@@ -1,5 +1,12 @@
 <template>
   <div class="points-mall-page">
+    <!-- 顶部导航栏 -->
+    <div class="page-header">
+      <LeftOutlined class="back-btn" @click="goBack" />
+      <span class="page-title">积分商城</span>
+      <div class="header-placeholder"></div>
+    </div>
+
     <!-- 1. 积分总览与功能区 -->
     <div class="points-overview">
       <div class="points-total">
@@ -168,7 +175,8 @@ import {
   UnorderedListOutlined,
   HistoryOutlined,
   QuestionCircleOutlined,
-  FilterOutlined
+  FilterOutlined,
+  LeftOutlined
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
@@ -336,7 +344,7 @@ const filteredProducts = computed(() => {
 
 // 方法
 const showPointsDetail = () => {
-  message.info('积分明细功能')
+  router.push('/points-detail')
 }
 
 const showRedemptionRecord = () => {
@@ -367,6 +375,10 @@ const showFilterDrawer = () => {
   filterVisible.value = true
 }
 
+const goBack = () => {
+  router.back()
+}
+
 const applyFilter = () => {
   // 筛选应用会自动通过computed更新
 }
@@ -386,6 +398,42 @@ const goToProductDetail = (id: number) => {
   min-height: 100vh;
   background: #f5f5f5;
   padding-bottom: 80px;
+}
+
+/* 顶部导航栏 */
+.page-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.back-btn {
+  font-size: 18px;
+  color: #333;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.back-btn:active {
+  opacity: 0.6;
+}
+
+.page-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+  text-align: center;
+}
+
+.header-placeholder {
+  width: 26px;
 }
 
 /* 1. 积分总览与功能区 */

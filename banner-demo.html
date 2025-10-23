@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>轮播广告样式演示 - 权益平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 420px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 沉浸式顶部 */
+    .immersive-header {
+      background: linear-gradient(135deg, #FF6B35 0%, #FF8C61 100%);
+      padding: 16px;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .city-selector {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.15);
+      transition: all 0.3s;
+    }
+
+    .city-selector:active {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(0.95);
+    }
+
+    .search-bar {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      padding: 10px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .search-bar:active {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .search-placeholder {
+      font-size: 14px;
+      color: white;
+      opacity: 0.8;
+    }
+
+    .notification-btn {
+      position: relative;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      transition: all 0.3s;
+    }
+
+    .notification-btn:active {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(0.9);
+    }
+
+    .badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      background: #ff4d4f;
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #FF6B35;
+    }
+
+    /* 轮播容器 */
+    .carousel-container {
+      position: relative;
+      overflow: hidden;
+      padding-bottom: 20px;
+    }
+
+    .carousel-wrapper {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      padding: 0 16px;
+    }
+
+    /* 指示器 */
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding-top: 12px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.4);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      width: 20px;
+      background: white;
+    }
+
+    /* 样式1：沉浸式文字叠加 */
+    .banner-style-1 {
+      position: relative;
+      height: 180px;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s;
+      background: linear-gradient(135deg, #FF6B35 0%, #FF8C61 100%);
+    }
+
+    .banner-style-1:active {
+      transform: scale(0.98);
+    }
+
+    .decoration-circle {
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .decoration-wave {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 150px;
+      height: 150px;
+      opacity: 0.1;
+    }
+
+    .banner-content {
+      position: relative;
+      z-index: 2;
+      padding: 24px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .main-title {
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      margin: 0 0 8px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: white;
+      opacity: 0.95;
+      margin: 0 0 12px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .tag {
+      padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      font-size: 12px;
+      color: white;
+      font-weight: 500;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      color: #FF6B35;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+      align-self: flex-start;
+    }
+
+    .cta-button:active {
+      transform: scale(0.95);
+    }
+
+    /* 样式2：卡片式图文混排 */
+    .banner-style-2 {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .banner-style-2:hover {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .banner-style-2:active {
+      transform: scale(0.98);
+    }
+
+    .banner-main {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .icon-section {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .icon-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    }
+
+    .icon {
+      font-size: 40px;
+      color: white;
+      position: relative;
+      z-index: 2;
+    }
+
+    .content-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .description {
+      font-size: 14px;
+      color: #666;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .status-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .status-tag {
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-tag.primary {
+      background: #E6F7FF;
+      color: #1890FF;
+    }
+
+    .status-tag.success {
+      background: #F6FFED;
+      color: #52C41A;
+    }
+
+    .banner-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: #FAFAFA;
+      border-top: 1px solid #F0F0F0;
+    }
+
+    .footer-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #999;
+    }
+
+    .action-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #FF6B35;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .action-button:active {
+      transform: scale(0.95);
+      background: #FF5722;
+    }
+
+    /* 样式3：极简卡片式 */
+    .banner-style-3 {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .banner-style-3:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .banner-style-3:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .image-section {
+      position: relative;
+      width: 100%;
+      height: 140px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .banner-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .banner-style-3:hover .banner-image {
+      transform: scale(1.05);
+    }
+
+    .image-placeholder {
+      font-size: 60px;
+      color: white;
+      opacity: 0.8;
+    }
+
+    .badge-hot {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      z-index: 2;
+      background: linear-gradient(135deg, #FF6B35 0%, #FF8C61 100%);
+    }
+
+    .image-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
+    }
+
+    .info-section {
+      padding: 16px;
+    }
+
+    .bottom-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+
+    .meta-info {
+      display: flex;
+      gap: 12px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: #999;
+    }
+
+    .link-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: transparent;
+      color: #FF6B35;
+      border: 1px solid #FF6B35;
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .link-button:active {
+      background: #FF6B35;
+      color: white;
+      transform: scale(0.95);
+    }
+
+    /* 说明区域 */
+    .demo-info {
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .demo-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 16px;
+    }
+
+    .demo-description {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+
+    .style-label {
+      display: inline-block;
+      padding: 4px 12px;
+      background: #FF6B35;
+      color: white;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 沉浸式顶部栏 -->
+    <div class="immersive-header">
+      <div class="header-content">
+        <div class="city-selector">
+          <span>苏州</span>
+          <i class="fas fa-chevron-down" style="font-size: 10px; opacity: 0.8;"></i>
+        </div>
+        
+        <div class="search-bar">
+          <i class="fas fa-search" style="font-size: 16px; color: white; opacity: 0.9;"></i>
+          <span class="search-placeholder">搜索优惠券、商品、补贴...</span>
+        </div>
+        
+        <div class="notification-btn">
+          <i class="fas fa-bell" style="font-size: 20px; color: white;"></i>
+          <span class="badge">3</span>
+        </div>
+      </div>
+      
+      <!-- 轮播广告 -->
+      <div class="carousel-container">
+        <div class="carousel-wrapper" id="carouselWrapper">
+          <!-- 样式1：沉浸式文字叠加 -->
+          <div class="carousel-slide">
+            <div class="banner-style-1">
+              <div class="decoration-circle"></div>
+              <div class="decoration-wave">
+                <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+                  <path d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z" fill="white"/>
+                </svg>
+              </div>
+              <div class="banner-content">
+                <div class="text-content">
+                  <h2 class="main-title">家电以旧换新</h2>
+                  <p class="subtitle">最高补贴2000元</p>
+                  <div class="tags">
+                    <span class="tag">政府官方认证</span>
+                    <span class="tag">全品类支持</span>
+                  </div>
+                </div>
+                <button class="cta-button">
+                  <span>立即申请</span>
+                  <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 样式2：卡片式图文混排 -->
+          <div class="carousel-slide">
+            <div class="banner-style-2">
+              <div class="banner-main">
+                <div class="icon-section">
+                  <i class="fas fa-gift icon"></i>
+                </div>
+                <div class="content-section">
+                  <h3 class="title">政府消费券大放送</h3>
+                  <p class="description">满200减50元，全场通用</p>
+                  <div class="status-tags">
+                    <span class="status-tag primary">领券中心</span>
+                    <span class="status-tag success">已领3张</span>
+                  </div>
+                </div>
+              </div>
+              <div class="banner-footer">
+                <div class="footer-info">
+                  <i class="fas fa-clock"></i>
+                  <span>限时领取 · 先到先得</span>
+                </div>
+                <button class="action-button">
+                  立即领取
+                  <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 样式3：极简卡片式 -->
+          <div class="carousel-slide">
+            <div class="banner-style-3">
+              <div class="image-section">
+                <i class="fas fa-trophy image-placeholder"></i>
+                <div class="badge-hot">热门</div>
+                <div class="image-overlay"></div>
+              </div>
+              <div class="info-section">
+                <h3 class="title">积分抽奖活动火热进行中</h3>
+                <p class="description">100积分抽大奖 · 人人有份</p>
+                <div class="bottom-info">
+                  <div class="meta-info">
+                    <span class="meta-item">
+                      <i class="fas fa-fire"></i>
+                      1.2万人参与
+                    </span>
+                  </div>
+                  <button class="link-button">
+                    去抽奖
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="carousel-dots">
+          <div class="dot active" data-index="0"></div>
+          <div class="dot" data-index="1"></div>
+          <div class="dot" data-index="2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 说明区域 -->
+    <div class="demo-info">
+      <h2 class="demo-title">三种轮播样式说明</h2>
+      
+      <div style="margin-bottom: 20px;">
+        <span class="style-label">样式一：沉浸式文字叠加</span>
+        <p class="demo-description">
+          <strong>适用场景：</strong>政府补贴、重大活动、品牌宣传<br>
+          <strong>特点：</strong>大标题 + 渐变背景，视觉冲击力强，信息传达直接
+        </p>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <span class="style-label">样式二：卡片式图文混排</span>
+        <p class="demo-description">
+          <strong>适用场景：</strong>优惠券领取、积分活动、会员权益<br>
+          <strong>特点：</strong>左侧图标 + 右侧文字，信息层次清晰，可展示多维度信息
+        </p>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <span class="style-label">样式三：极简卡片式</span>
+        <p class="demo-description">
+          <strong>适用场景：</strong>积分商城、附近商家、推荐内容<br>
+          <strong>特点：</strong>大图展示，极简设计，类似电商卡片
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 轮播功能
+    let currentIndex = 0;
+    const wrapper = document.getElementById('carouselWrapper');
+    const dots = document.querySelectorAll('.dot');
+    const totalSlides = 3;
+
+    function goToSlide(index) {
+      currentIndex = index;
+      wrapper.style.transform = `translateX(-${index * 100}%)`;
+      
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      goToSlide(currentIndex);
+    }
+
+    // 点击指示器切换
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const index = parseInt(dot.dataset.index);
+        goToSlide(index);
+      });
+    });
+
+    // 自动轮播
+    setInterval(nextSlide, 5000);
+
+    // 触摸滑动支持
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    wrapper.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    wrapper.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      if (touchEndX < touchStartX - 50) {
+        // 向左滑动
+        nextSlide();
+      }
+      if (touchEndX > touchStartX + 50) {
+        // 向右滑动
+        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        goToSlide(currentIndex);
+      }
+    }
+  </script>
+</body>
+</html>
+

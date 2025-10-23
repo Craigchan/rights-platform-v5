@@ -262,7 +262,7 @@ const showRules = () => {
 }
 
 const goToPointsDetail = () => {
-  message.info('跳转到积分明细')
+  router.push('/points-detail')
 }
 
 const goToPointsMall = () => {

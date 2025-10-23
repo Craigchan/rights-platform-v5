@@ -194,6 +194,12 @@
       </ul>
     </div>
 
+    <!-- 悬浮购物车按钮 -->
+    <div class="floating-cart-btn" @click="goToCart" v-if="cartStore.totalItems > 0">
+      <ShoppingCartOutlined class="cart-icon" />
+      <span class="cart-count">{{ cartStore.totalItems > 99 ? '99+' : cartStore.totalItems }}</span>
+    </div>
+
     <!-- 7. 底部操作栏 -->
     <div class="bottom-action-bar">
       <div class="action-icons">
@@ -206,9 +212,15 @@
           <span>收藏</span>
         </div>
       </div>
-      <a-button type="primary" size="large" class="redeem-btn" @click="handleRedeem">
-        立即兑换 ({{ currentRedeemPoints }})
-      </a-button>
+      <div class="action-buttons">
+        <a-button size="large" class="cart-btn" @click="handleAddToCart">
+          <ShoppingCartOutlined />
+          加入购物车
+        </a-button>
+        <a-button type="primary" size="large" class="redeem-btn" @click="handleRedeem">
+          立即兑换
+        </a-button>
+      </div>
     </div>
 
     <!-- 兑换确认弹窗 -->
@@ -427,13 +439,26 @@
         </div>
       </div>
     </a-modal>
+
+    <!-- 快速结算 Modal -->
+    <CheckoutModal 
+      v-model="showQuickCheckoutModal"
+      :items="quickCheckoutItems"
+      @success="handleQuickCheckoutSuccess"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
+import { useCartStore } from '@/stores/cart'
+
+// 异步加载大型组件
+const CheckoutModal = defineAsyncComponent(() =>
+  import('@/components/CheckoutModal.vue')
+)
 import {
   LeftOutlined,
   ShareAltOutlined,
@@ -444,11 +469,13 @@ import {
   RightOutlined,
   EnvironmentOutlined,
   CheckCircleFilled,
-  PlusOutlined
+  PlusOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
+const cartStore = useCartStore()
 
 // 当前图片索引
 const currentImageIndex = ref(0)
@@ -545,6 +572,29 @@ const isFavorited = ref(false)
 
 // 兑换弹窗
 const redeemModalVisible = ref(false)
+
+// 快速结算 Modal
+const showQuickCheckoutModal = ref(false)
+
+// 快速结算商品列表
+const quickCheckoutItems = computed(() => {
+  if (!selectedColor.value || !selectedSize.value) return []
+  
+  const colorName = productData.value.colors.find(c => c.id === selectedColor.value)?.name || ''
+  const sizeName = productData.value.sizes.find(s => s.id === selectedSize.value)?.name || ''
+  
+  return [{
+    id: Date.now(),
+    productId: productData.value.id,
+    name: productData.value.name,
+    image: productImages.value[0],
+    color: productImages.value[0],
+    price: selectedExchangeType.value === 'mixed' ? productData.value.mixedCash : 0,
+    points: selectedExchangeType.value === 'mixed' ? productData.value.mixedPoints : productData.value.purePoints,
+    quantity: 1,
+    spec: `${colorName} ${sizeName}`
+  }]
+})
 
 // 优惠券相关
 const couponDrawerVisible = ref(false)
@@ -697,25 +747,79 @@ const getSizeName = (sizeId: number) => {
   return productData.value.sizes?.find(s => s.id === sizeId)?.name || ''
 }
 
+// 加入购物车
+const handleAddToCart = () => {
+  // 验证规格选择
+  if (productData.value.hasSpecs) {
+    if (productData.value.colors && !selectedColor.value) {
+      message.warning('请选择颜色')
+      return
+    }
+    if (productData.value.sizes && !selectedSize.value) {
+      message.warning('请选择尺寸')
+      return
+    }
+  }
+
+  // 获取当前选择的价格
+  const points = selectedExchangeType.value === 'pure' 
+    ? productData.value.purePoints 
+    : productData.value.mixedPoints
+  
+  const price = selectedExchangeType.value === 'pure'
+    ? 0
+    : productData.value.mixedCash
+
+  // 构建规格描述
+  let spec = ''
+  if (selectedColor.value) {
+    spec += getColorName(selectedColor.value)
+  }
+  if (selectedSize.value) {
+    spec += (spec ? ' / ' : '') + getSizeName(selectedSize.value)
+  }
+  if (!spec) {
+    spec = '默认规格'
+  }
+
+  // 加入购物车
+  cartStore.addItem({
+    id: Date.now(), // 使用时间戳作为唯一ID
+    productId: productData.value.id,
+    name: productData.value.name,
+    image: productImages.value[0],
+    price: price,
+    points: points,
+    stock: 999 // 模拟库存
+  })
+
+  // 提示成功
+  message.success({
+    content: '已加入购物车',
+    duration: 2
+  })
+}
+
 const confirmRedeem = () => {
-  // 检查必填项
-  if (productData.value.type === 'physical' && !selectedAddress.value) {
-    message.error('请选择收货地址')
+  // 检查规格选择
+  if (!selectedColor.value) {
+    message.warning('请选择颜色')
+    return
+  }
+  if (!selectedSize.value) {
+    message.warning('请选择尺寸')
     return
   }
   
-  // 模拟兑换流程
+  // 关闭兑换弹窗，打开快速结算 Modal
   redeemModalVisible.value = false
-  
-  // 如果是积分+现金，这里应该跳转到支付页面
-  if (selectedExchangeType.value === 'mixed') {
-    message.loading('正在跳转支付...', 1)
-    setTimeout(() => {
-      completeRedeem()
-    }, 1000)
-  } else {
-    completeRedeem()
-  }
+  showQuickCheckoutModal.value = true
+}
+
+// 快速结算成功回调
+const handleQuickCheckoutSuccess = (orderId: string) => {
+  orderNumber.value = orderId
+  successModalVisible.value = true
 }
 
 const completeRedeem = () => {
@@ -734,7 +838,14 @@ const continueShopping = () => {
   router.push('/points-mall')
 }
 
+const goToCart = () => {
+  router.push('/cart')
+}
+
 onMounted(() => {
+  // 初始化购物车数据
+  cartStore.init()
+  
   // 可以根据路由参数加载不同的商品数据
   const productId = route.query.id
   console.log('Product ID:', productId)
@@ -1245,12 +1356,95 @@ onMounted(() => {
   color: #FF6B35;
 }
 
+.action-buttons {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+}
+
+.cart-btn {
+  flex: 1;
+  height: 44px;
+  border-radius: 22px;
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid #FF6B35;
+  color: #FF6B35;
+}
+
+.cart-btn:hover {
+  border-color: #FF8C61;
+  color: #FF8C61;
+}
+
 .redeem-btn {
   flex: 1;
   height: 44px;
   border-radius: 22px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
+}
+
+/* 悬浮购物车按钮 */
+.floating-cart-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 100px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8C61 100%);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  transition: all 0.3s;
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-cart-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.5);
+}
+
+.floating-cart-btn:active {
+  transform: scale(0.95);
+}
+
+.floating-cart-btn .cart-icon {
+  font-size: 26px;
+  color: #fff;
+}
+
+.floating-cart-btn .cart-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  background: #FF4444;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(255, 68, 68, 0.4);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 /* 兑换确认弹窗 */

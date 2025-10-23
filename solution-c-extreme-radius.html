@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>方案C - 极限Border-Radius</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #E94444;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 375px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Banner容器 - 使用极限border-radius */
+    .banner-container {
+      position: relative;
+      background: linear-gradient(180deg, #E94444 0%, #F25555 50%, #FF6B6B 100%);
+      padding: 16px 16px 150px;
+      color: white;
+      /* 使用极限参数: 水平200%, 垂直150px */
+      border-radius: 0 0 200% 200% / 0 0 150px 150px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .location {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+    }
+
+    .notification-btn {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      color: white;
+      font-size: 18px;
+    }
+
+    .search-box {
+      background: white;
+      border-radius: 20px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .search-box input::placeholder {
+      color: #999;
+    }
+
+    .banner-content {
+      text-align: center;
+    }
+
+    .banner-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 12px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .banner-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .banner-subtitle {
+      font-size: 13px;
+      opacity: 0.95;
+      margin-bottom: 20px;
+    }
+
+    .banner-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #FFB84D 0%, #FF9A3D 100%);
+      border: none;
+      border-radius: 24px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(255,154,61,0.4);
+    }
+
+    .function-grid-container {
+      position: relative;
+      background: #f5f5f5;
+      padding: 20px 16px;
+      margin-top: -150px;
+      z-index: 10;
+    }
+
+    .function-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .function-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .function-icon {
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-size: 24px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .function-name {
+      font-size: 12px;
+      color: #333;
+    }
+
+    .function-badge {
+      position: absolute;
+      top: -4px;
+      right: 8px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .function-badge.hot {
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF4444 100%);
+    }
+
+    .function-badge.new {
+      background: linear-gradient(135deg, #FF9A3D 0%, #FF8C5A 100%);
+    }
+
+    .note {
+      max-width: 375px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .note h3 {
+      color: #E94444;
+      margin-bottom: 10px;
+    }
+
+    .note p {
+      line-height: 1.6;
+      color: #666;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 方案C - 极限Border-Radius</h1>
+
+  <div class="note">
+    <h3>✨ 方案C特点</h3>
+    <p>✓ 使用border-radius纯CSS实现</p>
+    <p>✓ 水平半径200%,垂直半径150px</p>
+    <p>✓ 极限参数,最大弧度</p>
+    <p>✓ 代码最简单,兼容性最好</p>
+  </div>
+
+  <div class="container">
+    <div class="integrated-header">
+      <div class="banner-container">
+        <div class="top-bar">
+          <div class="location">
+            <span>南京</span>
+            <span>▼</span>
+          </div>
+          <button class="notification-btn">🔔</button>
+        </div>
+
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" placeholder="搜索优惠券、商品">
+        </div>
+
+        <div class="banner-content">
+          <div class="banner-tag">国家惠民政策</div>
+          <h1 class="banner-title">领取国补正当时</h1>
+          <p class="banner-subtitle">绿色智能家电和3C·最高补贴2000元</p>
+          <button class="banner-cta-btn">
+            资格申领 →
+          </button>
+        </div>
+      </div>
+
+      <div class="function-grid-container">
+        <div class="function-grid">
+          <div class="function-item">
+            <div class="function-icon">🎁</div>
+            <div class="function-name">优惠券</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">💰</div>
+            <div class="function-name">政府补贴</div>
+            <div class="function-badge hot">HOT</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🎯</div>
+            <div class="function-name">积分任务</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🏪</div>
+            <div class="function-name">附近商家</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🎰</div>
+            <div class="function-icon">抽奖中心</div>
+          </div>
+          
+          <div class="function-item">
+            <div class="function-icon">🎪</div>
+            <div class="function-name">苏潮专区</div>
+            <div class="function-badge hot">HOT</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🧩</div>
+            <div class="function-name">券拼图</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🏛️</div>
+            <div class="function-name">老字号</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🛒</div>
+            <div class="function-name">积分商城</div>
+            <div class="function-badge new">定制</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">⋯</div>
+            <div class="function-name">更多</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <h3>📐 技术说明</h3>
+    <p><strong>Border-Radius语法:</strong></p>
+    <p>border-radius: 0 0 200% 200% / 0 0 150px 150px;</p>
+    <p>• 水平半径: 200% (左下和右下角)</p>
+    <p>• 垂直半径: 150px (左下和右下角)</p>
+    <p>• 弧度深度: 150px</p>
+    <p>• 优点: 纯CSS,无需SVG,兼容性最好</p>
+  </div>
+</body>
+</html>
+

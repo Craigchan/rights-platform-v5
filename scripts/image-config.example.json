@@ -1,0 +1,63 @@
+{
+  "cdn": {
+    "baseUrl": "https://your-bucket.oss-cn-hangzhou.aliyuncs.com",
+    "provider": "aliyun-oss",
+    "bucket": "rights-platform-images",
+    "region": "oss-cn-hangzhou"
+  },
+  "optimization": {
+    "format": "webp",
+    "quality": 85,
+    "maxWidth": 1920,
+    "maxHeight": 1080
+  },
+  "categories": {
+    "banners": {
+      "path": "banners",
+      "sizes": [
+        { "name": "mobile", "width": 750, "height": 400 },
+        { "name": "tablet", "width": 1024, "height": 500 },
+        { "name": "desktop", "width": 1920, "height": 600 }
+      ]
+    },
+    "products": {
+      "path": "products",
+      "sizes": [
+        { "name": "thumbnail", "width": 200, "height": 200 },
+        { "name": "medium", "width": 600, "height": 600 },
+        { "name": "large", "width": 1200, "height": 1200 }
+      ]
+    },
+    "categories": {
+      "path": "categories",
+      "sizes": [
+        { "name": "icon", "width": 64, "height": 64 },
+        { "name": "card", "width": 200, "height": 200 }
+      ]
+    },
+    "avatars": {
+      "path": "avatars",
+      "sizes": [
+        { "name": "small", "width": 48, "height": 48 },
+        { "name": "medium", "width": 96, "height": 96 },
+        { "name": "large", "width": 200, "height": 200 }
+      ]
+    },
+    "activities": {
+      "path": "activities",
+      "sizes": [
+        { "name": "card", "width": 400, "height": 300 },
+        { "name": "detail", "width": 800, "height": 600 }
+      ]
+    }
+  },
+  "naming": {
+    "pattern": "{category}/{name}-{size}.{ext}",
+    "examples": [
+      "banners/new-user-promo-mobile.webp",
+      "products/smart-cooker-thumbnail.webp",
+      "activities/spring-festival-card.webp"
+    ]
+  }
+}
+

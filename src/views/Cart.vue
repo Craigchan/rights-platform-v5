@@ -2,44 +2,69 @@
   <div class="cart-page">
     <!-- 顶部导航栏 -->
     <div class="top-bar">
-      <ArrowLeftOutlined class="back-icon" @click="$router.back()" />
-      <span class="title">购物车 ({{ totalItems }})</span>
-      <EditOutlined class="edit-icon" @click="toggleEditMode" />
+      <LeftOutlined class="back-icon" @click="$router.back()" />
+      <span class="title">购物车 ({{ cartStore.totalItems }})</span>
+      <DeleteOutlined 
+        class="delete-icon" 
+        @click="handleClearSelected"
+        v-if="cartStore.selectedItems.length > 0"
+      />
     </div>
 
     <!-- 购物车为空 -->
-    <div v-if="cartItems.length === 0" class="empty-cart">
-      <ShoppingCartOutlined style="font-size: 80px; color: #DDD;" />
+    <div v-if="cartStore.items.length === 0" class="empty-cart">
+      <div class="empty-icon">
+        <ShoppingCartOutlined />
+      </div>
       <p class="empty-text">购物车还是空的</p>
-      <a-button type="primary" @click="goToHome">去逛逛</a-button>
+      <p class="empty-hint">快去挑选心仪的商品吧~</p>
+      <a-button type="primary" size="large" @click="goToMall">去逛逛</a-button>
     </div>
 
     <!-- 购物车列表 -->
     <div v-else class="cart-content">
       <!-- 商品列表 -->
       <div class="cart-items">
-        <div class="cart-item" v-for="item in cartItems" :key="item.id">
+        <div class="cart-item" v-for="item in cartStore.items" :key="item.id">
+          <!-- 选择框 -->
           <a-checkbox 
-            v-model:checked="item.checked" 
-            @change="onItemCheck"
+            :checked="item.selected" 
+            @change="() => cartStore.toggleSelect(item.id)"
             class="item-checkbox"
           />
+          
+          <!-- 商品图片 -->
           <div class="item-image" @click="goToProduct(item)">
-            <img :src="item.image" :alt="item.name" />
+            <div class="image-wrapper" :style="{ background: item.image }"></div>
           </div>
+          
+          <!-- 商品信息 -->
           <div class="item-info">
             <h3 class="item-name" @click="goToProduct(item)">{{ item.name }}</h3>
-            <p class="item-spec">{{ item.spec }}</p>
-            <div class="item-tags" v-if="item.tags && item.tags.length > 0">
-              <a-tag v-for="tag in item.tags" :key="tag" color="red" size="small">{{ tag }}</a-tag>
+            
+            <!-- 价格信息 -->
+            <div class="item-price-row">
+              <div class="price-group">
+                <span class="points-price" v-if="item.points > 0">
+                  {{ item.points.toLocaleString() }} 积分
+                </span>
+                <span class="cash-price" v-if="item.price > 0">
+                  + ¥{{ item.price.toFixed(2) }}
+                </span>
+                <span class="pure-points" v-if="item.price === 0 && item.points > 0">
+                  纯积分兑换
+                </span>
+              </div>
             </div>
+            
+            <!-- 数量控制 -->
             <div class="item-footer">
-              <span class="item-price">¥{{ item.price.toFixed(2) }}</span>
               <div class="item-quantity">
                 <a-button 
                   size="small" 
                   :disabled="item.quantity <= 1"
-                  @click="decreaseQuantity(item)"
+                  @click="() => cartStore.decreaseQuantity(item.id)"
+                  class="quantity-btn"
                 >
                   <MinusOutlined />
                 </a-button>
@@ -47,76 +72,61 @@
                 <a-button 
                   size="small"
                   :disabled="item.quantity >= item.stock"
-                  @click="increaseQuantity(item)"
+                  @click="() => cartStore.increaseQuantity(item.id)"
+                  class="quantity-btn"
                 >
                   <PlusOutlined />
                 </a-button>
               </div>
+              
+              <!-- 删除按钮 -->
+              <DeleteOutlined 
+                class="item-delete-btn" 
+                @click="() => handleRemoveItem(item)"
+              />
             </div>
           </div>
-          <DeleteOutlined 
-            class="item-delete" 
-            @click="removeItem(item)"
-            v-if="isEditMode"
-          />
         </div>
       </div>
 
-      <!-- 优惠券选择 -->
-      <div class="coupon-section" @click="showCouponModal = true">
-        <div class="coupon-left">
-          <GiftOutlined style="color: #FF4444; margin-right: 8px;" />
-          <span>优惠券</span>
-        </div>
-        <div class="coupon-right">
-          <span class="coupon-text" v-if="selectedCoupon">
-            -¥{{ selectedCoupon.amount }}
-          </span>
-          <span class="coupon-text" v-else style="color: #999;">
-            {{ availableCoupons.length }}张可用
-          </span>
-          <RightOutlined style="margin-left: 8px; color: #999;" />
-        </div>
-      </div>
-
-      <!-- 积分抵扣 -->
-      <div class="points-section">
-        <div class="points-left">
-          <StarOutlined style="color: #FFD700; margin-right: 8px;" />
-          <span>积分抵扣</span>
-          <span class="points-balance">(可用{{ userPoints }}积分)</span>
-        </div>
-        <div class="points-right">
-          <a-switch 
-            v-model:checked="usePoints" 
-            @change="onPointsChange"
-            size="small"
-          />
-          <span class="points-discount" v-if="usePoints">
-            -¥{{ pointsDiscount.toFixed(2) }}
-          </span>
+      <!-- 优惠信息卡片 -->
+      <div class="benefits-card">
+        <div class="benefit-item" @click="showCouponDrawer = true">
+          <div class="benefit-left">
+            <GiftOutlined class="benefit-icon" />
+            <span class="benefit-label">优惠券</span>
+          </div>
+          <div class="benefit-right">
+            <span class="benefit-value" v-if="selectedCoupon">
+              已选 {{ selectedCoupon.discount }}元券
+            </span>
+            <span class="benefit-hint" v-else>
+              {{ availableCoupons.length }}张可用
+            </span>
+            <RightOutlined class="benefit-arrow" />
+          </div>
         </div>
       </div>
 
       <!-- 推荐商品 -->
-      <div class="recommend-section">
-        <h3 class="recommend-title">猜你喜欢</h3>
+      <div class="recommend-section" v-if="recommendItems.length > 0">
+        <div class="recommend-header">
+          <h3 class="recommend-title">
+            <FireOutlined style="color: #FF4444; margin-right: 6px;" />
+            猜你喜欢
+          </h3>
+        </div>
         <div class="recommend-grid">
           <div 
             class="recommend-item" 
             v-for="item in recommendItems" 
             :key="item.id"
-            @click="goToProduct(item)"
+            @click="goToRecommendProduct(item)"
           >
-            <div class="recommend-image">
-              <img :src="item.image" :alt="item.name" />
-            </div>
+            <div class="recommend-image" :style="{ background: item.image }"></div>
             <p class="recommend-name">{{ item.name }}</p>
             <div class="recommend-footer">
-              <span class="recommend-price">¥{{ item.price }}</span>
-              <a-button size="small" type="primary" @click.stop="addToCart(item)">
-                <PlusOutlined />
-              </a-button>
+              <span class="recommend-points">{{ item.points.toLocaleString() }}积分</span>
             </div>
           </div>
         </div>
@@ -124,753 +134,720 @@
     </div>
 
     <!-- 底部结算栏 -->
-    <div class="bottom-bar" v-if="cartItems.length > 0">
+    <div class="bottom-bar" v-if="cartStore.items.length > 0">
       <div class="bottom-left">
         <a-checkbox 
-          v-model:checked="selectAll" 
-          @change="onSelectAll"
+          :checked="cartStore.isAllSelected" 
+          @change="cartStore.toggleSelectAll"
+          class="select-all-checkbox"
         >
           全选
         </a-checkbox>
       </div>
+      
       <div class="bottom-right">
-        <div class="price-info">
-          <div class="price-row">
-            <span class="price-label">合计:</span>
-            <span class="price-value">¥{{ subtotal.toFixed(2) }}</span>
-          </div>
-          <div class="price-row discount" v-if="totalDiscount > 0">
-            <span class="price-label">优惠:</span>
-            <span class="price-value">-¥{{ totalDiscount.toFixed(2) }}</span>
-          </div>
-          <div class="price-row total">
-            <span class="price-label">实付:</span>
-            <span class="price-value final">¥{{ finalPrice.toFixed(2) }}</span>
+        <div class="price-summary">
+          <div class="summary-row">
+            <span class="summary-label">合计:</span>
+            <div class="summary-value">
+              <span class="total-points">{{ cartStore.totalPoints.toLocaleString() }}积分</span>
+              <span class="total-cash" v-if="cartStore.totalPrice > 0">
+                + ¥{{ cartStore.totalPrice.toFixed(2) }}
+              </span>
+            </div>
           </div>
         </div>
+        
         <a-button 
           type="primary" 
           size="large"
-          :disabled="checkedItems.length === 0"
-          @click="goToCheckout"
+          class="checkout-btn"
+          :disabled="cartStore.selectedItems.length === 0"
+          @click="handleCheckout"
         >
-          结算({{ checkedItems.length }})
+          结算({{ cartStore.selectedCount }})
         </a-button>
       </div>
     </div>
 
-    <!-- 优惠券选择弹窗 -->
-    <a-modal
-      v-model:open="showCouponModal"
+    <!-- 优惠券抽屉 -->
+    <a-drawer
+      v-model:open="showCouponDrawer"
       title="选择优惠券"
-      :footer="null"
-      :width="360"
+      placement="bottom"
+      height="60%"
     >
       <div class="coupon-list">
         <div 
-          class="coupon-item"
-          :class="{ 'selected': selectedCoupon?.id === coupon.id, 'disabled': !coupon.available }"
-          v-for="coupon in availableCoupons"
+          v-for="coupon in availableCoupons" 
           :key="coupon.id"
+          class="coupon-card"
+          :class="{ 'selected': selectedCoupon?.id === coupon.id }"
           @click="selectCoupon(coupon)"
         >
-          <div class="coupon-left-part">
-            <div class="coupon-amount">¥{{ coupon.amount }}</div>
-            <div class="coupon-condition">{{ coupon.condition }}</div>
-          </div>
-          <div class="coupon-right-part">
+          <div class="coupon-amount">¥{{ coupon.discount }}</div>
+          <div class="coupon-info">
             <div class="coupon-name">{{ coupon.name }}</div>
+            <div class="coupon-condition">满{{ coupon.minAmount }}元可用</div>
             <div class="coupon-expire">有效期至 {{ coupon.expireDate }}</div>
-            <CheckCircleFilled 
-              v-if="selectedCoupon?.id === coupon.id"
-              class="coupon-check"
-            />
+          </div>
+          <div class="coupon-check">
+            <CheckCircleFilled v-if="selectedCoupon?.id === coupon.id" />
           </div>
         </div>
-        <div class="coupon-item disabled" @click="selectCoupon(null)">
-          <div class="coupon-left-part">
-            <div class="coupon-amount">不使用</div>
-          </div>
-          <div class="coupon-right-part">
-            <CheckCircleFilled 
-              v-if="!selectedCoupon"
-              class="coupon-check"
-            />
+        
+        <!-- 不使用优惠券选项 -->
+        <div 
+          class="coupon-card no-coupon"
+          :class="{ 'selected': !selectedCoupon }"
+          @click="selectCoupon(null)"
+        >
+          <div class="no-coupon-text">不使用优惠券</div>
+          <div class="coupon-check">
+            <CheckCircleFilled v-if="!selectedCoupon" />
           </div>
         </div>
       </div>
-    </a-modal>
+    </a-drawer>
+
+    <!-- 结算 Modal -->
+    <CheckoutModal 
+      v-model="showCheckoutModal"
+      :items="cartStore.selectedItems"
+      @success="handleCheckoutSuccess"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, onMounted, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
+import { useCartStore } from '@/stores/cart'
+
+// 异步加载大型组件
+const CheckoutModal = defineAsyncComponent(() =>
+  import('@/components/CheckoutModal.vue')
+)
 import {
-  ArrowLeftOutlined,
-  EditOutlined,
+  LeftOutlined,
+  DeleteOutlined,
   ShoppingCartOutlined,
   MinusOutlined,
   PlusOutlined,
-  DeleteOutlined,
   GiftOutlined,
   RightOutlined,
-  StarOutlined,
-  CheckCircleFilled
+  CheckCircleFilled,
+  FireOutlined
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
+const cartStore = useCartStore()
 
-// 编辑模式
-const isEditMode = ref(false)
+// 优惠券相关
+const showCouponDrawer = ref(false)
+const selectedCoupon = ref<any>(null)
 
-// 购物车商品
-const cartItems = ref([
-  {
-    id: 1,
-    name: '南京队主场球衣 2025赛季',
-    spec: '规格: 红色/L',
-    price: 299,
-    quantity: 1,
-    stock: 10,
-    checked: true,
-    image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Cdefs%3E%3ClinearGradient id="c1" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" style="stop-color:%23FF6B35;stop-opacity:1" /%3E%3Cstop offset="100%25" style="stop-color:%23F7931E;stop-opacity:1" /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100" height="100" fill="url(%23c1)" /%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="white" font-size="14" font-weight="bold" font-family="Arial"%3E球衣%3C/text%3E%3C/svg%3E',
-    tags: ['苏超专属']
-  },
-  {
-    id: 2,
-    name: '苏超限定围巾',
-    spec: '规格: 经典款',
-    price: 89,
-    quantity: 2,
-    stock: 20,
-    checked: true,
-    image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Cdefs%3E%3ClinearGradient id="c2" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" style="stop-color:%2300A8E8;stop-opacity:1" /%3E%3Cstop offset="100%25" style="stop-color:%233A86FF;stop-opacity:1" /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100" height="100" fill="url(%23c2)" /%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="white" font-size="14" font-weight="bold" font-family="Arial"%3E围巾%3C/text%3E%3C/svg%3E',
-    tags: ['热销']
-  },
-  {
-    id: 3,
-    name: '球队徽章套装',
-    spec: '规格: 12支球队',
-    price: 59,
-    quantity: 1,
-    stock: 15,
-    checked: false,
-    image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Cdefs%3E%3ClinearGradient id="c3" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" style="stop-color:%238338EC;stop-opacity:1" /%3E%3Cstop offset="100%25" style="stop-color:%23722ED1;stop-opacity:1" /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100" height="100" fill="url(%23c3)" /%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="white" font-size="14" font-weight="bold" font-family="Arial"%3E徽章%3C/text%3E%3C/svg%3E',
-    tags: []
-  }
-])
+// 结算 Modal
+const showCheckoutModal = ref(false)
 
-// 用户积分
-const userPoints = ref(15280)
-
-// 是否使用积分
-const usePoints = ref(false)
-
-// 优惠券
+// 模拟优惠券数据
 const availableCoupons = ref([
   {
     id: 1,
     name: '全场通用券',
-    amount: 20,
-    condition: '满100可用',
-    expireDate: '2025-12-31',
-    available: true,
-    minAmount: 100
+    discount: 20,
+    minAmount: 100,
+    expireDate: '2025-12-31'
   },
   {
     id: 2,
-    name: '苏超专属券',
-    amount: 50,
-    condition: '满300可用',
-    expireDate: '2025-11-30',
-    available: true,
-    minAmount: 300
+    name: '积分商城专享',
+    discount: 50,
+    minAmount: 300,
+    expireDate: '2025-11-30'
   },
   {
     id: 3,
     name: '新人专享券',
-    amount: 30,
-    condition: '满200可用',
-    expireDate: '2025-10-31',
-    available: false,
-    minAmount: 200
+    discount: 30,
+    minAmount: 200,
+    expireDate: '2025-10-31'
   }
 ])
-
-// 选中的优惠券
-const selectedCoupon = ref<any>(null)
-
-// 优惠券弹窗
-const showCouponModal = ref(false)
 
 // 推荐商品
 const recommendItems = ref([
   {
     id: 101,
-    name: '苏超纪念帽',
-    price: 79,
-    image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150"%3E%3Cdefs%3E%3ClinearGradient id="r1" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" style="stop-color:%2352C41A;stop-opacity:1" /%3E%3Cstop offset="100%25" style="stop-color:%2373D13D;stop-opacity:1" /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="150" height="150" fill="url(%23r1)" /%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="white" font-size="16" font-weight="bold" font-family="Arial"%3E帽子%3C/text%3E%3C/svg%3E'
+    name: '小米无线充电器',
+    points: 8000,
+    image: 'linear-gradient(135deg, #667EEA 0%, #764BA2 100%)'
   },
   {
     id: 102,
-    name: '球队水杯',
-    price: 49,
-    image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150"%3E%3Cdefs%3E%3ClinearGradient id="r2" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" style="stop-color:%23FF6B35;stop-opacity:1" /%3E%3Cstop offset="100%25" style="stop-color:%23F7931E;stop-opacity:1" /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="150" height="150" fill="url(%23r2)" /%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="white" font-size="16" font-weight="bold" font-family="Arial"%3E水杯%3C/text%3E%3C/svg%3E'
+    name: '蓝牙音箱',
+    points: 15000,
+    image: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)'
   },
   {
     id: 103,
-    name: '运动背包',
-    price: 159,
-    image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150"%3E%3Cdefs%3E%3ClinearGradient id="r3" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" style="stop-color:%2300A8E8;stop-opacity:1" /%3E%3Cstop offset="100%25" style="stop-color:%233A86FF;stop-opacity:1" /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="150" height="150" fill="url(%23r3)" /%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="white" font-size="16" font-weight="bold" font-family="Arial"%3E背包%3C/text%3E%3C/svg%3E'
+    name: '运动手环',
+    points: 12000,
+    image: 'linear-gradient(135deg, #4FACFE 0%, #00F2FE 100%)'
   },
   {
     id: 104,
-    name: '球迷手环',
-    price: 29,
-    image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150"%3E%3Cdefs%3E%3ClinearGradient id="r4" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" style="stop-color:%238338EC;stop-opacity:1" /%3E%3Cstop offset="100%25" style="stop-color:%23722ED1;stop-opacity:1" /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="150" height="150" fill="url(%23r4)" /%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="white" font-size="16" font-weight="bold" font-family="Arial"%3E手环%3C/text%3E%3C/svg%3E'
+    name: '保温杯',
+    points: 6000,
+    image: 'linear-gradient(135deg, #43E97B 0%, #38F9D7 100%)'
   }
 ])
 
-// 计算属性
-const totalItems = computed(() => {
-  return cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
+// 初始化
+onMounted(() => {
+  cartStore.init()
 })
 
-const checkedItems = computed(() => {
-  return cartItems.value.filter(item => item.checked)
-})
-
-const subtotal = computed(() => {
-  return checkedItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
-})
-
-const couponDiscount = computed(() => {
-  if (!selectedCoupon.value) return 0
-  if (subtotal.value < selectedCoupon.value.minAmount) {
-    return 0
-  }
-  return selectedCoupon.value.amount
-})
-
-const pointsDiscount = computed(() => {
-  if (!usePoints.value) return 0
-  // 100积分抵扣1元,最多抵扣订单金额的10%
-  const maxDiscount = subtotal.value * 0.1
-  const pointsValue = userPoints.value / 100
-  return Math.min(maxDiscount, pointsValue)
-})
-
-const totalDiscount = computed(() => {
-  return couponDiscount.value + pointsDiscount.value
-})
-
-const finalPrice = computed(() => {
-  return Math.max(0, subtotal.value - totalDiscount.value)
-})
-
-const selectAll = computed({
-  get: () => cartItems.value.length > 0 && cartItems.value.every(item => item.checked),
-  set: (value) => {
-    cartItems.value.forEach(item => item.checked = value)
-  }
-})
-
-// 方法
-const toggleEditMode = () => {
-  isEditMode.value = !isEditMode.value
-}
-
-const onItemCheck = () => {
-  // 检查优惠券是否还可用
-  if (selectedCoupon.value && subtotal.value < selectedCoupon.value.minAmount) {
-    message.warning(`订单金额不满足优惠券使用条件(满${selectedCoupon.value.minAmount}可用)`)
-  }
-}
-
-const onSelectAll = () => {
-  // selectAll的setter会自动处理
-}
-
-const decreaseQuantity = (item: any) => {
-  if (item.quantity > 1) {
-    item.quantity--
-  }
-}
-
-const increaseQuantity = (item: any) => {
-  if (item.quantity < item.stock) {
-    item.quantity++
-  } else {
-    message.warning('库存不足')
-  }
-}
-
-const removeItem = (item: any) => {
-  const index = cartItems.value.findIndex(i => i.id === item.id)
-  if (index > -1) {
-    cartItems.value.splice(index, 1)
-    message.success('已移除')
-  }
-}
-
-const selectCoupon = (coupon: any) => {
-  if (coupon && !coupon.available) {
-    message.warning('该优惠券不可用')
-    return
-  }
-  if (coupon && subtotal.value < coupon.minAmount) {
-    message.warning(`订单金额不满足优惠券使用条件(满${coupon.minAmount}可用)`)
-    return
-  }
-  selectedCoupon.value = coupon
-  showCouponModal.value = false
-  if (coupon) {
-    message.success(`已选择优惠券: ${coupon.name}`)
-  }
-}
-
-const onPointsChange = (checked: boolean) => {
-  if (checked) {
-    message.success(`使用${Math.floor(pointsDiscount.value * 100)}积分抵扣¥${pointsDiscount.value.toFixed(2)}`)
-  }
-}
-
-const goToHome = () => {
-  router.push('/')
-}
-
+// 跳转到商品详情
 const goToProduct = (item: any) => {
-  message.info('商品详情功能开发中')
+  router.push(`/product/${item.productId}`)
 }
 
-const addToCart = (item: any) => {
-  message.success(`已添加${item.name}到购物车`)
+// 跳转到推荐商品
+const goToRecommendProduct = (item: any) => {
+  router.push(`/product/${item.id}`)
 }
 
-const goToCheckout = () => {
-  if (checkedItems.value.length === 0) {
+// 跳转到商城
+const goToMall = () => {
+  router.push('/points-mall')
+}
+
+// 删除商品
+const handleRemoveItem = (item: any) => {
+  Modal.confirm({
+    title: '确认删除',
+    content: `确定要删除"${item.name}"吗？`,
+    okText: '确定',
+    cancelText: '取消',
+    onOk: () => {
+      cartStore.removeItem(item.id)
+      message.success('已删除')
+    }
+  })
+}
+
+// 清空选中商品
+const handleClearSelected = () => {
+  Modal.confirm({
+    title: '确认清空',
+    content: `确定要删除选中的 ${cartStore.selectedItems.length} 件商品吗？`,
+    okText: '确定',
+    cancelText: '取消',
+    onOk: () => {
+      cartStore.clearSelected()
+      message.success('已清空')
+    }
+  })
+}
+
+// 选择优惠券
+const selectCoupon = (coupon: any) => {
+  selectedCoupon.value = coupon
+  showCouponDrawer.value = false
+  if (coupon) {
+    message.success(`已选择 ${coupon.name}`)
+  }
+}
+
+// 结算
+const handleCheckout = () => {
+  if (cartStore.selectedItems.length === 0) {
     message.warning('请选择要结算的商品')
     return
   }
   
-  // 保存结算信息到本地存储
-  const checkoutData = {
-    items: checkedItems.value,
-    coupon: selectedCoupon.value,
-    usePoints: usePoints.value,
-    pointsDiscount: pointsDiscount.value,
-    subtotal: subtotal.value,
-    totalDiscount: totalDiscount.value,
-    finalPrice: finalPrice.value
+  // 检查积分是否足够（这里需要从用户信息获取）
+  const userPoints = 50000 // 模拟用户积分
+  if (cartStore.totalPoints > userPoints) {
+    message.error('积分不足，请调整商品数量或去赚取积分')
+    return
   }
-  localStorage.setItem('checkoutData', JSON.stringify(checkoutData))
   
-  router.push('/checkout')
+  // 打开结算 Modal
+  showCheckoutModal.value = true
+}
+
+// 结算成功回调
+const handleCheckoutSuccess = (orderId: string) => {
+  // 清空已选中的商品
+  cartStore.selectedItems.forEach(item => {
+    cartStore.removeItem(item.id)
+  })
+  message.success('已清空已兑换的商品')
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .cart-page {
   min-height: 100vh;
-  background: #F5F5F5;
+  background: #f5f5f5;
   padding-bottom: 80px;
 }
 
+/* 顶部导航栏 */
 .top-bar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  background: #fff;
+  padding: 12px 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background: white;
-  border-bottom: 1px solid #F0F0F0;
-
-  .back-icon,
-  .edit-icon {
-    font-size: 20px;
-    cursor: pointer;
-    padding: 4px;
-    color: #333;
-  }
-
-  .title {
-    font-size: 18px;
-    font-weight: bold;
-  }
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+.back-icon,
+.delete-icon {
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+}
+
+.delete-icon {
+  color: #FF4444;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 空购物车 */
 .empty-cart {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 100px 20px;
-
-  .empty-text {
-    font-size: 16px;
-    color: #999;
-    margin: 20px 0;
-  }
 }
 
+.empty-icon {
+  font-size: 100px;
+  color: #DDD;
+  margin-bottom: 20px;
+}
+
+.empty-text {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.empty-hint {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 30px;
+}
+
+/* 购物车内容 */
 .cart-content {
   padding-bottom: 20px;
 }
 
+/* 商品列表 */
 .cart-items {
-  background: white;
-  margin-bottom: 12px;
+  background: #fff;
+  margin-bottom: 10px;
 }
 
 .cart-item {
   display: flex;
   align-items: flex-start;
-  padding: 16px;
-  border-bottom: 1px solid #F0F0F0;
-  position: relative;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  .item-checkbox {
-    margin-right: 12px;
-    margin-top: 30px;
-  }
-
-  .item-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-right: 12px;
-    flex-shrink: 0;
-    cursor: pointer;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .item-info {
-    flex: 1;
-    min-width: 0;
-
-    .item-name {
-      font-size: 15px;
-      font-weight: 500;
-      margin: 0 0 4px;
-      cursor: pointer;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-
-      &:hover {
-        color: #1890ff;
-      }
-    }
-
-    .item-spec {
-      font-size: 13px;
-      color: #999;
-      margin: 0 0 4px;
-    }
-
-    .item-tags {
-      margin-bottom: 8px;
-    }
-
-    .item-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 8px;
-
-      .item-price {
-        font-size: 18px;
-        font-weight: bold;
-        color: #FF4444;
-      }
-
-      .item-quantity {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-
-        .quantity-text {
-          min-width: 30px;
-          text-align: center;
-          font-size: 14px;
-        }
-      }
-    }
-  }
-
-  .item-delete {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    font-size: 20px;
-    color: #FF4444;
-    cursor: pointer;
-    padding: 4px;
-
-    &:hover {
-      color: #FF0000;
-    }
-  }
+  padding: 15px;
+  border-bottom: 1px solid #f5f5f5;
+  gap: 12px;
 }
 
-.coupon-section,
-.points-section {
-  background: white;
-  padding: 16px;
-  margin-bottom: 12px;
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.item-checkbox {
+  margin-top: 30px;
+}
+
+.item-image {
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.image-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+  margin: 0;
+  cursor: pointer;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-price-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.price-group {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.points-price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #FF6B35;
+}
+
+.cash-price {
+  font-size: 14px;
+  color: #FF6B35;
+}
+
+.pure-points {
+  font-size: 12px;
+  color: #52c41a;
+  background: #f6ffed;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quantity-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.quantity-text {
+  font-size: 15px;
+  color: #333;
+  min-width: 30px;
+  text-align: center;
+}
+
+.item-delete-btn {
+  font-size: 18px;
+  color: #999;
   cursor: pointer;
-
-  .coupon-left,
-  .points-left {
-    display: flex;
-    align-items: center;
-    font-size: 15px;
-
-    .points-balance {
-      font-size: 12px;
-      color: #999;
-      margin-left: 4px;
-    }
-  }
-
-  .coupon-right,
-  .points-right {
-    display: flex;
-    align-items: center;
-
-    .coupon-text {
-      font-size: 14px;
-      color: #FF4444;
-      font-weight: bold;
-    }
-
-    .points-discount {
-      font-size: 14px;
-      color: #FF4444;
-      font-weight: bold;
-      margin-left: 8px;
-    }
-  }
+  padding: 4px;
 }
 
-.points-section {
-  cursor: default;
+.item-delete-btn:hover {
+  color: #FF4444;
 }
 
+/* 优惠信息卡片 */
+.benefits-card {
+  background: #fff;
+  margin-bottom: 10px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  cursor: pointer;
+}
+
+.benefit-item:active {
+  background: #f5f5f5;
+}
+
+.benefit-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.benefit-icon {
+  font-size: 18px;
+  color: #FF6B35;
+}
+
+.benefit-label {
+  font-size: 15px;
+  color: #333;
+}
+
+.benefit-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.benefit-value {
+  font-size: 14px;
+  color: #FF6B35;
+}
+
+.benefit-hint {
+  font-size: 14px;
+  color: #999;
+}
+
+.benefit-arrow {
+  font-size: 12px;
+  color: #999;
+}
+
+/* 推荐商品 */
 .recommend-section {
-  background: white;
-  padding: 16px;
-
-  .recommend-title {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 0 0 16px;
-  }
-
-  .recommend-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-
-    .recommend-item {
-      cursor: pointer;
-
-      .recommend-image {
-        width: 100%;
-        aspect-ratio: 1;
-        border-radius: 8px;
-        overflow: hidden;
-        margin-bottom: 8px;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
-
-      .recommend-name {
-        font-size: 14px;
-        margin: 0 0 8px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .recommend-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        .recommend-price {
-          font-size: 16px;
-          font-weight: bold;
-          color: #FF4444;
-        }
-      }
-    }
-  }
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
 }
 
+.recommend-header {
+  margin-bottom: 15px;
+}
+
+.recommend-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.recommend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.recommend-item {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.recommend-item:active {
+  transform: scale(0.98);
+}
+
+.recommend-image {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.recommend-name {
+  font-size: 14px;
+  color: #333;
+  margin: 0 0 6px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+.recommend-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recommend-points {
+  font-size: 15px;
+  font-weight: 600;
+  color: #FF6B35;
+}
+
+/* 底部结算栏 */
 .bottom-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
-  border-top: 1px solid #F0F0F0;
-  padding: 12px 16px;
+  background: #fff;
+  padding: 12px 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-
-  .bottom-left {
-    flex-shrink: 0;
-  }
-
-  .bottom-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .price-info {
-      text-align: right;
-
-      .price-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        margin-bottom: 2px;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-
-        .price-label {
-          color: #666;
-        }
-
-        .price-value {
-          color: #333;
-          font-weight: 500;
-
-          &.final {
-            color: #FF4444;
-            font-size: 18px;
-            font-weight: bold;
-          }
-        }
-
-        &.discount {
-          .price-value {
-            color: #FF4444;
-          }
-        }
-
-        &.total {
-          margin-top: 4px;
-        }
-      }
-    }
-  }
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 100;
 }
 
+.bottom-left {
+  flex-shrink: 0;
+}
+
+.select-all-checkbox {
+  font-size: 14px;
+}
+
+.bottom-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.price-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.summary-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: #666;
+}
+
+.summary-value {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.total-points {
+  font-size: 18px;
+  font-weight: 700;
+  color: #FF6B35;
+}
+
+.total-cash {
+  font-size: 14px;
+  color: #FF6B35;
+}
+
+.checkout-btn {
+  height: 44px;
+  padding: 0 30px;
+  border-radius: 22px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* 优惠券抽屉 */
 .coupon-list {
-  max-height: 400px;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
-  .coupon-item {
-    display: flex;
-    background: #FAFAFA;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s;
-    position: relative;
+.coupon-card {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background: linear-gradient(135deg, #FFF5F0 0%, #FFE8DD 100%);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+}
 
-    &:hover:not(.disabled) {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+.coupon-card.selected {
+  border-color: #FF6B35;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+}
 
-    &.selected {
-      border: 2px solid #1890ff;
-      background: #E6F7FF;
-    }
+.coupon-amount {
+  font-size: 24px;
+  font-weight: 700;
+  color: #FF6B35;
+  margin-right: 15px;
+  min-width: 80px;
+  text-align: center;
+}
 
-    &.disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+.coupon-info {
+  flex: 1;
+}
 
-    .coupon-left-part {
-      background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-      color: white;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-width: 100px;
+.coupon-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
 
-      .coupon-amount {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 4px;
-      }
+.coupon-condition {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 2px;
+}
 
-      .coupon-condition {
-        font-size: 12px;
-        opacity: 0.9;
-      }
-    }
+.coupon-expire {
+  font-size: 12px;
+  color: #999;
+}
 
-    .coupon-right-part {
-      flex: 1;
-      padding: 12px;
-      position: relative;
+.coupon-check {
+  font-size: 24px;
+  color: #FF6B35;
+  margin-left: 10px;
+}
 
-      .coupon-name {
-        font-size: 15px;
-        font-weight: bold;
-        margin-bottom: 4px;
-      }
+.coupon-card.no-coupon {
+  background: #f5f5f5;
+  justify-content: center;
+}
 
-      .coupon-expire {
-        font-size: 12px;
-        color: #999;
-      }
-
-      .coupon-check {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        font-size: 20px;
-        color: #1890ff;
-      }
-    }
-  }
+.no-coupon-text {
+  font-size: 15px;
+  color: #666;
+  flex: 1;
+  text-align: center;
 }
 </style>
 
