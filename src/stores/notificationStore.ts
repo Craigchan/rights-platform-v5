@@ -77,7 +77,7 @@ export const useNotificationStore = defineStore('notification', () => {
       iconColor: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
       isRead: true,
       createTime: Date.now() - 3 * 24 * 60 * 60 * 1000,
-      targetRoute: '/check-in'
+      targetRoute: '/earn-points'
     }
   ])
 
