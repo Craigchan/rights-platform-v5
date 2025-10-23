@@ -620,7 +620,10 @@ const submitApplication = async () => {
 }
 
 const viewApplicationDetail = (application: any) => {
-  message.info(`查看申请详情：${application.policyName}`)
+  router.push({
+    path: '/subsidy-applications',
+    query: { id: application.id }
+  })
 }
 
 const viewCertificate = (application: any) => {
