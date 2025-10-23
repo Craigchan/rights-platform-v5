@@ -31,16 +31,6 @@
       </div>
     </div>
 
-    <!-- SVG定义椭圆弧线裁剪路径 -->
-    <svg width="0" height="0" style="position: absolute;" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <clipPath id="ellipseSmileCurve" clipPathUnits="objectBoundingBox">
-          <!-- 使用椭圆弧(A命令)创建完美圆滑的笑脸曲线 -->
-          <path d="M 0,0 L 1,0 L 1,0.65 A 0.5,0.35 0 0,1 0,0.65 Z" />
-        </clipPath>
-      </defs>
-    </svg>
-
     <!-- 3. 金刚区 - 直接在背景板上，不使用白色卡片 -->
     <div class="function-grid-container">
       <div class="function-grid">
@@ -211,9 +201,10 @@ const handleFunctionClick = (item: any) => {
     #F25555 50%,
     #FF6B6B 100%
   );
-  padding-bottom: 100px;
-  /* 使用clip-path和椭圆弧创建完美的笑脸曲线 */
-  clip-path: url(#ellipseSmileCurve);
+  padding: 16px 16px 100px;
+  /* 使用border-radius创建完美的笑脸曲线 */
+  border-radius: 0 0 50% 50% / 0 0 100px 100px;
+  overflow: visible;
 }
 
 

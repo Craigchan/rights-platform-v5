@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>笑脸曲线 - 最终完美版</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 375px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .integrated-header {
+      position: relative;
+      width: 100%;
+    }
+
+    /* Banner容器 - 使用clip-path裁剪出笑脸曲线 */
+    .banner-container {
+      position: relative;
+      background: linear-gradient(180deg, #E94444 0%, #F25555 50%, #FF6B6B 100%);
+      padding: 16px 16px 120px;
+      color: white;
+      clip-path: url(#smileCurve);
+    }
+
+    /* 顶部栏 */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .location {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+    }
+
+    .notification-btn {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* 搜索框 */
+    .search-box {
+      background: white;
+      border-radius: 20px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .search-box input::placeholder {
+      color: #999;
+    }
+
+    /* Banner内容 */
+    .banner-content {
+      text-align: center;
+    }
+
+    .banner-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 12px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .banner-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .banner-subtitle {
+      font-size: 13px;
+      opacity: 0.95;
+      margin-bottom: 20px;
+    }
+
+    .banner-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #FFB84D 0%, #FF9A3D 100%);
+      border: none;
+      border-radius: 24px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255,154,61,0.4);
+    }
+
+    /* 金刚区容器 */
+    .function-grid-container {
+      position: relative;
+      background: #f5f5f5;
+      padding: 20px 16px;
+      margin-top: -120px;
+      z-index: 10;
+    }
+
+    /* 金刚区 */
+    .function-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .function-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .function-icon {
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-size: 24px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .function-name {
+      font-size: 12px;
+      color: #333;
+    }
+
+    .function-badge {
+      position: absolute;
+      top: -4px;
+      right: 8px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .function-badge.hot {
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF4444 100%);
+    }
+
+    .function-badge.new {
+      background: linear-gradient(135deg, #FF9A3D 0%, #FF8C5A 100%);
+    }
+
+    .note {
+      max-width: 375px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .note h2 {
+      color: #E94444;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    .note p {
+      line-height: 1.8;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .note strong {
+      color: #E94444;
+    }
+  </style>
+</head>
+<body>
+  <div class="note">
+    <h2>🎉 笑脸曲线 - 最终完美版</h2>
+    <p><strong>方案B: 椭圆弧线</strong></p>
+    <p>✓ 使用SVG椭圆弧(A命令)创建笑脸曲线</p>
+    <p>✓ 弧度深度35%,非常明显</p>
+    <p>✓ 曲线完美圆滑,完全无棱角</p>
+    <p>✓ 金刚区完美贴合Banner</p>
+  </div>
+
+  <div class="container">
+    <div class="integrated-header">
+      <!-- Banner区域 -->
+      <div class="banner-container">
+        <!-- 顶部栏 -->
+        <div class="top-bar">
+          <div class="location">
+            <span>南京</span>
+            <span>▼</span>
+          </div>
+          <button class="notification-btn">🔔</button>
+        </div>
+
+        <!-- 搜索框 -->
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" placeholder="搜索优惠券、商品">
+        </div>
+
+        <!-- Banner内容 -->
+        <div class="banner-content">
+          <div class="banner-tag">国家惠民政策</div>
+          <h1 class="banner-title">领取国补正当时</h1>
+          <p class="banner-subtitle">绿色智能家电和3C·最高补贴2000元</p>
+          <button class="banner-cta-btn">
+            资格申领
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 金刚区 -->
+      <div class="function-grid-container">
+        <div class="function-grid">
+          <div class="function-item">
+            <div class="function-icon">🎁</div>
+            <div class="function-name">优惠券</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">💰</div>
+            <div class="function-name">政府补贴</div>
+            <div class="function-badge hot">HOT</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🎯</div>
+            <div class="function-name">积分任务</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🏪</div>
+            <div class="function-name">附近商家</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🎰</div>
+            <div class="function-name">抽奖中心</div>
+          </div>
+          
+          <div class="function-item">
+            <div class="function-icon">🎪</div>
+            <div class="function-name">苏潮专区</div>
+            <div class="function-badge hot">HOT</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🧩</div>
+            <div class="function-name">券拼图</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🏛️</div>
+            <div class="function-name">老字号</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">🛒</div>
+            <div class="function-name">积分商城</div>
+            <div class="function-badge new">定制</div>
+          </div>
+          <div class="function-item">
+            <div class="function-icon">⋯</div>
+            <div class="function-name">更多</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG定义 - 椭圆弧线裁剪路径 -->
+  <svg width="0" height="0" style="position: absolute;">
+    <defs>
+      <clipPath id="smileCurve" clipPathUnits="objectBoundingBox">
+        <path d="M 0,0 L 1,0 L 1,0.65 A 0.5,0.35 0 0,1 0,0.65 Z" />
+      </clipPath>
+    </defs>
+  </svg>
+
+  <div class="note">
+    <h2>📐 技术说明</h2>
+    <p><strong>SVG路径解析:</strong></p>
+    <p>M 0,0 - 从左上角开始</p>
+    <p>L 1,0 - 直线到右上角</p>
+    <p>L 1,0.65 - 直线向下到65%高度</p>
+    <p>A 0.5,0.35 0 0,1 0,0.65 - 椭圆弧到左侧65%高度</p>
+    <p>Z - 闭合路径</p>
+    <p></p>
+    <p><strong>参数说明:</strong></p>
+    <p>rx=0.5 (水平半径50%)</p>
+    <p>ry=0.35 (垂直半径35% - 控制弧度深度)</p>
+  </div>
+</body>
+</html>
+
