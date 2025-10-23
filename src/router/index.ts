@@ -45,6 +45,12 @@ const router = createRouter({
       component: () => import('../views/MineRedesigned.vue')
     },
     {
+      path: '/notifications',
+      name: 'Notifications',
+      component: () => import('../views/Notifications.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/earn-points',
       name: 'EarnPoints',
       component: () => import('../views/EarnPoints.vue')
@@ -188,6 +194,12 @@ const router = createRouter({
       path: '/merchant/:id',
       name: 'MerchantDetail',
       component: () => import('../views/MerchantDetail.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
+      path: '/merchant-payment/:merchantId',
+      name: 'MerchantPayment',
+      component: () => import('../views/MerchantPayment.vue'),
       meta: { hideTabBar: true }
     },
     {
@@ -446,6 +458,22 @@ const router = createRouter({
       name: 'Nearby',
       component: () => import('../views/Nearby.vue'),
       meta: { hideTabBar: true }
+    },
+    {
+      path: '/error',
+      name: 'Error',
+      component: () => import('../views/ErrorPage.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
+      path: '/404',
+      name: 'NotFound',
+      component: () => import('../views/NotFound.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/404'
     }
   ]
 })

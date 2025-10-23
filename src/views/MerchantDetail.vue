@@ -105,6 +105,25 @@
       </div>
     </div>
 
+    <!-- 惠买单区域 -->
+    <div class="payment-section">
+      <div class="section-header">
+        <div class="payment-badge">
+          <span class="badge-icon">单</span>
+          <span class="badge-text">惠买单</span>
+        </div>
+      </div>
+      <div class="payment-card">
+        <div class="payment-info">
+          <div class="payment-offer">每满20减2元</div>
+          <div class="payment-time">周一至周日 | 民生银行卡专享</div>
+        </div>
+        <a-button type="primary" class="payment-btn" @click="goToPayment">
+          买单
+        </a-button>
+      </div>
+    </div>
+
     <!-- 推荐商品 -->
     <div class="product-section">
       <div class="section-header">
@@ -786,6 +805,14 @@ const confirmUse = () => {
   }
 }
 
+// 跳转到买单页面
+const goToPayment = () => {
+  router.push({
+    name: 'MerchantPayment',
+    params: { merchantId: merchant.value.id }
+  })
+}
+
 onMounted(async () => {
   // 模拟数据加载
   await new Promise(resolve => setTimeout(resolve, 1000))
@@ -1049,6 +1076,86 @@ onUnmounted(() => {
         color: #ff4d4f;
         font-size: 14px;
         font-weight: bold;
+      }
+    }
+  }
+}
+
+// 惠买单区域样式
+.payment-section {
+  margin-bottom: 16px;
+
+  .section-header {
+    margin-bottom: 12px;
+
+    .payment-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      .badge-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #00c853 0%, #00b248 100%);
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 4px;
+      }
+
+      .badge-text {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+      }
+    }
+  }
+
+  .payment-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+    border: 1px solid #ffd699;
+    border-radius: 8px;
+    transition: all 0.3s;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+    }
+
+    .payment-info {
+      flex: 1;
+
+      .payment-offer {
+        font-size: 16px;
+        font-weight: 600;
+        color: #ff6b35;
+        margin-bottom: 4px;
+      }
+
+      .payment-time {
+        font-size: 12px;
+        color: #999;
+      }
+    }
+
+    .payment-btn {
+      background: #00c853;
+      border-color: #00c853;
+      color: #fff;
+      font-weight: 500;
+      padding: 8px 24px;
+      height: auto;
+      border-radius: 20px;
+
+      &:hover {
+        background: #00b248;
+        border-color: #00b248;
       }
     }
   }

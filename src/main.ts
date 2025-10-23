@@ -29,4 +29,22 @@ const favoritesStore = useFavoritesStore()
 cartStore.init()
 favoritesStore.init()
 
+// 全局错误处理
+app.config.errorHandler = (err, instance, info) => {
+  console.error('[Global Error]', err, info)
+  // 可以在这里上报错误到监控系统
+}
+
+// 路由错误处理
+router.onError((error) => {
+  console.error('[Router Error]', error)
+  router.push({
+    name: 'Error',
+    query: {
+      code: '500',
+      message: '路由加载失败'
+    }
+  })
+})
+
 app.mount('#app')

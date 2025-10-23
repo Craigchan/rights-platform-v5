@@ -11,6 +11,12 @@
         <SearchOutlined />
         <span>搜索优惠券、商品</span>
       </div>
+      <div class="notification-icon-wrapper" @click="goToNotifications">
+        <BellOutlined class="notification-icon" />
+        <span v-if="notificationStore.unreadCount > 0" class="notification-badge">
+          {{ notificationStore.unreadCount > 99 ? '99+' : notificationStore.unreadCount }}
+        </span>
+      </div>
     </div>
 
     <!-- 轮播广告 -->
@@ -78,10 +84,12 @@ import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
 import { useFeedStore } from '../stores/feedStore'
+import { useNotificationStore } from '../stores/notificationStore'
 import { 
   EnvironmentOutlined, 
   DownOutlined, 
   SearchOutlined,
+  BellOutlined,
   SafetyOutlined,
   TagsOutlined,
   ShopOutlined,
@@ -102,6 +110,7 @@ import PointsTaskCard from '../components/feed/PointsTaskCard.vue'
 import ActivityCard from '../components/feed/ActivityCard.vue'
 
 const router = useRouter()
+const notificationStore = useNotificationStore()
 const userStore = useUserStore()
 const feedStore = useFeedStore()
 
@@ -160,6 +169,10 @@ const selectCity = () => {
 
 const goSearch = () => {
   router.push('/search')
+}
+
+const goToNotifications = () => {
+  router.push('/notifications')
 }
 
 const goToDiscover = () => {
@@ -228,6 +241,43 @@ onMounted(() => {
   font-size: 14px;
   color: #999;
   cursor: pointer;
+}
+
+.notification-icon-wrapper {
+  position: relative;
+  cursor: pointer;
+  padding: 4px;
+  margin-right: -4px;
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+.notification-icon {
+  font-size: 20px;
+  color: #333;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: #ff4d4f;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(255, 77, 79, 0.3);
+  transform: translate(25%, -25%);
 }
 
 /* 轮播广告 */

@@ -57,6 +57,7 @@ declare module 'vue' {
     ATimePicker: typeof import('ant-design-vue/es')['TimePicker']
     AUpload: typeof import('ant-design-vue/es')['Upload']
     AvailableCoupons: typeof import('./src/components/checkout/AvailableCoupons.vue')['default']
+    BackToTop: typeof import('./src/components/BackToTop.vue')['default']
     CheckoutDrawer: typeof import('./src/components/checkout/CheckoutDrawer.vue')['default']
     CheckoutModal: typeof import('./src/components/CheckoutModal.vue')['default']
     ConfettiEffect: typeof import('./src/components/lottery/ConfettiEffect.vue')['default']

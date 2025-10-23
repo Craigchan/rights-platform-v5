@@ -17,18 +17,29 @@
     <div class="order-section">
       <div class="section-title">订单信息</div>
       <div class="order-info">
-        <div class="info-row">
-          <span class="label">订单编号</span>
-          <span class="value">{{ orderData.orderNo }}</span>
-        </div>
-        <div class="info-row">
-          <span class="label">商品数量</span>
-          <span class="value">{{ orderData.itemCount }} 件</span>
-        </div>
-        <div class="info-row">
-          <span class="label">收货地址</span>
-          <span class="value address">{{ orderData.address }}</span>
-        </div>
+        <!-- 买单订单 -->
+        <template v-if="orderData.type === 'merchant_payment'">
+          <div class="merchant-payment-info">
+            <div class="merchant-name">{{ orderData.merchantName }}</div>
+            <div class="payment-amount">¥{{ orderData.finalAmount?.toFixed(2) }}</div>
+            <div class="payment-label">实付款</div>
+          </div>
+        </template>
+        <!-- 普通订单 -->
+        <template v-else>
+          <div class="info-row">
+            <span class="label">订单编号</span>
+            <span class="value">{{ orderData.orderNo }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">商品数量</span>
+            <span class="value">{{ orderData.itemCount }} 件</span>
+          </div>
+          <div class="info-row">
+            <span class="label">收货地址</span>
+            <span class="value address">{{ orderData.address }}</span>
+          </div>
+        </template>
       </div>
     </div>
 
@@ -36,18 +47,32 @@
     <div class="amount-section">
       <div class="section-title">支付金额</div>
       <div class="amount-detail">
-        <div class="amount-row" v-if="orderData.points > 0">
-          <span class="label">积分抵扣</span>
-          <span class="value points">{{ orderData.points.toLocaleString() }} 积分</span>
-        </div>
-        <div class="amount-row" v-if="orderData.couponDiscount > 0">
-          <span class="label">优惠券</span>
-          <span class="value discount">-¥{{ orderData.couponDiscount.toFixed(2) }}</span>
-        </div>
+        <!-- 买单订单 -->
+        <template v-if="orderData.type === 'merchant_payment'">
+          <div class="amount-row">
+            <span class="label">订单金额</span>
+            <span class="value">¥{{ orderData.consumeAmount?.toFixed(2) }}</span>
+          </div>
+          <div class="amount-row" v-if="orderData.discountAmount > 0">
+            <span class="label merchant-discount">商户买单优惠</span>
+            <span class="value discount">-¥{{ orderData.discountAmount?.toFixed(2) }}</span>
+          </div>
+        </template>
+        <!-- 普通订单 -->
+        <template v-else>
+          <div class="amount-row" v-if="orderData.points > 0">
+            <span class="label">积分抵扣</span>
+            <span class="value points">{{ orderData.points.toLocaleString() }} 积分</span>
+          </div>
+          <div class="amount-row" v-if="orderData.couponDiscount > 0">
+            <span class="label">优惠券</span>
+            <span class="value discount">-¥{{ orderData.couponDiscount.toFixed(2) }}</span>
+          </div>
+        </template>
         <div class="amount-divider"></div>
         <div class="amount-row total">
           <span class="label">需要支付</span>
-          <span class="value price">¥{{ orderData.payAmount.toFixed(2) }}</span>
+          <span class="value price">¥{{ finalPayAmount.toFixed(2) }}</span>
         </div>
       </div>
     </div>
@@ -80,7 +105,7 @@
     <div class="bottom-bar">
       <div class="pay-info">
         <div class="pay-label">需支付</div>
-        <div class="pay-amount">¥{{ orderData.payAmount.toFixed(2) }}</div>
+        <div class="pay-amount">¥{{ finalPayAmount.toFixed(2) }}</div>
       </div>
       <a-button 
         type="primary" 
@@ -130,7 +155,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message, Modal } from 'ant-design-vue'
 import {
@@ -148,13 +173,28 @@ const router = useRouter()
 const route = useRoute()
 
 // 订单数据
-const orderData = ref({
+const orderData = ref<any>({
+  type: '',
   orderNo: '',
   itemCount: 0,
   address: '',
   points: 0,
   couponDiscount: 0,
-  payAmount: 0
+  payAmount: 0,
+  // 买单订单字段
+  merchantId: '',
+  merchantName: '',
+  consumeAmount: 0,
+  discountAmount: 0,
+  finalAmount: 0
+})
+
+// 计算最终支付金额
+const finalPayAmount = computed(() => {
+  if (orderData.value.type === 'merchant_payment') {
+    return orderData.value.finalAmount || 0
+  }
+  return orderData.value.payAmount || 0
 })
 
 // 倒计时（15分钟）
@@ -285,12 +325,37 @@ const backToHome = () => {
 
 onMounted(() => {
   // 从路由参数获取订单数据
-  const orderDataStr = route.query.data as string
+  const orderDataStr = route.query.data as string || route.query.orderData as string
   if (orderDataStr) {
     try {
       const data = JSON.parse(decodeURIComponent(orderDataStr))
-      orderData.value = data
+      console.log('[Cashier] 订单数据:', data)
+      
+      // 确保所有必要字段存在
+      orderData.value = {
+        type: data.type || '',
+        orderNo: data.orderNo || '',
+        itemCount: data.itemCount || 0,
+        address: data.address || '',
+        points: data.points || 0,
+        couponDiscount: data.couponDiscount || 0,
+        payAmount: data.payAmount || 0,
+        // 买单订单字段
+        merchantId: data.merchantId || '',
+        merchantName: data.merchantName || '',
+        consumeAmount: data.consumeAmount || 0,
+        discountAmount: data.discountAmount || 0,
+        finalAmount: data.finalAmount || 0
+      }
+      
+      // 如果是买单订单，生成订单编号
+      if (data.type === 'merchant_payment' && !orderData.value.orderNo) {
+        orderData.value.orderNo = `MP${Date.now()}`
+      }
+      
+      console.log('[Cashier] 处理后的订单数据:', orderData.value)
     } catch (error) {
+      console.error('[Cashier] 订单数据解析失败:', error)
       message.error('订单数据异常')
       router.back()
       return
@@ -403,6 +468,35 @@ onUnmounted(() => {
 
 .info-row .label {
   color: #999;
+}
+
+/* 买单订单信息样式 */
+.merchant-payment-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.merchant-payment-info .merchant-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.merchant-payment-info .payment-amount {
+  font-size: 48px;
+  font-weight: 600;
+  color: #00c853;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.merchant-payment-info .payment-label {
+  font-size: 14px;
+  color: #999;
   min-width: 80px;
 }
 
@@ -445,7 +539,11 @@ onUnmounted(() => {
 }
 
 .amount-row .value.discount {
-  color: #52c41a;
+  color: #ff6b35;
+}
+
+.label.merchant-discount {
+  color: #ff6b35;
 }
 
 .amount-divider {
