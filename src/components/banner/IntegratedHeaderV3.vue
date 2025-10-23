@@ -30,14 +30,7 @@
         </button>
       </div>
 
-      <!-- SVG定义笑脸曲线裁剪路径 -->
-      <svg width="0" height="0" style="position: absolute;">
-        <defs>
-          <clipPath id="smileClipPath" clipPathUnits="objectBoundingBox">
-            <path d="M 0 0 L 1 0 L 1 0.85 Q 0.5 1 0 0.85 Z" />
-          </clipPath>
-        </defs>
-      </svg>
+
     </div>
 
     <!-- 3. 金刚区 - 直接在背景板上，不使用白色卡片 -->
@@ -210,9 +203,9 @@ const handleFunctionClick = (item: any) => {
     #F25555 50%,
     #FF6B6B 100%
   );
-  padding-bottom: 60px;
-  /* 使用clip-path裁剪出底部的笑脸曲线 */
-  clip-path: url(#smileClipPath);
+  padding-bottom: 80px;
+  /* 使用border-radius创建底部圆滑的笑脸曲线 */
+  border-radius: 0 0 50% 50% / 0 0 80px 80px;
 }
 
 

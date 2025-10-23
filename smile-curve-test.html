@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>笑脸曲线深度测试</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 375px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .banner {
+      background: linear-gradient(180deg, #E94444 0%, #F25555 50%, #FF6B6B 100%);
+      padding: 60px 20px;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+
+    .banner h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .function-grid {
+      background: #f5f5f5;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-top: -60px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .function-item {
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-size: 24px;
+    }
+
+    /* 不同深度的笑脸曲线 */
+    .depth-15 { clip-path: url(#smile15); }
+    .depth-20 { clip-path: url(#smile20); }
+    .depth-25 { clip-path: url(#smile25); }
+    .depth-30 { clip-path: url(#smile30); }
+    .depth-35 { clip-path: url(#smile35); }
+
+    .label {
+      text-align: center;
+      padding: 10px;
+      background: #333;
+      color: white;
+      font-weight: bold;
+    }
+
+    .controls {
+      max-width: 375px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .controls h3 {
+      margin-bottom: 15px;
+    }
+
+    .slider-group {
+      margin-bottom: 20px;
+    }
+
+    .slider-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .value-display {
+      text-align: center;
+      font-size: 18px;
+      color: #E94444;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="text-align: center; margin-bottom: 20px;">笑脸曲线深度对比</h2>
+
+  <!-- 深度15% -->
+  <div class="container">
+    <div class="label">深度 15% (当前)</div>
+    <div class="banner depth-15">
+      <h1>领取国补正当时</h1>
+      <p>绿色智能家电和3C·最高补贴2000元</p>
+    </div>
+    <div class="function-grid">
+      <div class="function-item"><div class="icon">🎁</div>优惠券</div>
+      <div class="function-item"><div class="icon">💰</div>政府补贴</div>
+      <div class="function-item"><div class="icon">⭐</div>打新股</div>
+      <div class="function-item"><div class="icon">✨</div>货心选</div>
+      <div class="function-item"><div class="icon">💎</div>基金</div>
+    </div>
+  </div>
+
+  <!-- 深度20% -->
+  <div class="container">
+    <div class="label">深度 20%</div>
+    <div class="banner depth-20">
+      <h1>领取国补正当时</h1>
+      <p>绿色智能家电和3C·最高补贴2000元</p>
+    </div>
+    <div class="function-grid">
+      <div class="function-item"><div class="icon">🎁</div>优惠券</div>
+      <div class="function-item"><div class="icon">💰</div>政府补贴</div>
+      <div class="function-item"><div class="icon">⭐</div>打新股</div>
+      <div class="function-item"><div class="icon">✨</div>货心选</div>
+      <div class="function-item"><div class="icon">💎</div>基金</div>
+    </div>
+  </div>
+
+  <!-- 深度25% -->
+  <div class="container">
+    <div class="label">深度 25%</div>
+    <div class="banner depth-25">
+      <h1>领取国补正当时</h1>
+      <p>绿色智能家电和3C·最高补贴2000元</p>
+    </div>
+    <div class="function-grid">
+      <div class="function-item"><div class="icon">🎁</div>优惠券</div>
+      <div class="function-item"><div class="icon">💰</div>政府补贴</div>
+      <div class="function-item"><div class="icon">⭐</div>打新股</div>
+      <div class="function-item"><div class="icon">✨</div>货心选</div>
+      <div class="function-item"><div class="icon">💎</div>基金</div>
+    </div>
+  </div>
+
+  <!-- 深度30% -->
+  <div class="container">
+    <div class="label">深度 30%</div>
+    <div class="banner depth-30">
+      <h1>领取国补正当时</h1>
+      <p>绿色智能家电和3C·最高补贴2000元</p>
+    </div>
+    <div class="function-grid">
+      <div class="function-item"><div class="icon">🎁</div>优惠券</div>
+      <div class="function-item"><div class="icon">💰</div>政府补贴</div>
+      <div class="function-item"><div class="icon">⭐</div>打新股</div>
+      <div class="function-item"><div class="icon">✨</div>货心选</div>
+      <div class="function-item"><div class="icon">💎</div>基金</div>
+    </div>
+  </div>
+
+  <!-- 深度35% -->
+  <div class="container">
+    <div class="label">深度 35%</div>
+    <div class="banner depth-35">
+      <h1>领取国补正当时</h1>
+      <p>绿色智能家电和3C·最高补贴2000元</p>
+    </div>
+    <div class="function-grid">
+      <div class="function-item"><div class="icon">🎁</div>优惠券</div>
+      <div class="function-item"><div class="icon">💰</div>政府补贴</div>
+      <div class="function-item"><div class="icon">⭐</div>打新股</div>
+      <div class="function-item"><div class="icon">✨</div>货心选</div>
+      <div class="function-item"><div class="icon">💎</div>基金</div>
+    </div>
+  </div>
+
+  <!-- 自定义深度控制 -->
+  <div class="controls">
+    <h3>自定义笑脸曲线深度</h3>
+    <div class="slider-group">
+      <label for="depthSlider">曲线深度:</label>
+      <input type="range" id="depthSlider" min="10" max="50" value="25" step="1">
+      <div class="value-display"><span id="depthValue">25</span>%</div>
+    </div>
+    <div class="container" id="customContainer">
+      <div class="label">自定义深度 <span id="customLabel">25%</span></div>
+      <div class="banner" id="customBanner">
+        <h1>领取国补正当时</h1>
+        <p>绿色智能家电和3C·最高补贴2000元</p>
+      </div>
+      <div class="function-grid">
+        <div class="function-item"><div class="icon">🎁</div>优惠券</div>
+        <div class="function-item"><div class="icon">💰</div>政府补贴</div>
+        <div class="function-item"><div class="icon">⭐</div>打新股</div>
+        <div class="function-item"><div class="icon">✨</div>货心选</div>
+        <div class="function-item"><div class="icon">💎</div>基金</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG定义不同深度的裁剪路径 -->
+  <svg width="0" height="0" style="position: absolute;">
+    <defs>
+      <!-- 15% 深度 -->
+      <clipPath id="smile15" clipPathUnits="objectBoundingBox">
+        <path d="M 0 0 L 1 0 L 1 0.85 Q 0.5 1 0 0.85 Z" />
+      </clipPath>
+      <!-- 20% 深度 -->
+      <clipPath id="smile20" clipPathUnits="objectBoundingBox">
+        <path d="M 0 0 L 1 0 L 1 0.80 Q 0.5 1 0 0.80 Z" />
+      </clipPath>
+      <!-- 25% 深度 -->
+      <clipPath id="smile25" clipPathUnits="objectBoundingBox">
+        <path d="M 0 0 L 1 0 L 1 0.75 Q 0.5 1 0 0.75 Z" />
+      </clipPath>
+      <!-- 30% 深度 -->
+      <clipPath id="smile30" clipPathUnits="objectBoundingBox">
+        <path d="M 0 0 L 1 0 L 1 0.70 Q 0.5 1 0 0.70 Z" />
+      </clipPath>
+      <!-- 35% 深度 -->
+      <clipPath id="smile35" clipPathUnits="objectBoundingBox">
+        <path d="M 0 0 L 1 0 L 1 0.65 Q 0.5 1 0 0.65 Z" />
+      </clipPath>
+      <!-- 自定义深度 -->
+      <clipPath id="smileCustom" clipPathUnits="objectBoundingBox">
+        <path id="customPath" d="M 0 0 L 1 0 L 1 0.75 Q 0.5 1 0 0.75 Z" />
+      </clipPath>
+    </defs>
+  </svg>
+
+  <script>
+    const slider = document.getElementById('depthSlider');
+    const depthValue = document.getElementById('depthValue');
+    const customLabel = document.getElementById('customLabel');
+    const customBanner = document.getElementById('customBanner');
+    const customPath = document.getElementById('customPath');
+
+    slider.addEventListener('input', function() {
+      const depth = parseInt(this.value);
+      depthValue.textContent = depth;
+      customLabel.textContent = depth + '%';
+      
+      // 计算起始点 (1 - depth/100)
+      const startY = (1 - depth / 100).toFixed(2);
+      
+      // 更新SVG路径
+      const newPath = `M 0 0 L 1 0 L 1 ${startY} Q 0.5 1 0 ${startY} Z`;
+      customPath.setAttribute('d', newPath);
+      
+      // 应用clip-path
+      customBanner.style.clipPath = 'url(#smileCustom)';
+    });
+
+    // 初始化
+    customBanner.style.clipPath = 'url(#smileCustom)';
+  </script>
+</body>
+</html>
+
