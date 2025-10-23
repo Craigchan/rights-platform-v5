@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>一体化顶部设计 V3 Final - 完美笑脸弧形</title>
+  <title>一体化顶部设计 V3 - 完美笑脸弧形</title>
   <style>
     * {
       margin: 0;
@@ -17,7 +17,7 @@
       overflow-x: hidden;
     }
 
-    /* Banner容器 - 红色背景区域，底部有向下凸出的笑脸弧形 */
+    /* Banner容器 - 红色背景区域 */
     .banner-container {
       position: relative;
       background: linear-gradient(
@@ -27,12 +27,7 @@
         #FF6B6B 100%
       );
       padding-bottom: 60px;
-      /* 使用clip-path裁剪出底部的笑脸曲线 */
-      clip-path: url(#smileClipPath);
     }
-
-    /* Banner底部的笑脸弧形 - 使用SVG */
-
 
     /* 顶部栏 */
     .top-bar {
@@ -105,7 +100,7 @@
 
     /* Banner内容区域 */
     .banner-content {
-      padding: 20px 16px 60px;
+      padding: 20px 16px 50px;
       position: relative;
       z-index: 2;
     }
@@ -160,21 +155,47 @@
       transform: scale(0.95);
     }
 
-    /* 金刚区容器 - 直接在背景板上，不使用白色卡片 */
+    /* Banner底部的笑脸弧形 - 使用SVG实现 */
+    .smile-curve-svg {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      z-index: 1;
+    }
+
+    /* 金刚区容器 */
     .function-grid-container {
       position: relative;
-      background: #f5f5f5;
-      padding: 20px 16px 20px;
-      margin-top: -60px;
+      margin-top: -40px;
+      padding: 0 16px 20px;
       z-index: 10;
     }
 
-    /* 金刚区 - 直接在背景板上绘制 */
+    /* 金刚区 - 白色卡片，上边缘向上凹陷贴合Banner的凸出弧形 */
     .function-grid {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 16px;
       position: relative;
+    }
+    
+    /* 金刚区上边缘的凹陷弧形 */
+    .function-grid::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: #fff;
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+      z-index: -1;
     }
 
     .function-item {
@@ -344,7 +365,7 @@
   </style>
 </head>
 <body>
-  <!-- Banner容器 - 底部有向下凸出的笑脸弧形 -->
+  <!-- Banner容器 -->
   <div class="banner-container">
     <!-- 1. 顶部栏 -->
     <div class="top-bar">
@@ -374,17 +395,14 @@
       </button>
     </div>
 
-    <!-- SVG定义笑脸曲线裁剪路径 -->
-    <svg width="0" height="0" style="position: absolute;">
-      <defs>
-        <clipPath id="smileClipPath" clipPathUnits="objectBoundingBox">
-          <path d="M 0 0 L 1 0 L 1 0.85 Q 0.5 1 0 0.85 Z" />
-        </clipPath>
-      </defs>
+    <!-- Banner底部的笑脸弧形 - SVG，向下凸出 -->
+    <svg class="smile-curve-svg" viewBox="0 0 375 60" preserveAspectRatio="none">
+      <!-- 红色背景填充，弧形向下凸出（笑脸形状） -->
+      <path d="M 0 0 Q 187.5 60 375 0 L 375 60 L 0 60 Z" fill="#FF6B6B"/>
     </svg>
   </div>
 
-  <!-- 3. 金刚区 - 白色卡片，上边缘向上凹陷贴合Banner -->
+  <!-- 3. 金刚区 -->
   <div class="function-grid-container">
     <div class="function-grid">
       <div class="function-item">
@@ -467,20 +485,20 @@
 
   <!-- 设计说明 -->
   <div class="design-notes">
-    <h3>🎨 V3 Final完美笑脸弧形设计</h3>
+    <h3>🎨 V3完美笑脸弧形设计</h3>
     <ul>
-      <li><strong>Banner底部笑脸弧形</strong> - 红色Banner底部边框向下凸出，形成笑脸形状</li>
-      <li><strong>金刚区上沿贴合</strong> - 白色卡片上边缘向上凹陷，正好贴合Banner的凸出弧形</li>
-      <li><strong>宽度一致</strong> - 金刚区白色卡片宽度和Banner宽度完全一致</li>
-      <li><strong>无缝衔接</strong> - Banner和金刚区完美咬合，形成一体化效果</li>
-      <li><strong>使用clip-path和border-radius</strong> - 纯CSS实现，性能优秀</li>
+      <li><strong>Banner底部笑脸弧形</strong> - Banner区域底部边框是向下凹陷的笑脸形状</li>
+      <li><strong>金刚区上沿贴合</strong> - 金刚区白色卡片的上边缘正好贴合Banner的笑脸弧形</li>
+      <li><strong>SVG实现弧形</strong> - 使用SVG路径绘制完美的笑脸弧形</li>
+      <li><strong>无缝衔接</strong> - Banner和金刚区完美融合，一体化效果</li>
       <li><strong>参考东方财富</strong> - 完全复刻东方财富APP的设计风格</li>
+      <li><strong>国补场景适配</strong> - 文案和视觉完美匹配政府补贴场景</li>
     </ul>
   </div>
 
   <!-- 对比按钮 -->
   <div class="compare-buttons">
-    <button class="compare-btn active">V3 Final</button>
+    <button class="compare-btn active">V3完美版</button>
     <button class="compare-btn" onclick="window.location.href='integrated-header-demo.html'">V1版本</button>
   </div>
 

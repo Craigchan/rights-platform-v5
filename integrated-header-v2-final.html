@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>一体化顶部设计 V3 Final - 完美笑脸弧形</title>
+  <title>一体化顶部设计 V2 Final - 笑脸弧形</title>
   <style>
     * {
       margin: 0;
@@ -17,8 +17,8 @@
       overflow-x: hidden;
     }
 
-    /* Banner容器 - 红色背景区域，底部有向下凸出的笑脸弧形 */
-    .banner-container {
+    /* 一体化容器 */
+    .integrated-header {
       position: relative;
       background: linear-gradient(
         180deg,
@@ -26,13 +26,8 @@
         #F25555 50%,
         #FF6B6B 100%
       );
-      padding-bottom: 60px;
-      /* 使用clip-path裁剪出底部的笑脸曲线 */
-      clip-path: url(#smileClipPath);
+      padding-bottom: 120px;
     }
-
-    /* Banner底部的笑脸弧形 - 使用SVG */
-
 
     /* 顶部栏 */
     .top-bar {
@@ -40,6 +35,8 @@
       align-items: center;
       gap: 12px;
       padding: 12px 16px;
+      position: relative;
+      z-index: 10;
     }
 
     .location {
@@ -103,10 +100,10 @@
       border: 2px solid #E94444;
     }
 
-    /* Banner内容区域 */
-    .banner-content {
-      padding: 20px 16px 60px;
+    /* Banner区域 */
+    .banner-area {
       position: relative;
+      padding: 20px 16px 40px;
       z-index: 2;
     }
 
@@ -160,21 +157,53 @@
       transform: scale(0.95);
     }
 
-    /* 金刚区容器 - 直接在背景板上，不使用白色卡片 */
-    .function-grid-container {
-      position: relative;
+    /* 笑脸型弧形底部 */
+    .smile-curve {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 150px;
       background: #f5f5f5;
-      padding: 20px 16px 20px;
-      margin-top: -60px;
-      z-index: 10;
+      border-radius: 0 0 50% 50% / 0 0 80% 80%;
+      z-index: 1;
+    }
+    
+    /* 弧形上方的红色遮罩，形成凹陷效果 */
+    .smile-curve::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(
+        180deg,
+        #FF6B6B 0%,
+        rgba(255, 107, 107, 0) 100%
+      );
+      z-index: 2;
     }
 
-    /* 金刚区 - 直接在背景板上绘制 */
+    /* 金刚区容器 - 绝对定位在弧形上 */
+    .function-grid-wrapper {
+      position: absolute;
+      bottom: -50px;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      padding: 0 16px;
+    }
+
+    /* 金刚区 */
     .function-grid {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 16px;
-      position: relative;
     }
 
     .function-item {
@@ -234,10 +263,10 @@
       background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);
     }
 
-    /* 内容区域 */
+    /* 内容区域 - 需要留出金刚区的空间 */
     .content-area {
       background: #f5f5f5;
-      padding: 20px 16px;
+      padding: 70px 16px 20px;
     }
 
     .section-title {
@@ -344,8 +373,8 @@
   </style>
 </head>
 <body>
-  <!-- Banner容器 - 底部有向下凸出的笑脸弧形 -->
-  <div class="banner-container">
+  <!-- 一体化顶部 -->
+  <div class="integrated-header">
     <!-- 1. 顶部栏 -->
     <div class="top-bar">
       <div class="location">
@@ -363,8 +392,8 @@
       </div>
     </div>
 
-    <!-- 2. Banner内容 -->
-    <div class="banner-content">
+    <!-- 2. Banner区域 -->
+    <div class="banner-area">
       <div class="banner-hint">国家惠民政策</div>
       <h1 class="banner-main-title">领取国补正当时</h1>
       <p class="banner-subtitle">绿色智能家电和3C·最高补贴2000元</p>
@@ -374,82 +403,76 @@
       </button>
     </div>
 
-    <!-- SVG定义笑脸曲线裁剪路径 -->
-    <svg width="0" height="0" style="position: absolute;">
-      <defs>
-        <clipPath id="smileClipPath" clipPathUnits="objectBoundingBox">
-          <path d="M 0 0 L 1 0 L 1 0.85 Q 0.5 1 0 0.85 Z" />
-        </clipPath>
-      </defs>
-    </svg>
-  </div>
+    <!-- 笑脸型弧形 -->
+    <div class="smile-curve"></div>
 
-  <!-- 3. 金刚区 - 白色卡片，上边缘向上凹陷贴合Banner -->
-  <div class="function-grid-container">
-    <div class="function-grid">
-      <div class="function-item">
-        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE8D6;">
-          <span style="color: #FF8C5A;">💰</span>
+    <!-- 3. 金刚区 - 悬浮在弧形上 -->
+    <div class="function-grid-wrapper">
+      <div class="function-grid">
+        <div class="function-item">
+          <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE8D6;">
+            <span style="color: #FF8C5A;">💰</span>
+          </div>
+          <div class="function-name">省心投</div>
         </div>
-        <div class="function-name">省心投</div>
-      </div>
-      <div class="function-item">
-        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE4CC;">
-          <span style="color: #FF6B35;">🔥</span>
+        <div class="function-item">
+          <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE4CC;">
+            <span style="color: #FF6B35;">🔥</span>
+          </div>
+          <div class="function-name">天天发</div>
+          <div class="function-badge hot">HOT</div>
         </div>
-        <div class="function-name">天天发</div>
-        <div class="function-badge hot">HOT</div>
-      </div>
-      <div class="function-item">
-        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE0E0;">
-          <span style="color: #E94444;">⭐</span>
+        <div class="function-item">
+          <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE0E0;">
+            <span style="color: #E94444;">⭐</span>
+          </div>
+          <div class="function-name">打新股</div>
         </div>
-        <div class="function-name">打新股</div>
-      </div>
-      <div class="function-item">
-        <div class="function-icon-wrapper style-solid" style="--bg-color: #E8E4FF;">
-          <span style="color: #7B68EE;">✨</span>
+        <div class="function-item">
+          <div class="function-icon-wrapper style-solid" style="--bg-color: #E8E4FF;">
+            <span style="color: #7B68EE;">✨</span>
+          </div>
+          <div class="function-name">省心选</div>
         </div>
-        <div class="function-name">省心选</div>
-      </div>
-      <div class="function-item">
-        <div class="function-icon-wrapper style-solid" style="--bg-color: #E0E8FF;">
-          <span style="color: #5B8DEE;">💎</span>
+        <div class="function-item">
+          <div class="function-icon-wrapper style-solid" style="--bg-color: #E0E8FF;">
+            <span style="color: #5B8DEE;">💎</span>
+          </div>
+          <div class="function-name">基金</div>
         </div>
-        <div class="function-name">基金</div>
-      </div>
-      
-      <div class="function-item">
-        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE0E0;">
-          <span style="color: #E94444;">🔥</span>
+        
+        <div class="function-item">
+          <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE0E0;">
+            <span style="color: #E94444;">🔥</span>
+          </div>
+          <div class="function-name">热点掘金</div>
+          <div class="function-badge hot">HOT</div>
         </div>
-        <div class="function-name">热点掘金</div>
-        <div class="function-badge hot">HOT</div>
-      </div>
-      <div class="function-item">
-        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE4CC;">
-          <span style="color: #FF6B35;">💵</span>
+        <div class="function-item">
+          <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE4CC;">
+            <span style="color: #FF6B35;">💵</span>
+          </div>
+          <div class="function-name">活期</div>
         </div>
-        <div class="function-name">活期</div>
-      </div>
-      <div class="function-item">
-        <div class="function-icon-wrapper style-solid" style="--bg-color: #E8E4FF;">
-          <span style="color: #7B68EE;">⏰</span>
+        <div class="function-item">
+          <div class="function-icon-wrapper style-solid" style="--bg-color: #E8E4FF;">
+            <span style="color: #7B68EE;">⏰</span>
+          </div>
+          <div class="function-name">定期</div>
         </div>
-        <div class="function-name">定期</div>
-      </div>
-      <div class="function-item">
-        <div class="function-icon-wrapper style-solid" style="--bg-color: #E0E8FF;">
-          <span style="color: #5B8DEE;">🎯</span>
+        <div class="function-item">
+          <div class="function-icon-wrapper style-solid" style="--bg-color: #E0E8FF;">
+            <span style="color: #5B8DEE;">🎯</span>
+          </div>
+          <div class="function-name">智配管家</div>
+          <div class="function-badge new">定制</div>
         </div>
-        <div class="function-name">智配管家</div>
-        <div class="function-badge new">定制</div>
-      </div>
-      <div class="function-item">
-        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE8D6;">
-          <span style="color: #FF8C5A;">⋯</span>
+        <div class="function-item">
+          <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE8D6;">
+            <span style="color: #FF8C5A;">⋯</span>
+          </div>
+          <div class="function-name">更多</div>
         </div>
-        <div class="function-name">更多</div>
       </div>
     </div>
   </div>
@@ -467,20 +490,20 @@
 
   <!-- 设计说明 -->
   <div class="design-notes">
-    <h3>🎨 V3 Final完美笑脸弧形设计</h3>
+    <h3>🎨 V2 Final设计亮点</h3>
     <ul>
-      <li><strong>Banner底部笑脸弧形</strong> - 红色Banner底部边框向下凸出，形成笑脸形状</li>
-      <li><strong>金刚区上沿贴合</strong> - 白色卡片上边缘向上凹陷，正好贴合Banner的凸出弧形</li>
-      <li><strong>宽度一致</strong> - 金刚区白色卡片宽度和Banner宽度完全一致</li>
-      <li><strong>无缝衔接</strong> - Banner和金刚区完美咬合，形成一体化效果</li>
-      <li><strong>使用clip-path和border-radius</strong> - 纯CSS实现，性能优秀</li>
-      <li><strong>参考东方财富</strong> - 完全复刻东方财富APP的设计风格</li>
+      <li><strong>笑脸型弧形底部</strong> - Banner底部向下凹陷的弧形，像微笑</li>
+      <li><strong>金刚区悬浮</strong> - 金刚区嵌入在弧形凹陷处，形成一体化效果</li>
+      <li><strong>红色渐变背景</strong> - 参考东方财富，专业醒目</li>
+      <li><strong>大标题Banner</strong> - "领取国补正当时"，视觉冲击力强</li>
+      <li><strong>白色卡片金刚区</strong> - 浅色图标背景，清爽简洁</li>
+      <li><strong>无缝衔接</strong> - Banner、弧形、金刚区完美融合</li>
     </ul>
   </div>
 
   <!-- 对比按钮 -->
   <div class="compare-buttons">
-    <button class="compare-btn active">V3 Final</button>
+    <button class="compare-btn active">V2 Final</button>
     <button class="compare-btn" onclick="window.location.href='integrated-header-demo.html'">V1版本</button>
   </div>
 

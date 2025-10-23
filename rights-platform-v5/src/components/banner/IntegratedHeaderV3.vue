@@ -30,13 +30,15 @@
         </button>
       </div>
 
-      <!-- SVG定义笑脸曲线裁剪路径 -->
-      <svg width="0" height="0" style="position: absolute;">
+      <!-- Banner底部的笑脸弧形SVG -->
+      <svg class="smile-curve" viewBox="0 0 375 60" preserveAspectRatio="none">
         <defs>
-          <clipPath id="smileClipPath" clipPathUnits="objectBoundingBox">
-            <path d="M 0 0 L 1 0 L 1 0.85 Q 0.5 1 0 0.85 Z" />
-          </clipPath>
+          <linearGradient id="smileGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#F25555;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#FF6B6B;stop-opacity:1" />
+          </linearGradient>
         </defs>
+        <path d="M 0 0 Q 187.5 60 375 0 L 375 60 L 0 60 Z" fill="url(#smileGradient)"/>
       </svg>
     </div>
 
@@ -211,11 +213,18 @@ const handleFunctionClick = (item: any) => {
     #FF6B6B 100%
   );
   padding-bottom: 60px;
-  /* 使用clip-path裁剪出底部的笑脸曲线 */
-  clip-path: url(#smileClipPath);
 }
 
-
+/* Banner底部的笑脸弧形 - 使用SVG */
+.smile-curve {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 100;
+  pointer-events: none;
+}
 
 /* 顶部栏 */
 .top-bar {
@@ -343,11 +352,11 @@ const handleFunctionClick = (item: any) => {
   transform: scale(0.95);
 }
 
-/* 金刚区容器 - 直接在背景板上，不使用白色卡版 */
+/* 金刚区容器 - 直接在背景板上，不使用白色卡片 */
 .function-grid-container {
   position: relative;
   background: #f5f5f5;
-  padding: 20px 16px 20px;
+  padding: 20px 16px;
   margin-top: -60px;
   z-index: 10;
 }

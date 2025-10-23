@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>一体化顶部设计 - 高保真原型</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: #f5f5f5;
+      overflow-x: hidden;
+    }
+
+    /* 一体化容器 */
+    .integrated-header {
+      background: linear-gradient(
+        180deg,
+        #FF6B35 0%,
+        #FF7A47 30%,
+        #FF8C5A 60%,
+        #FFA07A 100%
+      );
+      padding-bottom: 30px;
+      position: relative;
+    }
+
+    /* 顶部栏 */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      padding-top: 12px;
+    }
+
+    .location {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .location-icon {
+      font-size: 16px;
+    }
+
+    .arrow {
+      font-size: 10px;
+      transition: transform 0.3s;
+    }
+
+    .search-box {
+      flex: 1;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .search-box:active {
+      transform: scale(0.98);
+    }
+
+    .search-icon {
+      font-size: 16px;
+      color: #999;
+    }
+
+    .search-placeholder {
+      color: #999;
+      font-size: 14px;
+    }
+
+    .notification-icon {
+      font-size: 20px;
+      color: #fff;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 8px;
+      height: 8px;
+      background: #ff4d4f;
+      border-radius: 50%;
+      border: 2px solid #FF6B35;
+    }
+
+    /* 快捷功能 */
+    .quick-actions {
+      display: flex;
+      justify-content: space-around;
+      padding: 16px 16px 20px;
+    }
+
+    .quick-action-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .quick-action-item:active {
+      transform: scale(0.95);
+    }
+
+    .quick-action-icon {
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .quick-action-name {
+      font-size: 12px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* 轮播容器 */
+    .banner-container {
+      padding: 0 16px 30px;
+      position: relative;
+    }
+
+    /* 笑脸卡片 */
+    .smile-banner-card {
+      position: relative;
+      height: 160px;
+      border-radius: 16px 16px 0 0;
+      padding: 20px;
+      overflow: visible;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);
+    }
+
+    /* 笑脸型底部边框 */
+    .smile-banner-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background: inherit;
+      border-radius: 0 0 50% 50% / 0 0 100% 100%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .banner-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-tags {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      padding: 3px 10px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      font-size: 11px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .banner-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      margin: 0 0 6px 0;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .banner-subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.95);
+      margin: 0 0 14px 0;
+    }
+
+    .banner-cta {
+      padding: 8px 20px;
+      background: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #FF6B35;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+    }
+
+    .banner-cta:active {
+      transform: scale(0.95);
+    }
+
+    .banner-decoration {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 150px;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .deco-1 {
+      width: 100px;
+      height: 100px;
+      top: -30px;
+      right: -20px;
+    }
+
+    .deco-2 {
+      width: 60px;
+      height: 60px;
+      bottom: 10px;
+      right: 30px;
+    }
+
+    /* 金刚区 */
+    .function-grid {
+      background: transparent;
+      padding: 30px 16px 20px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .function-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s;
+    }
+
+    .function-item:active {
+      transform: scale(0.95);
+    }
+
+    .function-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      transition: all 0.3s;
+    }
+
+    .function-item:active .function-icon {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .function-name {
+      font-size: 12px;
+      color: #fff;
+      font-weight: 500;
+      text-align: center;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .function-badge {
+      position: absolute;
+      top: -4px;
+      right: 8px;
+      background: #ff4d4f;
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    /* 内容区域 */
+    .content-area {
+      background: #fff;
+      padding: 20px 16px;
+      margin-top: -10px;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 16px;
+    }
+
+    .content-placeholder {
+      height: 200px;
+      background: #f5f5f5;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+    }
+
+    /* 设计说明 */
+    .design-notes {
+      background: #fff;
+      padding: 20px;
+      margin: 20px 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .design-notes h3 {
+      font-size: 16px;
+      color: #FF6B35;
+      margin-bottom: 12px;
+    }
+
+    .design-notes ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .design-notes li {
+      padding: 8px 0;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .design-notes li::before {
+      content: '✓';
+      color: #52c41a;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    /* 对比按钮 */
+    .compare-buttons {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 1000;
+    }
+
+    .compare-btn {
+      padding: 12px 24px;
+      background: #fff;
+      border: 2px solid #FF6B35;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #FF6B35;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+    }
+
+    .compare-btn.active {
+      background: #FF6B35;
+      color: #fff;
+    }
+
+    .compare-btn:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+  <!-- 一体化顶部 -->
+  <div class="integrated-header">
+    <!-- 1. 顶部栏 -->
+    <div class="top-bar">
+      <div class="location">
+        <span class="location-icon">📍</span>
+        <span>南京</span>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <span class="search-placeholder">搜索优惠券、商品</span>
+      </div>
+      <div class="notification-icon">
+        🔔
+        <div class="notification-badge"></div>
+      </div>
+    </div>
+
+    <!-- 2. 快捷功能 -->
+    <div class="quick-actions">
+      <div class="quick-action-item">
+        <div class="quick-action-icon">📷</div>
+        <div class="quick-action-name">扫一扫</div>
+      </div>
+      <div class="quick-action-item">
+        <div class="quick-action-icon">🎁</div>
+        <div class="quick-action-name">领券</div>
+      </div>
+      <div class="quick-action-item">
+        <div class="quick-action-icon">💰</div>
+        <div class="quick-action-name">积分</div>
+      </div>
+      <div class="quick-action-item">
+        <div class="quick-action-icon">💵</div>
+        <div class="quick-action-name">补贴</div>
+      </div>
+    </div>
+
+    <!-- 3. 轮播广告（笑脸卡片） -->
+    <div class="banner-container">
+      <div class="smile-banner-card">
+        <div class="banner-content">
+          <div class="banner-tags">
+            <span class="tag">政府官方认证</span>
+            <span class="tag">全品类支持</span>
+          </div>
+          <h3 class="banner-title">家电以旧换新</h3>
+          <p class="banner-subtitle">最高补贴2000元</p>
+          <button class="banner-cta">
+            立即申请 →
+          </button>
+        </div>
+        <div class="banner-decoration">
+          <div class="deco-circle deco-1"></div>
+          <div class="deco-circle deco-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 金刚区 -->
+    <div class="function-grid">
+      <div class="function-item">
+        <div class="function-icon" style="background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);">
+          🛡️
+        </div>
+        <div class="function-name">政府补贴</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon" style="background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);">
+          🎁
+        </div>
+        <div class="function-name">领券中心</div>
+        <div class="function-badge">12</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon" style="background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);">
+          🏪
+        </div>
+        <div class="function-name">积分商城</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon" style="background: linear-gradient(135deg, #FAAD14 0%, #FFC53D 100%);">
+          🏆
+        </div>
+        <div class="function-name">玩赚积分</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon" style="background: linear-gradient(135deg, #13C2C2 0%, #36CFC9 100%);">
+          📍
+        </div>
+        <div class="function-name">附近优惠</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon" style="background: linear-gradient(135deg, #F5222D 0%, #FF4D4F 100%);">
+          🔥
+        </div>
+        <div class="function-name">限时秒杀</div>
+        <div class="function-badge">HOT</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon" style="background: linear-gradient(135deg, #FA8C16 0%, #FFA940 100%);">
+          🎪
+        </div>
+        <div class="function-name">活动中心</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon" style="background: linear-gradient(135deg, #722ED1 0%, #9254DE 100%);">
+          ⏰
+        </div>
+        <div class="function-name">定期活动</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon" style="background: linear-gradient(135deg, #1890FF 0%, #40A9FF 100%);">
+          🎯
+        </div>
+        <div class="function-name">智配管家</div>
+        <div class="function-badge">定制</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon" style="background: linear-gradient(135deg, #8C8C8C 0%, #BFBFBF 100%);">
+          ⋯
+        </div>
+        <div class="function-name">更多</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 内容区域 -->
+  <div class="content-area">
+    <div class="section-title">为您推荐</div>
+    <div class="content-placeholder">
+      下方内容区域
+    </div>
+  </div>
+
+  <!-- 设计说明 -->
+  <div class="design-notes">
+    <h3>🎨 设计亮点说明</h3>
+    <ul>
+      <li><strong>笑脸型底部边框</strong> - 轮播卡片底部采用弧形设计，增强亲和力</li>
+      <li><strong>统一渐变背景</strong> - 橙红色渐变贯穿顶部、快捷功能、轮播、金刚区</li>
+      <li><strong>快捷功能前置</strong> - 高频功能（扫一扫、领券、积分、补贴）在顶部</li>
+      <li><strong>金刚区悬浮</strong> - 白色卡片图标悬浮在渐变背景上，层次分明</li>
+      <li><strong>视觉连贯性</strong> - 无缝衔接，沉浸式体验</li>
+      <li><strong>品牌识别度</strong> - 橙红色是品牌色，温暖活力</li>
+    </ul>
+  </div>
+
+  <!-- 对比按钮 -->
+  <div class="compare-buttons">
+    <button class="compare-btn active" onclick="showDesign('integrated')">一体化设计</button>
+    <button class="compare-btn" onclick="showDesign('traditional')">传统设计</button>
+  </div>
+
+  <script>
+    function showDesign(type) {
+      if (type === 'traditional') {
+        alert('传统设计对比功能开发中...\n\n传统设计的问题：\n- 顶部、轮播、金刚区分离\n- 视觉不连贯\n- 品牌识别度低\n- 空间利用率低');
+      }
+      
+      // 更新按钮状态
+      document.querySelectorAll('.compare-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+
+    // 添加交互反馈
+    document.querySelectorAll('.function-item, .quick-action-item, .search-box, .banner-cta').forEach(item => {
+      item.addEventListener('click', function() {
+        const name = this.querySelector('.function-name')?.textContent || 
+                     this.querySelector('.quick-action-name')?.textContent || 
+                     '搜索';
+        console.log('点击了:', name);
+      });
+    });
+  </script>
+</body>
+</html>
+

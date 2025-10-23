@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>一体化顶部设计 V3 Final - 完美笑脸弧形</title>
+  <title>一体化顶部设计 V2 - 参考东方财富</title>
   <style>
     * {
       margin: 0;
@@ -17,22 +17,17 @@
       overflow-x: hidden;
     }
 
-    /* Banner容器 - 红色背景区域，底部有向下凸出的笑脸弧形 */
-    .banner-container {
-      position: relative;
+    /* 一体化容器 */
+    .integrated-header {
       background: linear-gradient(
         180deg,
         #E94444 0%,
         #F25555 50%,
         #FF6B6B 100%
       );
-      padding-bottom: 60px;
-      /* 使用clip-path裁剪出底部的笑脸曲线 */
-      clip-path: url(#smileClipPath);
+      position: relative;
+      overflow: hidden;
     }
-
-    /* Banner底部的笑脸弧形 - 使用SVG */
-
 
     /* 顶部栏 */
     .top-bar {
@@ -40,6 +35,8 @@
       align-items: center;
       gap: 12px;
       padding: 12px 16px;
+      position: relative;
+      z-index: 10;
     }
 
     .location {
@@ -51,6 +48,10 @@
       font-weight: 500;
       cursor: pointer;
       flex-shrink: 0;
+    }
+
+    .location-icon {
+      font-size: 16px;
     }
 
     .arrow {
@@ -103,11 +104,11 @@
       border: 2px solid #E94444;
     }
 
-    /* Banner内容区域 */
-    .banner-content {
-      padding: 20px 16px 60px;
+    /* Banner区域 */
+    .banner-area {
       position: relative;
-      z-index: 2;
+      padding: 20px 16px 0;
+      min-height: 220px;
     }
 
     .banner-hint {
@@ -160,21 +161,75 @@
       transform: scale(0.95);
     }
 
-    /* 金刚区容器 - 直接在背景板上，不使用白色卡片 */
-    .function-grid-container {
-      position: relative;
-      background: #f5f5f5;
-      padding: 20px 16px 20px;
-      margin-top: -60px;
-      z-index: 10;
+    /* Banner装饰元素 */
+    .banner-decoration {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
     }
 
-    /* 金刚区 - 直接在背景板上绘制 */
+    .deco-wave {
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.2) 100%);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+
+    .deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .deco-circle-1 {
+      width: 120px;
+      height: 120px;
+      top: -40px;
+      right: -30px;
+    }
+
+    .deco-circle-2 {
+      width: 80px;
+      height: 80px;
+      top: 60px;
+      left: -20px;
+    }
+
+    .deco-circle-3 {
+      width: 60px;
+      height: 60px;
+      bottom: 40px;
+      right: 40px;
+    }
+
+    /* 金刚区容器 */
+    .function-section {
+      background: linear-gradient(
+        180deg,
+        #E94444 0%,
+        #F5F5F5 20%,
+        #F5F5F5 100%
+      );
+      padding: 30px 16px 20px;
+      position: relative;
+    }
+
+    /* 金刚区 */
     .function-grid {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 16px;
-      position: relative;
     }
 
     .function-item {
@@ -201,6 +256,10 @@
       font-size: 26px;
       position: relative;
       transition: all 0.3s;
+    }
+
+    .function-icon-wrapper.style-gradient {
+      background: linear-gradient(135deg, var(--start-color) 0%, var(--end-color) 100%);
     }
 
     .function-icon-wrapper.style-solid {
@@ -264,8 +323,6 @@
       justify-content: center;
       color: #999;
       font-size: 14px;
-      text-align: center;
-      line-height: 1.6;
     }
 
     /* 设计说明 */
@@ -344,12 +401,12 @@
   </style>
 </head>
 <body>
-  <!-- Banner容器 - 底部有向下凸出的笑脸弧形 -->
-  <div class="banner-container">
+  <!-- 一体化顶部 -->
+  <div class="integrated-header">
     <!-- 1. 顶部栏 -->
     <div class="top-bar">
       <div class="location">
-        <span>📍</span>
+        <span class="location-icon">📍</span>
         <span>南京</span>
         <span class="arrow">▼</span>
       </div>
@@ -363,8 +420,8 @@
       </div>
     </div>
 
-    <!-- 2. Banner内容 -->
-    <div class="banner-content">
+    <!-- 2. Banner区域 -->
+    <div class="banner-area">
       <div class="banner-hint">国家惠民政策</div>
       <h1 class="banner-main-title">领取国补正当时</h1>
       <p class="banner-subtitle">绿色智能家电和3C·最高补贴2000元</p>
@@ -372,20 +429,19 @@
         资格申领
         <span>→</span>
       </button>
+      
+      <!-- 装饰元素 -->
+      <div class="banner-decoration">
+        <div class="deco-wave"></div>
+        <div class="deco-circle deco-circle-1"></div>
+        <div class="deco-circle deco-circle-2"></div>
+        <div class="deco-circle deco-circle-3"></div>
+      </div>
     </div>
-
-    <!-- SVG定义笑脸曲线裁剪路径 -->
-    <svg width="0" height="0" style="position: absolute;">
-      <defs>
-        <clipPath id="smileClipPath" clipPathUnits="objectBoundingBox">
-          <path d="M 0 0 L 1 0 L 1 0.85 Q 0.5 1 0 0.85 Z" />
-        </clipPath>
-      </defs>
-    </svg>
   </div>
 
-  <!-- 3. 金刚区 - 白色卡片，上边缘向上凹陷贴合Banner -->
-  <div class="function-grid-container">
+  <!-- 3. 金刚区 -->
+  <div class="function-section">
     <div class="function-grid">
       <div class="function-item">
         <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE8D6;">
@@ -467,24 +523,36 @@
 
   <!-- 设计说明 -->
   <div class="design-notes">
-    <h3>🎨 V3 Final完美笑脸弧形设计</h3>
+    <h3>🎨 V2设计亮点说明</h3>
     <ul>
-      <li><strong>Banner底部笑脸弧形</strong> - 红色Banner底部边框向下凸出，形成笑脸形状</li>
-      <li><strong>金刚区上沿贴合</strong> - 白色卡片上边缘向上凹陷，正好贴合Banner的凸出弧形</li>
-      <li><strong>宽度一致</strong> - 金刚区白色卡片宽度和Banner宽度完全一致</li>
-      <li><strong>无缝衔接</strong> - Banner和金刚区完美咬合，形成一体化效果</li>
-      <li><strong>使用clip-path和border-radius</strong> - 纯CSS实现，性能优秀</li>
-      <li><strong>参考东方财富</strong> - 完全复刻东方财富APP的设计风格</li>
+      <li><strong>参考东方财富风格</strong> - 红色渐变背景 + 大标题 + 金色装饰</li>
+      <li><strong>Banner文案</strong> - "领取国补正当时，绿色智能家电和3C·最高补贴2000元"</li>
+      <li><strong>金刚区背景</strong> - 白色卡片 + 浅色图标背景，更清爽</li>
+      <li><strong>渐变过渡</strong> - 从红色渐变自然过渡到浅灰色背景</li>
+      <li><strong>视觉层次</strong> - Banner突出，金刚区清晰，内容区分明</li>
+      <li><strong>品牌调性</strong> - 红色代表热情、活力、财富增长</li>
     </ul>
   </div>
 
   <!-- 对比按钮 -->
   <div class="compare-buttons">
-    <button class="compare-btn active">V3 Final</button>
-    <button class="compare-btn" onclick="window.location.href='integrated-header-demo.html'">V1版本</button>
+    <button class="compare-btn active" onclick="showVersion('v2')">V2设计</button>
+    <button class="compare-btn" onclick="showVersion('v1')">V1设计</button>
   </div>
 
   <script>
+    function showVersion(version) {
+      if (version === 'v1') {
+        window.location.href = 'integrated-header-demo.html';
+      }
+      
+      // 更新按钮状态
+      document.querySelectorAll('.compare-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+
     // 添加交互反馈
     document.querySelectorAll('.function-item, .banner-cta-btn, .search-box').forEach(item => {
       item.addEventListener('click', function() {
