@@ -87,6 +87,17 @@ export default defineConfig({
     // 启用 CSS 代码分割
     cssCodeSplit: true
   },
+  // 开发服务器配置
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    allowedHosts: [
+      '.manus-asia.computer',
+      '.manusvm.computer',
+      'localhost',
+      '127.0.0.1'
+    ]
+  },
   // 预览配置
   preview: {
     port: 5002,

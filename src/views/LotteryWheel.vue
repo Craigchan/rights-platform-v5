@@ -365,8 +365,28 @@ const handleShare = () => {
 <style scoped lang="scss">
 .lottery-wheel-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #FFF5E5 0%, #f5f5f5 100%);
+  background: linear-gradient(180deg, #FFF9E6 0%, #FFE8B8 50%, #f5f5f5 100%);
   padding-bottom: 20px;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(255, 165, 0, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .page-header {
@@ -413,10 +433,13 @@ const handleShare = () => {
   justify-content: center;
   gap: 20px;
   padding: 20px;
-  background: white;
+  background: linear-gradient(135deg, #fff 0%, #fffbf0 100%);
   margin: 16px;
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 
+    0 4px 16px rgba(255, 165, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 2px solid rgba(255, 215, 0, 0.2);
 }
 
 .info-item {
@@ -432,13 +455,26 @@ const handleShare = () => {
 }
 
 .info-value {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
   color: #333;
+  background: linear-gradient(135deg, #FF6B35 0%, #FFA500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 
   &.highlight {
-    color: #FF6B35;
+    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: valueGlow 2s ease-in-out infinite;
   }
+}
+
+@keyframes valueGlow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
 }
 
 .info-divider {
@@ -474,7 +510,7 @@ const handleShare = () => {
 }
 
 .prize-card {
-  background: white;
+  background: linear-gradient(135deg, #fff 0%, #fffbf0 100%);
   padding: 16px 8px;
   border-radius: 12px;
   display: flex;
@@ -482,6 +518,13 @@ const handleShare = () => {
   align-items: center;
   gap: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  transition: all 0.3s;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 165, 0, 0.2);
+  }
 }
 
 .prize-icon-large {
