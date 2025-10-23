@@ -40,7 +40,7 @@ export const useNotificationStore = defineStore('notification', () => {
       iconColor: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
       isRead: false,
       createTime: Date.now() - 5 * 60 * 60 * 1000,
-      targetRoute: '/my-coupons'
+      targetRoute: '/vouchers'
     },
     {
       id: '3',
@@ -52,7 +52,7 @@ export const useNotificationStore = defineStore('notification', () => {
       iconColor: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
       isRead: false,
       createTime: Date.now() - 24 * 60 * 60 * 1000,
-      targetRoute: '/government-subsidy'
+      targetRoute: '/gov-subsidy'
     },
     {
       id: '4',
