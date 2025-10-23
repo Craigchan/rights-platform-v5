@@ -123,21 +123,21 @@ const banners = [
     id: 1,
     title: '家电以旧换新',
     subtitle: '最高补贴2000元',
-    image: 'https://picsum.photos/seed/banner-appliance/750/300',
+    image: '/images/banners/promo-1.jpg',
     route: '/gov-subsidy' // 跳转到政府补贴页面
   },
   {
     id: 2,
     title: '政府消费券',
     subtitle: '满200减50元',
-    image: 'https://picsum.photos/seed/banner-voucher/750/300',
+    image: '/images/banners/sale-1.jpg',
     route: '/voucher-center' // 跳转到领券中心
   },
   {
     id: 3,
     title: '积分抽奖',
     subtitle: '100积分抽大奖',
-    image: 'https://picsum.photos/seed/banner-lottery/750/300',
+    image: '/images/banners/lottery-1.jpg',
     route: '/lottery-center' // 跳转到抽奖中心
   }
 ]
@@ -302,6 +302,13 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: opacity 0.3s ease;
+}
+
+.banner-image[src=""],
+.banner-image:not([src]) {
+  opacity: 0.3;
 }
 
 /* 金刚区 */

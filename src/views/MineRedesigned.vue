@@ -224,7 +224,7 @@ const userInfo = ref({
   avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
   nickname: '江苏用户',
   phone: '138****8888',
-  memberLevel: 'gold', // bronze, silver, gold, diamond, platinum
+  memberLevel: 'silver', // bronze, silver, gold, diamond, platinum
   points: 12580,
   isAuthenticated: true
 })
