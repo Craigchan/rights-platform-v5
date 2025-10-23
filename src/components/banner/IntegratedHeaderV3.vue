@@ -38,6 +38,7 @@
             <stop offset="100%" style="stop-color:#FF6B6B;stop-opacity:1" />
           </linearGradient>
         </defs>
+        <!-- 绘制向下凸出的笑脸曲线填充区域 -->
         <path d="M 0 0 Q 187.5 60 375 0 L 375 60 L 0 60 Z" fill="url(#smileGradient)"/>
       </svg>
     </div>
@@ -212,13 +213,13 @@ const handleFunctionClick = (item: any) => {
     #F25555 50%,
     #FF6B6B 100%
   );
-  padding-bottom: 60px;
+  padding-bottom: 20px;
 }
 
 /* Banner底部的笑脸弧形 - 使用SVG */
 .smile-curve {
   position: absolute;
-  bottom: -1px;
+  bottom: -40px;
   left: 0;
   width: 100%;
   height: 60px;
@@ -352,12 +353,12 @@ const handleFunctionClick = (item: any) => {
   transform: scale(0.95);
 }
 
-/* 金刚区容器 - 直接在背景板上，不使用白色卡片 */
+/* 金刚区容器 - 直接在背景板上，不使用白色卡版 */
 .function-grid-container {
   position: relative;
   background: #f5f5f5;
-  padding: 20px 16px;
-  margin-top: -60px;
+  padding: 40px 16px 20px;
+  margin-top: 0;
   z-index: 10;
 }
 
