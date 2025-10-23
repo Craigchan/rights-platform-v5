@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>一体化顶部设计 V3 Final - 完美笑脸弧形</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: #f5f5f5;
+      overflow-x: hidden;
+    }
+
+    /* Banner容器 - 红色背景区域，底部有向下凸出的笑脸弧形 */
+    .banner-container {
+      position: relative;
+      background: linear-gradient(
+        180deg,
+        #E94444 0%,
+        #F25555 50%,
+        #FF6B6B 100%
+      );
+      padding-bottom: 60px;
+    }
+
+    /* Banner底部的笑脸弧形 - 使用SVG */
+    .smile-curve {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    /* 顶部栏 */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+    }
+
+    .location {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .arrow {
+      font-size: 10px;
+    }
+
+    .search-box {
+      flex: 1;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .search-box:active {
+      transform: scale(0.98);
+    }
+
+    .search-icon {
+      font-size: 16px;
+      color: #999;
+    }
+
+    .search-placeholder {
+      color: #999;
+      font-size: 14px;
+    }
+
+    .notification-icon {
+      font-size: 20px;
+      color: #fff;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      border: 2px solid #E94444;
+    }
+
+    /* Banner内容区域 */
+    .banner-content {
+      padding: 20px 16px 60px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .banner-hint {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .banner-main-title {
+      font-size: 42px;
+      font-weight: 900;
+      color: #fff;
+      text-align: center;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      font-style: italic;
+      letter-spacing: 2px;
+    }
+
+    .banner-subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.9);
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .banner-cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 200px;
+      height: 48px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);
+      border: none;
+      border-radius: 24px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+      transition: all 0.3s;
+    }
+
+    .banner-cta-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* 金刚区容器 - 直接在背景板上，不使用白色卡片 */
+    .function-grid-container {
+      position: relative;
+      background: #f5f5f5;
+      padding: 20px 16px;
+      margin-top: -60px;
+      z-index: 10;
+    }
+
+    /* 金刚区 - 直接在背景板上绘制 */
+    .function-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      position: relative;
+    }
+
+    .function-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s;
+    }
+
+    .function-item:active {
+      transform: scale(0.95);
+    }
+
+    .function-icon-wrapper {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .function-icon-wrapper.style-solid {
+      background: var(--bg-color);
+    }
+
+    .function-name {
+      font-size: 12px;
+      color: #333;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .function-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #ff4d4f;
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .function-badge.hot {
+      background: linear-gradient(135deg, #FF4D4F 0%, #FF7875 100%);
+    }
+
+    .function-badge.new {
+      background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 100%);
+    }
+
+    /* 内容区域 */
+    .content-area {
+      background: #f5f5f5;
+      padding: 20px 16px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 16px;
+    }
+
+    .content-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .content-placeholder {
+      height: 120px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* 设计说明 */
+    .design-notes {
+      background: #fff;
+      padding: 20px;
+      margin: 20px 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .design-notes h3 {
+      font-size: 16px;
+      color: #E94444;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .design-notes ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .design-notes li {
+      padding: 8px 0;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .design-notes li::before {
+      content: '✓';
+      color: #52c41a;
+      font-weight: bold;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* 对比按钮 */
+    .compare-buttons {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 1000;
+    }
+
+    .compare-btn {
+      padding: 12px 24px;
+      background: #fff;
+      border: 2px solid #E94444;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #E94444;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+    }
+
+    .compare-btn.active {
+      background: #E94444;
+      color: #fff;
+    }
+
+    .compare-btn:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+  <!-- Banner容器 - 底部有向下凸出的笑脸弧形 -->
+  <div class="banner-container">
+    <!-- 1. 顶部栏 -->
+    <div class="top-bar">
+      <div class="location">
+        <span>📍</span>
+        <span>南京</span>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <span class="search-placeholder">搜索优惠券、商品</span>
+      </div>
+      <div class="notification-icon">
+        🔔
+        <div class="notification-badge"></div>
+      </div>
+    </div>
+
+    <!-- 2. Banner内容 -->
+    <div class="banner-content">
+      <div class="banner-hint">国家惠民政策</div>
+      <h1 class="banner-main-title">领取国补正当时</h1>
+      <p class="banner-subtitle">绿色智能家电和3C·最高补贴2000元</p>
+      <button class="banner-cta-btn">
+        资格申领
+        <span>→</span>
+      </button>
+    </div>
+
+    <!-- Banner底部的笑脸弧形SVG -->
+    <svg class="smile-curve" viewBox="0 0 375 60" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="smileGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#F25555;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#FF6B6B;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <path d="M 0 0 Q 187.5 60 375 0 L 375 60 L 0 60 Z" fill="url(#smileGradient)"/>
+    </svg>
+  </div>
+
+  <!-- 3. 金刚区 - 白色卡片，上边缘向上凹陷贴合Banner -->
+  <div class="function-grid-container">
+    <div class="function-grid">
+      <div class="function-item">
+        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE8D6;">
+          <span style="color: #FF8C5A;">💰</span>
+        </div>
+        <div class="function-name">省心投</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE4CC;">
+          <span style="color: #FF6B35;">🔥</span>
+        </div>
+        <div class="function-name">天天发</div>
+        <div class="function-badge hot">HOT</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE0E0;">
+          <span style="color: #E94444;">⭐</span>
+        </div>
+        <div class="function-name">打新股</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon-wrapper style-solid" style="--bg-color: #E8E4FF;">
+          <span style="color: #7B68EE;">✨</span>
+        </div>
+        <div class="function-name">省心选</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon-wrapper style-solid" style="--bg-color: #E0E8FF;">
+          <span style="color: #5B8DEE;">💎</span>
+        </div>
+        <div class="function-name">基金</div>
+      </div>
+      
+      <div class="function-item">
+        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE0E0;">
+          <span style="color: #E94444;">🔥</span>
+        </div>
+        <div class="function-name">热点掘金</div>
+        <div class="function-badge hot">HOT</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE4CC;">
+          <span style="color: #FF6B35;">💵</span>
+        </div>
+        <div class="function-name">活期</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon-wrapper style-solid" style="--bg-color: #E8E4FF;">
+          <span style="color: #7B68EE;">⏰</span>
+        </div>
+        <div class="function-name">定期</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon-wrapper style-solid" style="--bg-color: #E0E8FF;">
+          <span style="color: #5B8DEE;">🎯</span>
+        </div>
+        <div class="function-name">智配管家</div>
+        <div class="function-badge new">定制</div>
+      </div>
+      <div class="function-item">
+        <div class="function-icon-wrapper style-solid" style="--bg-color: #FFE8D6;">
+          <span style="color: #FF8C5A;">⋯</span>
+        </div>
+        <div class="function-name">更多</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 内容区域 -->
+  <div class="content-area">
+    <div class="section-title">📋 交易日每日更新</div>
+    <div class="content-card">
+      <div class="content-placeholder">
+        直击近期市场最新风向！<br>
+        板块轮动，如何掘金风口赛道？
+      </div>
+    </div>
+  </div>
+
+  <!-- 设计说明 -->
+  <div class="design-notes">
+    <h3>🎨 V3 Final完美笑脸弧形设计</h3>
+    <ul>
+      <li><strong>Banner底部笑脸弧形</strong> - 红色Banner底部边框向下凸出，形成笑脸形状</li>
+      <li><strong>金刚区上沿贴合</strong> - 白色卡片上边缘向上凹陷，正好贴合Banner的凸出弧形</li>
+      <li><strong>宽度一致</strong> - 金刚区白色卡片宽度和Banner宽度完全一致</li>
+      <li><strong>无缝衔接</strong> - Banner和金刚区完美咬合，形成一体化效果</li>
+      <li><strong>使用clip-path和border-radius</strong> - 纯CSS实现，性能优秀</li>
+      <li><strong>参考东方财富</strong> - 完全复刻东方财富APP的设计风格</li>
+    </ul>
+  </div>
+
+  <!-- 对比按钮 -->
+  <div class="compare-buttons">
+    <button class="compare-btn active">V3 Final</button>
+    <button class="compare-btn" onclick="window.location.href='integrated-header-demo.html'">V1版本</button>
+  </div>
+
+  <script>
+    // 添加交互反馈
+    document.querySelectorAll('.function-item, .banner-cta-btn, .search-box').forEach(item => {
+      item.addEventListener('click', function() {
+        const name = this.querySelector('.function-name')?.textContent || 
+                     this.textContent.trim();
+        console.log('点击了:', name);
+      });
+    });
+  </script>
+</body>
+</html>
+
