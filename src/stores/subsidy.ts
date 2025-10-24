@@ -38,6 +38,7 @@ export interface SubsidyConfig {
 // 补贴申请
 export interface SubsidyApplication {
   id: number
+  applicationNo: string    // 申请编号
   type: SubsidyType
   title: string
   description: string
@@ -50,10 +51,13 @@ export interface SubsidyApplication {
     avatar: string
     helpedAt: string
   }[]
-  status: 'pending' | 'in_progress' | 'completed' | 'claimed'
+  status: ApplicationStatus
   createdAt: string
-  completedAt?: string
-  claimedAt?: string
+  submittedAt?: string     // 提交时间
+  approvedAt?: string      // 审核通过时间
+  completedAt?: string     // 完成时间
+  claimedAt?: string       // 领取时间
+  rejectReason?: string    // 拒绝原因
 }
 
 export const useSubsidyStore = defineStore('subsidy', () => {
@@ -64,6 +68,7 @@ export const useSubsidyStore = defineStore('subsidy', () => {
   const myApplications = ref<SubsidyApplication[]>([
     {
       id: 1,
+      applicationNo: 'BT202510170001',
       type: 'appliance',
       title: '家电以旧换新补贴',
       description: '购买新家电,旧家电回收可获得政府补贴',
@@ -91,7 +96,8 @@ export const useSubsidyStore = defineStore('subsidy', () => {
         }
       ],
       status: 'in_progress',
-      createdAt: '2025-10-17 09:00'
+      createdAt: '2025-10-17 09:00',
+      submittedAt: '2025-10-17 09:00'
     }
   ])
 
@@ -166,8 +172,15 @@ export const useSubsidyStore = defineStore('subsidy', () => {
     const subsidy = availableSubsidies.value.find(s => s.type === subsidyType)
     if (!subsidy) return null
 
+    // 生成申请编号: BT + 日期 + 4位随机数
+    const date = new Date()
+    const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '')
+    const randomNum = String(Math.floor(Math.random() * 10000)).padStart(4, '0')
+    const applicationNo = `BT${dateStr}${randomNum}`
+
     const newApp: SubsidyApplication = {
       id: Date.now(),
+      applicationNo,
       type: subsidyType,
       title: subsidy.name,
       description: subsidy.description,
@@ -176,7 +189,8 @@ export const useSubsidyStore = defineStore('subsidy', () => {
       currentHelpers: 0,
       helpers: [],
       status: 'pending',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      submittedAt: new Date().toISOString()
     }
 
     myApplications.value.unshift(newApp)
