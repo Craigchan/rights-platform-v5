@@ -149,6 +149,8 @@ export const useUserStore = defineStore('user', () => {
   const setUserInfo = (info: UserInfo) => {
     userInfo.value = info
     isLoggedIn.value = true
+    // 持久化用户信息
+    localStorage.setItem('user_info', JSON.stringify(info))
   }
   
   const setToken = (newToken: string) => {
@@ -213,6 +215,7 @@ export const useUserStore = defineStore('user', () => {
     token.value = ''
     isLoggedIn.value = false
     localStorage.removeItem('access_token')
+    localStorage.removeItem('user_info')
   }
   
   const fetchUserInfo = async () => {
@@ -304,6 +307,18 @@ export const useUserStore = defineStore('user', () => {
       token.value = savedToken
       fetchUserInfo()
     }
+    
+    // 加载保存的用户信息
+    const savedUserInfo = localStorage.getItem('user_info')
+    if (savedUserInfo) {
+      try {
+        userInfo.value = JSON.parse(savedUserInfo)
+        isLoggedIn.value = true
+      } catch (error) {
+        console.error('Failed to load user info from storage:', error)
+      }
+    }
+    
     loadPuzzlesFromStorage()
   }
   

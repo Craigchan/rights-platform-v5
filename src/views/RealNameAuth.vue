@@ -621,6 +621,8 @@ const submitAuth = () => {
         idCard: formData.value.idCard,
         verifiedAt: new Date().toISOString()
       }
+      // 触发持久化
+      userStore.setUserInfo(userStore.userInfo)
     }
     
     // 发放新人礼包积分

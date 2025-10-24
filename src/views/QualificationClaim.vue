@@ -140,7 +140,7 @@
       @ok="confirmUnbind"
       ok-text="确认解绑"
       cancel-text="取消"
-      ok-button-props="{ danger: true }"
+      :ok-button-props="{ danger: true }"
     >
       <div class="unbind-confirm">
         <div class="unbind-icon">
