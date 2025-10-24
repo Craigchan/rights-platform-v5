@@ -22,6 +22,18 @@ export type ApplicationStatus =
   | 'completed'    // 已完成
   | 'claimed'      // 已领取
 
+// 二级品类
+export interface SubsidySubCategory {
+  id: string
+  name: string
+  icon: string
+  amount: number
+  description: string
+  totalQuota: number
+  usedQuota: number
+  requiredHelpers: number
+}
+
 // 补贴配置
 export interface SubsidyConfig {
   id: string
@@ -33,6 +45,7 @@ export interface SubsidyConfig {
   description: string
   conditions: string[]
   materials: string[]
+  subCategories?: SubsidySubCategory[]  // 二级品类
 }
 
 // 补贴申请
@@ -61,8 +74,27 @@ export interface SubsidyApplication {
 }
 
 export const useSubsidyStore = defineStore('subsidy', () => {
-  // 已申领的补贴资格
-  const claimedQualifications = ref<SubsidyType[]>([])
+  // 已申领的补贴资格(二级品类ID)
+  const claimedQualifications = ref<string[]>([])
+  
+  // 解绑资格
+  const unbindQualification = (subCategoryId: string) => {
+    const index = claimedQualifications.value.indexOf(subCategoryId)
+    if (index > -1) {
+      claimedQualifications.value.splice(index, 1)
+      saveClaimedQualifications()
+    }
+  }
+
+  // 申领资格
+  const claimQualification = (subCategoryId: string) => {
+    if (!claimedQualifications.value.includes(subCategoryId)) {
+      claimedQualifications.value.push(subCategoryId)
+      saveClaimedQualifications()
+      return true
+    }
+    return false
+  }
 
   // 用户的补贴申请列表
   const myApplications = ref<SubsidyApplication[]>([
@@ -113,7 +145,39 @@ export const useSubsidyStore = defineStore('subsidy', () => {
       requiredHelpers: 10,
       description: '购买新能源汽车,旧车回收最高补贴1万元',
       totalQuota: 1000,
-      usedQuota: 234
+      usedQuota: 234,
+      subCategories: [
+        {
+          id: 'car-ev',
+          name: '纯电动汽车',
+          icon: '⚡',
+          amount: 10000,
+          description: '购买纯电动汽车,最高补贴1万元',
+          totalQuota: 500,
+          usedQuota: 123,
+          requiredHelpers: 10
+        },
+        {
+          id: 'car-phev',
+          name: '插电混动汽车',
+          icon: '🔌',
+          amount: 8000,
+          description: '购买插电混动汽车,最高补贴8000元',
+          totalQuota: 300,
+          usedQuota: 67,
+          requiredHelpers: 8
+        },
+        {
+          id: 'car-fuel',
+          name: '节能燃油汽车',
+          icon: '⛽',
+          amount: 5000,
+          description: '购买国六标准节能燃油车,最高补贴5000元',
+          totalQuota: 200,
+          usedQuota: 44,
+          requiredHelpers: 6
+        }
+      ]
     },
     {
       id: 2,
@@ -125,7 +189,49 @@ export const useSubsidyStore = defineStore('subsidy', () => {
       requiredHelpers: 5,
       description: '购买智能家电,旧家电回收最高补贴500元',
       totalQuota: 2000,
-      usedQuota: 567
+      usedQuota: 567,
+      subCategories: [
+        {
+          id: 'appliance-tv',
+          name: '智能电视',
+          icon: '📺',
+          amount: 500,
+          description: '购买4K/8K智能电视,最高补贴500元',
+          totalQuota: 600,
+          usedQuota: 178,
+          requiredHelpers: 5
+        },
+        {
+          id: 'appliance-fridge',
+          name: '智能冰箱',
+          icon: '❄️',
+          amount: 400,
+          description: '购买一级能效智能冰箱,最高补贴400元',
+          totalQuota: 500,
+          usedQuota: 145,
+          requiredHelpers: 5
+        },
+        {
+          id: 'appliance-washer',
+          name: '智能洗衣机',
+          icon: '🧹',
+          amount: 300,
+          description: '购买智能洗衣机,最高补贴300元',
+          totalQuota: 500,
+          usedQuota: 134,
+          requiredHelpers: 4
+        },
+        {
+          id: 'appliance-ac',
+          name: '智能空调',
+          icon: '❄️',
+          amount: 400,
+          description: '购买新一级能效智能空调,最高补贴400元',
+          totalQuota: 400,
+          usedQuota: 110,
+          requiredHelpers: 5
+        }
+      ]
     },
     {
       id: 3,
@@ -137,7 +243,49 @@ export const useSubsidyStore = defineStore('subsidy', () => {
       requiredHelpers: 8,
       description: '购买环保家具,最高补贴800元',
       totalQuota: 1500,
-      usedQuota: 423
+      usedQuota: 423,
+      subCategories: [
+        {
+          id: 'furniture-sofa',
+          name: '沙发',
+          icon: '🛋️',
+          amount: 800,
+          description: '购买环保沙发,最高补贴800元',
+          totalQuota: 400,
+          usedQuota: 112,
+          requiredHelpers: 8
+        },
+        {
+          id: 'furniture-bed',
+          name: '床具',
+          icon: '🛏️',
+          amount: 600,
+          description: '购买环保床具,最高补贴600元',
+          totalQuota: 400,
+          usedQuota: 98,
+          requiredHelpers: 6
+        },
+        {
+          id: 'furniture-wardrobe',
+          name: '衣柜',
+          icon: '🚪',
+          amount: 700,
+          description: '购买环保衣柜,最高补贴700元',
+          totalQuota: 400,
+          usedQuota: 123,
+          requiredHelpers: 7
+        },
+        {
+          id: 'furniture-desk',
+          name: '书桌椅',
+          icon: '🪑',
+          amount: 500,
+          description: '购买环保书桌椅,最高补贴500元',
+          totalQuota: 300,
+          usedQuota: 90,
+          requiredHelpers: 5
+        }
+      ]
     },
     {
       id: 4,
@@ -149,7 +297,49 @@ export const useSubsidyStore = defineStore('subsidy', () => {
       requiredHelpers: 10,
       description: '厨卫改造升级,最高补贴1000元',
       totalQuota: 1200,
-      usedQuota: 389
+      usedQuota: 389,
+      subCategories: [
+        {
+          id: 'renovation-kitchen',
+          name: '厨房改造',
+          icon: '🍳',
+          amount: 1000,
+          description: '厨房整体改造,最高补贴1000元',
+          totalQuota: 300,
+          usedQuota: 98,
+          requiredHelpers: 10
+        },
+        {
+          id: 'renovation-bathroom',
+          name: '卫生间改造',
+          icon: '🚿',
+          amount: 800,
+          description: '卫生间整体改造,最高补贴800元',
+          totalQuota: 300,
+          usedQuota: 87,
+          requiredHelpers: 8
+        },
+        {
+          id: 'renovation-water',
+          name: '热水器/净水器',
+          icon: '💧',
+          amount: 600,
+          description: '购买智能热水器或净水器,最高补贴600元',
+          totalQuota: 300,
+          usedQuota: 112,
+          requiredHelpers: 6
+        },
+        {
+          id: 'renovation-range',
+          name: '油烟机/灶具',
+          icon: '🔥',
+          amount: 500,
+          description: '购买智能油烟机或灶具,最高补贴500元',
+          totalQuota: 300,
+          usedQuota: 92,
+          requiredHelpers: 5
+        }
+      ]
     }
   ])
 
@@ -257,13 +447,18 @@ export const useSubsidyStore = defineStore('subsidy', () => {
     return true
   }
 
+  // 保存已申领资格到localStorage
+  const saveClaimedQualifications = () => {
+    localStorage.setItem('claimed_qualifications', JSON.stringify(claimedQualifications.value))
+  }
+
   // 保存到localStorage
   const saveToStorage = () => {
     localStorage.setItem('subsidy_applications', JSON.stringify(myApplications.value))
     localStorage.setItem('subsidy_helped', JSON.stringify(myHelpedApplications.value))
   }
 
-  // 从localStorage加载
+  // 从 localStorage加载
   const loadFromStorage = () => {
     const savedApps = localStorage.getItem('subsidy_applications')
     if (savedApps) {
@@ -280,6 +475,15 @@ export const useSubsidyStore = defineStore('subsidy', () => {
         myHelpedApplications.value = JSON.parse(savedHelped)
       } catch (error) {
         console.error('Failed to load helped applications:', error)
+      }
+    }
+
+    const savedQualifications = localStorage.getItem('claimed_qualifications')
+    if (savedQualifications) {
+      try {
+        claimedQualifications.value = JSON.parse(savedQualifications)
+      } catch (error) {
+        console.error('Failed to load claimed qualifications:', error)
       }
     }
   }
@@ -310,6 +514,8 @@ export const useSubsidyStore = defineStore('subsidy', () => {
     createApplication,
     helpFriend,
     claimSubsidy,
+    claimQualification,
+    unbindQualification,
     hasAppliedType,
     init
   }
