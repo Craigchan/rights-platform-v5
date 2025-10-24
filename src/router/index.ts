@@ -19,6 +19,12 @@ const router = createRouter({
       component: () => import('../views/Home.vue')
     },
     {
+      path: '/image-fallback-test',
+      name: 'ImageFallbackTest',
+      component: () => import('../views/ImageFallbackTest.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/points-mall',
       name: 'PointsMall',
       component: () => import('../views/PointsMall.vue'),
