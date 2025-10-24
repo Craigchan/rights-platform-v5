@@ -69,6 +69,7 @@ declare module 'vue' {
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IntegratedHeaderV3: typeof import('./src/components/banner/IntegratedHeaderV3.vue')['default']
     LotteryWheel: typeof import('./src/components/lottery/LotteryWheel.vue')['default']
+    MerchantRecommend: typeof import('./src/components/subsidy/MerchantRecommend.vue')['default']
     MineSkeleton: typeof import('./src/components/MineSkeleton.vue')['default']
     NearbyCard: typeof import('./src/components/feed/NearbyCard.vue')['default']
     PageSkeleton: typeof import('./src/components/skeleton/PageSkeleton.vue')['default']
