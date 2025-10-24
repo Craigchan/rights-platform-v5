@@ -4,7 +4,7 @@
     <div class="profile-card">
       <div class="profile-header">
         <div class="avatar-section" @click="showAvatarPreview = true">
-          <img :src="userInfo.avatar" alt="头像" class="avatar" />
+          <img v-img-fallback :src="userInfo.avatar" alt="头像" class="avatar" />
           <div class="avatar-edit" @click.stop="showAvatarUpload = true">
             <CameraOutlined />
           </div>
@@ -194,7 +194,7 @@
       width="80%"
       class="avatar-preview-modal"
     >
-      <img :src="userInfo.avatar" alt="头像" class="avatar-preview-image" />
+      <img v-img-fallback :src="userInfo.avatar" alt="头像" class="avatar-preview-image" />
     </a-modal>
 
     <!-- 头像上传弹窗 -->

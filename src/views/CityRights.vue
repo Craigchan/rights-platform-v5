@@ -60,7 +60,7 @@
           @click="selectCity(city)"
         >
           <div class="city-image">
-            <img :src="city.image" :alt="city.name" />
+            <img v-img-fallback :src="city.image" :alt="city.name" />
             <div class="city-overlay">
               <h4>{{ city.name }}</h4>
               <p>{{ city.description }}</p>
@@ -139,7 +139,7 @@
           @click="viewRightDetail(right)"
         >
           <div class="right-image">
-            <img :src="right.image" :alt="right.title" />
+            <img v-img-fallback :src="right.image" :alt="right.title" />
             <div v-if="right.discount" class="discount-badge">
               {{ right.discount }}
             </div>
@@ -255,7 +255,7 @@
       width="90%"
     >
       <div v-if="selectedRight" class="right-detail">
-        <img :src="selectedRight.image" class="detail-image" />
+        <img v-img-fallback :src="selectedRight.image" class="detail-image" />
         
         <div class="detail-section">
           <h4>权益详情</h4>

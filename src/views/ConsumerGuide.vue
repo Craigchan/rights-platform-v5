@@ -42,7 +42,7 @@
             @click="goToBenefitDetail(benefit)"
           >
             <div class="benefit-image">
-              <img :src="benefit.image" :alt="benefit.title" />
+              <img v-img-fallback :src="benefit.image" :alt="benefit.title" />
               <div class="benefit-badge" v-if="benefit.badge">{{ benefit.badge }}</div>
               <div class="benefit-distance">{{ benefit.distance }}</div>
             </div>
@@ -91,7 +91,7 @@
               {{ index + 1 }}
             </div>
             <div class="ranking-image">
-              <img :src="item.image" :alt="item.name" />
+              <img v-img-fallback :src="item.image" :alt="item.name" />
             </div>
             <div class="ranking-info">
               <h3 class="ranking-name">{{ item.name }}</h3>
@@ -126,7 +126,7 @@
             @click="goToStrategy(strategy)"
           >
             <div class="strategy-image">
-              <img :src="strategy.image" :alt="strategy.title" />
+              <img v-img-fallback :src="strategy.image" :alt="strategy.title" />
             </div>
             <div class="strategy-content">
               <h3 class="strategy-title">{{ strategy.title }}</h3>

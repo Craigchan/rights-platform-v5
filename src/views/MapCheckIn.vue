@@ -75,7 +75,7 @@
           @click="showPointDetail(point)"
         >
           <div class="point-image">
-            <img :src="point.image" :alt="point.name" />
+            <img v-img-fallback :src="point.image" :alt="point.name" />
             <div v-if="point.isCheckedIn" class="checked-badge">
               <CheckCircleFilled />
             </div>
@@ -174,7 +174,7 @@
       width="90%"
     >
       <div v-if="selectedPoint" class="point-detail">
-        <img :src="selectedPoint.image" class="detail-image" />
+        <img v-img-fallback :src="selectedPoint.image" class="detail-image" />
         <div class="detail-info">
           <div class="info-row">
             <EnvironmentOutlined />

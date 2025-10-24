@@ -174,8 +174,7 @@
           <div v-if="selectedFeedback.images && selectedFeedback.images.length > 0" class="detail-section">
             <div class="section-title">图片附件</div>
             <div class="feedback-images">
-              <img 
-                v-for="(img, index) in selectedFeedback.images" 
+              <img v-img-fallback v-for="(img, index) in selectedFeedback.images" 
                 :key="index"
                 :src="img" 
                 alt="反馈图片"
@@ -219,7 +218,7 @@
       :footer="null"
       @cancel="previewVisible = false"
     >
-      <img :src="previewImage" style="width: 100%" />
+      <img v-img-fallback :src="previewImage" style="width: 100%" />
     </a-modal>
   </div>
 </template>

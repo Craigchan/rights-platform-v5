@@ -70,7 +70,7 @@
 
           <div class="match-info">
             <div class="team home-team">
-              <img :src="match.homeTeam.logo" :alt="match.homeTeam.name" />
+              <img v-img-fallback :src="match.homeTeam.logo" :alt="match.homeTeam.name" />
               <span class="team-name">{{ match.homeTeam.name }}</span>
               <span v-if="match.status === 'finished'" class="score">{{ match.homeScore }}</span>
             </div>
@@ -80,7 +80,7 @@
             <div class="team away-team">
               <span v-if="match.status === 'finished'" class="score">{{ match.awayScore }}</span>
               <span class="team-name">{{ match.awayTeam.name }}</span>
-              <img :src="match.awayTeam.logo" :alt="match.awayTeam.name" />
+              <img v-img-fallback :src="match.awayTeam.logo" :alt="match.awayTeam.name" />
             </div>
           </div>
 

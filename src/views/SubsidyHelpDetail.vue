@@ -84,7 +84,7 @@
       
       <div class="helpers-list" v-if="application.helpers.length > 0">
         <div class="helper-item" v-for="helper in application.helpers" :key="helper.userId">
-          <img :src="helper.avatar" class="helper-avatar" />
+          <img v-img-fallback :src="helper.avatar" class="helper-avatar" />
           <div class="helper-info">
             <div class="helper-name">{{ helper.userName }}</div>
             <div class="helper-time">{{ formatTime(helper.helpedAt) }}</div>

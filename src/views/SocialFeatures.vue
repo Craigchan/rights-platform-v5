@@ -98,7 +98,7 @@
             :key="index" 
             class="image-item"
           >
-            <img :src="image" :alt="`图片${index + 1}`" />
+            <img v-img-fallback :src="image" :alt="`图片${index + 1}`" />
           </div>
         </div>
 
@@ -170,7 +170,7 @@
               :key="index" 
               class="upload-item"
             >
-              <img :src="image" />
+              <img v-img-fallback :src="image" />
               <div class="remove-btn" @click="removeImage(index)">
                 <CloseCircleFilled />
               </div>
@@ -331,7 +331,7 @@
       :bodyStyle="{ padding: 0 }"
     >
       <div class="image-preview">
-        <img :src="previewImage" />
+        <img v-img-fallback :src="previewImage" />
       </div>
     </a-modal>
   </div>

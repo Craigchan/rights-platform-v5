@@ -10,7 +10,7 @@
       <div class="user-header">
         <!-- 头像区域 -->
         <div class="avatar-section" @click="handleAvatarClick">
-          <img :src="userInfo.avatar" alt="用户头像" class="avatar" />
+          <img v-img-fallback :src="userInfo.avatar" alt="用户头像" class="avatar" />
           <div class="avatar-edit-badge">
             <EditOutlined />
           </div>

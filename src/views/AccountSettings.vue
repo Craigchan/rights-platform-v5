@@ -12,7 +12,7 @@
       <div class="setting-item" @click="showAvatarModal = true">
         <span class="setting-label">头像</span>
         <div class="setting-value">
-          <img :src="userInfo.avatar" alt="头像" class="avatar-preview" />
+          <img v-img-fallback :src="userInfo.avatar" alt="头像" class="avatar-preview" />
           <RightOutlined class="arrow-icon" />
         </div>
       </div>
