@@ -395,6 +395,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
+import { useUserStore } from '@/stores/user'
 import {
   LeftOutlined,
   SafetyCertificateOutlined,
@@ -415,6 +416,7 @@ import {
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
+const userStore = useUserStore()
 
 // 当前步骤
 const currentStep = ref(0)
@@ -594,6 +596,17 @@ const submitAuth = () => {
     authSubmitting.value = false
     authSuccess.value = true
     authTime.value = new Date().toLocaleString('zh-CN')
+    
+    // 更新用户认证状态
+    if (userStore.userInfo) {
+      userStore.userInfo.certified = true
+      userStore.userInfo.realName = formData.value.realName
+      userStore.userInfo.idCard = formData.value.idCard
+    }
+    
+    // 发放新人礼包积分
+    userStore.addPoints(200)
+    
     message.success('实名认证成功')
   }, 2000)
 }
