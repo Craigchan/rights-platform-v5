@@ -62,7 +62,7 @@ const router = useRouter()
 
 const viewMerchant = (merchant: Merchant) => {
   console.log('查看商家:', merchant)
-  router.push(`/merchant/${merchant.id}`)
+  router.push('/merchant-offer-detail')
 }
 
 const viewMore = () => {
