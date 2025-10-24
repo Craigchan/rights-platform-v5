@@ -4,10 +4,41 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useUserStore } from './user'
 
+// 补贴类型
+export type SubsidyType = 
+  | 'car'              // 汽车以旧换新
+  | 'appliance'        // 家电以旧换新
+  | 'furniture'        // 家具换新
+  | 'renovation'       // 厨卫焕新
+  | '3c'               // 3C数码
+  | 'green_appliance'  // 绿色家电
+
+// 申请状态
+export type ApplicationStatus = 
+  | 'pending'      // 待审核
+  | 'in_progress'  // 审核中
+  | 'approved'     // 已通过
+  | 'rejected'     // 已拒绝
+  | 'completed'    // 已完成
+  | 'claimed'      // 已领取
+
+// 补贴配置
+export interface SubsidyConfig {
+  id: string
+  type: SubsidyType
+  name: string
+  icon: string
+  color: string
+  amount: number
+  description: string
+  conditions: string[]
+  materials: string[]
+}
+
 // 补贴申请
 export interface SubsidyApplication {
   id: number
-  type: 'car' | 'appliance' | 'furniture' | 'renovation'
+  type: SubsidyType
   title: string
   description: string
   subsidyAmount: number
@@ -228,6 +259,11 @@ export const useSubsidyStore = defineStore('subsidy', () => {
     }
   }
 
+  // 检查是否已申请过某类型的补贴
+  const hasAppliedType = (type: SubsidyApplication['type']): boolean => {
+    return myApplications.value.some(app => app.type === type)
+  }
+
   // 初始化
   const init = () => {
     loadFromStorage()
@@ -248,6 +284,7 @@ export const useSubsidyStore = defineStore('subsidy', () => {
     createApplication,
     helpFriend,
     claimSubsidy,
+    hasAppliedType,
     init
   }
 })
