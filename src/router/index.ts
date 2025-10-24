@@ -21,7 +21,8 @@ const router = createRouter({
     {
       path: '/points-mall',
       name: 'PointsMall',
-      component: () => import('../views/PointsMall.vue')
+      component: () => import('../views/PointsMall.vue'),
+      meta: { hideTabBar: true }
     },
     {
       path: '/vouchers',
@@ -91,7 +92,8 @@ const router = createRouter({
     {
       path: '/trendy-products',
       name: 'TrendyProducts',
-      component: () => import('../views/TrendyProducts.vue')
+      component: () => import('../views/TrendyProducts.vue'),
+      meta: { hideTabBar: true }
     },
     {
       path: '/business-circle',
@@ -146,6 +148,7 @@ const router = createRouter({
       path: '/local-products',
       name: 'LocalProducts',
       component: () => import('../views/LocalProducts.vue'),
+      meta: { hideTabBar: true }
     },
     {
       path: '/heritage-brands',
