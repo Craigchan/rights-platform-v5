@@ -173,6 +173,12 @@ const router = createRouter({
       meta: { hideTabBar: true }
     },
     {
+      path: '/subsidy-applications/:id',
+      name: 'SubsidyApplicationDetail',
+      component: () => import('../views/SubsidyApplicationDetail.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/subsidy-help',
       name: 'SubsidyHelp',
       component: () => import('../views/SubsidyHelp.vue'),
