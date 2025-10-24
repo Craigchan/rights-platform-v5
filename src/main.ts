@@ -12,6 +12,7 @@ import router from './router'
 import { useCartStore } from './stores/cart'
 import { useFavoritesStore } from './stores/favorites'
 import { lazyLoad } from './directives'
+import { imgFallback, lazyImg } from './directives/image'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -22,6 +23,8 @@ app.use(router)
 
 // 注册全局指令
 app.directive('lazy', lazyLoad)
+app.directive('img-fallback', imgFallback)
+app.directive('lazy-img', lazyImg)
 
 // 初始化 stores
 const cartStore = useCartStore()
