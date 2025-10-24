@@ -598,7 +598,24 @@ const submitAuth = () => {
     authTime.value = new Date().toLocaleString('zh-CN')
     
     // 更新用户认证状态
-    if (userStore.userInfo) {
+    if (!userStore.userInfo) {
+      // 如果用户信息不存在,创建默认用户
+      userStore.setUserInfo({
+        id: Date.now(),
+        username: formData.value.realName,
+        phone: formData.value.phone,
+        avatar: 'https://i.pravatar.cc/150?img=12',
+        points: 0,
+        level: 0,
+        isVerified: false,
+        realNameInfo: {
+          realName: formData.value.realName,
+          idCard: formData.value.idCard,
+          verifiedAt: new Date().toISOString()
+        }
+      })
+    } else {
+      // 更新现有用户的认证信息
       userStore.userInfo.realNameInfo = {
         realName: formData.value.realName,
         idCard: formData.value.idCard,
@@ -608,6 +625,9 @@ const submitAuth = () => {
     
     // 发放新人礼包积分
     userStore.addPoints(200)
+    
+    console.log('认证成功,用户信息已更新:', userStore.userInfo)
+    console.log('isRealNameVerified:', userStore.isRealNameVerified)
     
     message.success('实名认证成功')
   }, 2000)
