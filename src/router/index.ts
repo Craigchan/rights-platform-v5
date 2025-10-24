@@ -59,7 +59,8 @@ const router = createRouter({
     {
       path: '/earn-points',
       name: 'EarnPoints',
-      component: () => import('../views/EarnPoints.vue')
+      component: () => import('../views/EarnPoints.vue'),
+      meta: { hideTabBar: true }
     },
     {
       path: '/check-in',
@@ -82,12 +83,14 @@ const router = createRouter({
     {
       path: '/voucher-center',
       name: 'VoucherCenter',
-      component: () => import('../views/VoucherCenter.vue')
+      component: () => import('../views/VoucherCenter.vue'),
+      meta: { hideTabBar: true }
     },
     {
       path: '/flash-sale',
       name: 'FlashSale',
-      component: () => import('../views/FlashSale.vue')
+      component: () => import('../views/FlashSale.vue'),
+      meta: { hideTabBar: true }
     },
     {
       path: '/trendy-products',
@@ -99,7 +102,8 @@ const router = createRouter({
       path: '/business-circle',
       alias: '/activity-center',
       name: 'ActivityCenter',
-      component: () => import('../views/ActivityCenter.vue')
+      component: () => import('../views/ActivityCenter.vue'),
+      meta: { hideTabBar: true }
     },
     {
       path: '/activity-detail/:id',
