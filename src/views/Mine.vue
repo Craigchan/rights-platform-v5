@@ -367,9 +367,7 @@ const goToAddress = () => {
 
 const goToAuth = () => {
   router.push('/real-name-auth')
-  return
-  // 旧代码:
-  message.info('跳转到实名认证页')
+  // 旧代码:message.info('跳转到实名认证页')
 }
 
 const goToInvoice = () => {
