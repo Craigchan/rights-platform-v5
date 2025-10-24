@@ -539,13 +539,14 @@ const nextStep = () => {
       message.warning('请完成人脸识别')
       return
     }
-  } else if (currentStep.value === 3) {
-    // 提交认证
-    submitAuth()
-    return
   }
 
   currentStep.value++
+  
+  // 进入第4步时自动提交认证
+  if (currentStep.value === 3) {
+    submitAuth()
+  }
 }
 
 const prevStep = () => {
