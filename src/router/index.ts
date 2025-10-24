@@ -179,6 +179,12 @@ const router = createRouter({
       meta: { hideTabBar: true }
     },
     {
+      path: '/qualification-claim',
+      name: 'QualificationClaim',
+      component: () => import('../views/QualificationClaim.vue'),
+      meta: { hideTabBar: true }
+    },
+    {
       path: '/subsidy-help',
       name: 'SubsidyHelp',
       component: () => import('../views/SubsidyHelp.vue'),
