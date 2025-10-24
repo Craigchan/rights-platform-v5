@@ -367,8 +367,37 @@ export const useSubsidyStore = defineStore('subsidy', () => {
 
   // 创建补贴申请
   const createApplication = (subsidyType: SubsidyApplication['type']) => {
+    const userStore = useUserStore()
+    
+    // 检查是否已实名认证
+    if (!userStore.isRealNameVerified) {
+      return {
+        success: false,
+        code: 'NOT_VERIFIED',
+        message: '请先完成实名认证',
+        data: null
+      }
+    }
+    
+    // 检查是否已申请过
+    if (hasAppliedType(subsidyType)) {
+      return {
+        success: false,
+        code: 'ALREADY_APPLIED',
+        message: '您已申请过该类型的补贴',
+        data: null
+      }
+    }
+    
     const subsidy = availableSubsidies.value.find(s => s.type === subsidyType)
-    if (!subsidy) return null
+    if (!subsidy) {
+      return {
+        success: false,
+        code: 'SUBSIDY_NOT_FOUND',
+        message: '补贴类型不存在',
+        data: null
+      }
+    }
 
     // 生成申请编号: BT + 日期 + 4位随机数
     const date = new Date()
@@ -393,7 +422,13 @@ export const useSubsidyStore = defineStore('subsidy', () => {
 
     myApplications.value.unshift(newApp)
     saveToStorage()
-    return newApp
+    
+    return {
+      success: true,
+      code: 'SUCCESS',
+      message: '申请创建成功',
+      data: newApp
+    }
   }
 
   // 帮助好友

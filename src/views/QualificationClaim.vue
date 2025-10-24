@@ -18,81 +18,140 @@
         <div class="info-text">
           <div class="info-title">什么是资格申领?</div>
           <div class="info-desc">
-            申领补贴资格后,即可申请对应的补贴项目。每个资格只需申领一次,永久有效。
+            申领补贴资格后,即可申请对应的补贴项目。每个品类只需申领一次,可随时解绑重新申领。
           </div>
         </div>
       </div>
 
-      <!-- 补贴资格列表 -->
-      <div class="qualification-list">
-        <div 
+      <!-- 补贴资格列表 - 折叠面板 -->
+      <a-collapse 
+        v-model:activeKey="activeKeys" 
+        :bordered="false"
+        class="qualification-collapse"
+      >
+        <a-collapse-panel 
           v-for="subsidy in subsidyStore.availableSubsidies" 
           :key="subsidy.id"
-          class="qualification-item"
-          :class="{ claimed: isQualificationClaimed(subsidy.type) }"
+          class="qualification-panel"
         >
-          <div class="item-icon">{{ subsidy.icon }}</div>
-          <div class="item-content">
-            <div class="item-header">
-              <div class="item-title">{{ subsidy.name }}</div>
-              <div class="item-amount" :style="{ color: subsidy.color }">
-                最高¥{{ subsidy.amount }}
+          <template #header>
+            <div class="panel-header">
+              <div class="panel-left">
+                <span class="panel-icon">{{ subsidy.icon }}</span>
+                <span class="panel-title">{{ subsidy.name }}</span>
+                <span class="panel-desc">{{ subsidy.description }}</span>
+              </div>
+              <div class="panel-badge">
+                {{ getClaimedCountForCategory(subsidy.type) }}/{{ subsidy.subCategories?.length || 0 }}
               </div>
             </div>
-            <div class="item-desc">{{ subsidy.description }}</div>
-            <div class="item-quota">
-              <div class="quota-bar">
-                <div 
-                  class="quota-fill" 
-                  :style="{ 
-                    width: `${(subsidy.usedQuota / subsidy.totalQuota) * 100}%`,
-                    background: subsidy.color 
-                  }"
-                ></div>
-              </div>
-              <div class="quota-text">
-                剩余 {{ subsidy.totalQuota - subsidy.usedQuota }} / {{ subsidy.totalQuota }}
-                <span :class="getQuotaStatusClass(subsidy)">
-                  {{ getQuotaStatus(subsidy) }}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="item-action">
-            <a-button 
-              v-if="!isQualificationClaimed(subsidy.type)"
-              type="primary" 
-              size="small"
-              @click="claimQualification(subsidy)"
+          </template>
+
+          <!-- 二级品类列表 -->
+          <div class="sub-category-list">
+            <div 
+              v-for="subCat in subsidy.subCategories" 
+              :key="subCat.id"
+              class="sub-category-item"
+              :class="{ claimed: isSubCategoryClaimed(subCat.id) }"
             >
-              申领
-            </a-button>
-            <div v-else class="claimed-badge">
-              <CheckCircleFilled /> 已申领
+              <div class="sub-cat-icon">{{ subCat.icon }}</div>
+              <div class="sub-cat-content">
+                <div class="sub-cat-header">
+                  <div class="sub-cat-title">{{ subCat.name }}</div>
+                  <div class="sub-cat-amount" :style="{ color: subsidy.color }">
+                    ¥{{ subCat.amount }}
+                  </div>
+                </div>
+                <div class="sub-cat-desc">{{ subCat.description }}</div>
+                <div class="sub-cat-info">
+                  <span class="info-item">
+                    <UserOutlined /> 需{{ subCat.requiredHelpers }}人助力
+                  </span>
+                  <span class="info-item">
+                    <TeamOutlined /> 剩余{{ subCat.totalQuota - subCat.usedQuota }}份
+                  </span>
+                </div>
+                <div class="sub-cat-quota">
+                  <div class="quota-bar">
+                    <div 
+                      class="quota-fill" 
+                      :style="{ 
+                        width: `${(subCat.usedQuota / subCat.totalQuota) * 100}%`,
+                        background: `linear-gradient(90deg, ${subsidy.color}88, ${subsidy.color})`
+                      }"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div class="sub-cat-action">
+                <template v-if="!isSubCategoryClaimed(subCat.id)">
+                  <a-button 
+                    type="primary" 
+                    size="small"
+                    @click="claimSubCategory(subCat.id, subCat.name)"
+                  >
+                    申领
+                  </a-button>
+                </template>
+                <template v-else>
+                  <div class="claimed-badge">
+                    <CheckCircleFilled /> 已申领
+                  </div>
+                  <a-button 
+                    type="link" 
+                    danger
+                    size="small"
+                    @click="showUnbindConfirm(subCat.id, subCat.name)"
+                  >
+                    解绑
+                  </a-button>
+                </template>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </a-collapse-panel>
+      </a-collapse>
 
       <!-- 已申领统计 -->
       <div class="claim-stats">
         <div class="stats-title">申领统计</div>
         <div class="stats-grid">
           <div class="stats-item">
-            <div class="stats-value">{{ claimedQualifications.length }}</div>
+            <div class="stats-value">{{ claimedCount }}</div>
             <div class="stats-label">已申领资格</div>
           </div>
           <div class="stats-item">
-            <div class="stats-value">{{ subsidyStore.availableSubsidies.length - claimedQualifications.length }}</div>
+            <div class="stats-value">{{ totalSubCategories }}</div>
             <div class="stats-label">可申领资格</div>
           </div>
           <div class="stats-item">
-            <div class="stats-value">{{ totalSubsidyAmount }}</div>
-            <div class="stats-label">可获补贴(元)</div>
+            <div class="stats-value">¥{{ totalSubsidyAmount }}</div>
+            <div class="stats-label">可获补贴</div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- 解绑确认对话框 -->
+    <a-modal
+      v-model:open="unbindModalVisible"
+      title="确认解绑资格?"
+      @ok="confirmUnbind"
+      ok-text="确认解绑"
+      cancel-text="取消"
+      ok-button-props="{ danger: true }"
+    >
+      <div class="unbind-confirm">
+        <div class="unbind-icon">
+          <ExclamationCircleOutlined />
+        </div>
+        <div class="unbind-text">
+          <p>您正在解绑 <strong>{{ unbindingCategoryName }}</strong> 资格</p>
+          <p>解绑后需要重新申领才能申请该补贴项目,确定要解绑吗?</p>
+        </div>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -100,10 +159,13 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import {
-  LeftOutlined,
+import { 
+  LeftOutlined, 
   SafetyCertificateOutlined,
-  CheckCircleFilled
+  CheckCircleFilled,
+  UserOutlined,
+  TeamOutlined,
+  ExclamationCircleOutlined
 } from '@ant-design/icons-vue'
 import { useSubsidyStore } from '@/stores/subsidy'
 import type { SubsidyType } from '@/stores/subsidy'
@@ -111,47 +173,78 @@ import type { SubsidyType } from '@/stores/subsidy'
 const router = useRouter()
 const subsidyStore = useSubsidyStore()
 
+// 折叠面板激活的key
+const activeKeys = ref<number[]>([])
+
+// 解绑相关
+const unbindModalVisible = ref(false)
+const unbindingCategoryId = ref<string>('')
+const unbindingCategoryName = ref<string>('')
+
+// 已申领的资格
 const claimedQualifications = computed(() => subsidyStore.claimedQualifications)
 
-const isQualificationClaimed = (type: SubsidyType) => {
-  return claimedQualifications.value.includes(type)
-}
+// 计算已申领数量
+const claimedCount = computed(() => claimedQualifications.value.length)
 
-const claimQualification = (subsidy: any) => {
-  if (isQualificationClaimed(subsidy.type)) {
-    message.warning('您已申领过该资格')
-    return
-  }
-
-  // 添加到已申领列表
-  subsidyStore.claimedQualifications.push(subsidy.type)
-  message.success(`成功申领${subsidy.name}资格!`)
-}
-
-const getQuotaStatus = (policy: any) => {
-  const remaining = policy.totalQuota - policy.usedQuota
-  const percentage = (remaining / policy.totalQuota) * 100
-  
-  if (percentage > 50) return '充足'
-  if (percentage > 20) return '紧张'
-  return '即将用完'
-}
-
-const getQuotaStatusClass = (policy: any) => {
-  const remaining = policy.totalQuota - policy.usedQuota
-  const percentage = (remaining / policy.totalQuota) * 100
-  
-  if (percentage > 50) return 'quota-sufficient'
-  if (percentage > 20) return 'quota-low'
-  return 'quota-critical'
-}
-
-const totalSubsidyAmount = computed(() => {
-  return claimedQualifications.value.reduce((sum, type) => {
-    const subsidy = subsidyStore.availableSubsidies.find(s => s.type === type)
-    return sum + (subsidy?.amount || 0)
+// 计算总的二级品类数量
+const totalSubCategories = computed(() => {
+  return subsidyStore.availableSubsidies.reduce((total, subsidy) => {
+    return total + (subsidy.subCategories?.length || 0)
   }, 0)
 })
+
+// 计算可获得的总补贴金额
+const totalSubsidyAmount = computed(() => {
+  let total = 0
+  subsidyStore.availableSubsidies.forEach(subsidy => {
+    subsidy.subCategories?.forEach(subCat => {
+      if (claimedQualifications.value.includes(subCat.id)) {
+        total += subCat.amount
+      }
+    })
+  })
+  return total
+})
+
+// 获取某个主类别下已申领的子类别数量
+const getClaimedCountForCategory = (type: SubsidyType) => {
+  const subsidy = subsidyStore.availableSubsidies.find(s => s.type === type)
+  if (!subsidy || !subsidy.subCategories) return 0
+  
+  return subsidy.subCategories.filter(subCat => 
+    claimedQualifications.value.includes(subCat.id)
+  ).length
+}
+
+// 检查某个二级品类是否已申领
+const isSubCategoryClaimed = (subCategoryId: string) => {
+  return claimedQualifications.value.includes(subCategoryId)
+}
+
+// 申领二级品类
+const claimSubCategory = (subCategoryId: string, name: string) => {
+  const success = subsidyStore.claimQualification(subCategoryId)
+  if (success) {
+    message.success(`已成功申领${name}资格`)
+  } else {
+    message.warning('该资格已申领')
+  }
+}
+
+// 显示解绑确认对话框
+const showUnbindConfirm = (subCategoryId: string, name: string) => {
+  unbindingCategoryId.value = subCategoryId
+  unbindingCategoryName.value = name
+  unbindModalVisible.value = true
+}
+
+// 确认解绑
+const confirmUnbind = () => {
+  subsidyStore.unbindQualification(unbindingCategoryId.value)
+  message.success(`已解绑${unbindingCategoryName.value}资格`)
+  unbindModalVisible.value = false
+}
 </script>
 
 <style scoped lang="scss">
@@ -162,30 +255,31 @@ const totalSubsidyAmount = computed(() => {
 }
 
 .claim-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 
-.header-left {
-  font-size: 20px;
-  cursor: pointer;
-  padding: 4px;
-}
+  .header-left {
+    width: 40px;
+    cursor: pointer;
+  }
 
-.header-title {
-  font-size: 18px;
-  font-weight: 600;
-}
+  .header-title {
+    flex: 1;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+  }
 
-.header-right {
-  width: 28px;
+  .header-right {
+    width: 40px;
+  }
 }
 
 .claim-content {
@@ -193,188 +287,266 @@ const totalSubsidyAmount = computed(() => {
 }
 
 .info-card {
-  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.info-icon {
-  font-size: 32px;
-  color: #667eea;
-}
-
-.info-text {
-  flex: 1;
-}
-
-.info-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.info-desc {
-  font-size: 14px;
-  color: #666;
-  line-height: 1.6;
-}
-
-.qualification-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.qualification-item {
   background: white;
   border-radius: 12px;
   padding: 16px;
+  margin-bottom: 16px;
   display: flex;
   gap: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
+
+  .info-icon {
+    font-size: 24px;
+    color: #667eea;
+  }
+
+  .info-text {
+    flex: 1;
+
+    .info-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .info-desc {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+    }
+  }
 }
 
-.qualification-item:active {
-  transform: scale(0.98);
+.qualification-collapse {
+  background: transparent;
+
+  :deep(.ant-collapse-item) {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    border: none;
+    overflow: hidden;
+  }
+
+  :deep(.ant-collapse-header) {
+    padding: 16px !important;
+    background: white;
+  }
+
+  :deep(.ant-collapse-content) {
+    border-top: 1px solid #f0f0f0;
+  }
+
+  :deep(.ant-collapse-content-box) {
+    padding: 12px !important;
+  }
 }
 
-.qualification-item.claimed {
-  background: #f6ffed;
-  border: 1px solid #b7eb8f;
-}
-
-.item-icon {
-  font-size: 40px;
-  flex-shrink: 0;
-}
-
-.item-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.item-header {
+.panel-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
+  width: 100%;
+
+  .panel-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+
+    .panel-icon {
+      font-size: 24px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .panel-desc {
+      font-size: 12px;
+      color: #999;
+      margin-left: 8px;
+    }
+  }
+
+  .panel-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 12px;
+  }
 }
 
-.item-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-}
-
-.item-amount {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.item-desc {
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-
-.item-quota {
-  margin-top: 8px;
-}
-
-.quota-bar {
-  height: 6px;
-  background: #f0f0f0;
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 6px;
-}
-
-.quota-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-.quota-text {
-  font-size: 12px;
-  color: #999;
+.sub-category-list {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.quota-sufficient {
-  color: #52c41a;
-  font-weight: 500;
-}
-
-.quota-low {
-  color: #faad14;
-  font-weight: 500;
-}
-
-.quota-critical {
-  color: #ff4d4f;
-  font-weight: 500;
-}
-
-.item-action {
+.sub-category-item {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 16px;
   display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
+  gap: 12px;
+  transition: all 0.3s;
 
-.claimed-badge {
-  color: #52c41a;
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
+  &.claimed {
+    background: #f6ffed;
+    border: 1px solid #b7eb8f;
+  }
+
+  .sub-cat-icon {
+    font-size: 32px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+  }
+
+  .sub-cat-content {
+    flex: 1;
+  }
+
+  .sub-cat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .sub-cat-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .sub-cat-amount {
+      font-size: 18px;
+      font-weight: 700;
+    }
+  }
+
+  .sub-cat-desc {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .sub-cat-info {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+
+    .info-item {
+      font-size: 12px;
+      color: #999;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+
+  .sub-cat-quota {
+    .quota-bar {
+      height: 6px;
+      background: #e8e8e8;
+      border-radius: 3px;
+      overflow: hidden;
+
+      .quota-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s;
+      }
+    }
+  }
+
+  .sub-cat-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+
+    .claimed-badge {
+      color: #52c41a;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
 }
 
 .claim-stats {
   background: white;
   border-radius: 12px;
-  padding: 16px;
+  padding: 20px;
+  margin-top: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  .stats-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .stats-item {
+    text-align: center;
+
+    .stats-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 8px;
+    }
+
+    .stats-label {
+      font-size: 13px;
+      color: #999;
+    }
+  }
 }
 
-.stats-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 16px;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.unbind-confirm {
+  display: flex;
   gap: 16px;
-}
+  padding: 16px 0;
 
-.stats-item {
-  text-align: center;
-}
+  .unbind-icon {
+    font-size: 32px;
+    color: #faad14;
+  }
 
-.stats-value {
-  font-size: 24px;
-  font-weight: 600;
-  color: #667eea;
-  margin-bottom: 4px;
-}
+  .unbind-text {
+    flex: 1;
 
-.stats-label {
-  font-size: 13px;
-  color: #999;
+    p {
+      margin-bottom: 12px;
+      color: #666;
+      line-height: 1.6;
+
+      strong {
+        color: #333;
+      }
+    }
+  }
 }
 </style>
-
