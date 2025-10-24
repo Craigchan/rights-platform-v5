@@ -217,51 +217,126 @@
         </div>
 
         <div v-else-if="authSuccess" class="auth-success">
-          <CheckCircleFilled class="result-icon success" />
+          <!-- 成功动画效果 -->
+          <div class="success-animation">
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+          </div>
+
+          <!-- 认证徽章 -->
+          <div class="auth-badge">
+            <div class="badge-circle">
+              <CheckCircleFilled class="result-icon success" />
+            </div>
+            <div class="badge-rays"></div>
+          </div>
+
           <div class="result-title">认证成功</div>
-          <div class="result-desc">恭喜您，实名认证已完成！</div>
+          <div class="result-desc">恭喜您成为平台认证用户！</div>
           
-          <div class="auth-info-card">
-            <div class="info-row">
-              <span class="info-label">姓名：</span>
-              <span class="info-value">{{ formData.realName }}</span>
+          <!-- 认证证书卡片 -->
+          <div class="certificate-card">
+            <div class="certificate-header">
+              <SafetyCertificateOutlined class="cert-icon" />
+              <span class="cert-title">实名认证证书</span>
             </div>
-            <div class="info-row">
-              <span class="info-label">身份证号：</span>
-              <span class="info-value">{{ maskIdCard(formData.idCard) }}</span>
+            <div class="certificate-body">
+              <div class="info-row">
+                <span class="info-label">姓名</span>
+                <span class="info-value">{{ formData.realName }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">身份证号</span>
+                <span class="info-value">{{ maskIdCard(formData.idCard) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">手机号</span>
+                <span class="info-value">{{ maskPhone(formData.phone) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">认证时间</span>
+                <span class="info-value">{{ authTime }}</span>
+              </div>
             </div>
-            <div class="info-row">
-              <span class="info-label">手机号：</span>
-              <span class="info-value">{{ maskPhone(formData.phone) }}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">认证时间：</span>
-              <span class="info-value">{{ authTime }}</span>
-            </div>
-          </div>
-
-          <div class="benefits-card">
-            <div class="benefits-title">认证后可享受：</div>
-            <div class="benefit-item">
-              <CheckCircleOutlined />
-              <span>领取政府消费券</span>
-            </div>
-            <div class="benefit-item">
-              <CheckCircleOutlined />
-              <span>申请政府补贴</span>
-            </div>
-            <div class="benefit-item">
-              <CheckCircleOutlined />
-              <span>参与平台活动</span>
-            </div>
-            <div class="benefit-item">
-              <CheckCircleOutlined />
-              <span>积分兑换商品</span>
+            <div class="certificate-footer">
+              <div class="cert-number">NO.{{ certNumber }}</div>
+              <div class="cert-seal">官方认证</div>
             </div>
           </div>
 
-          <a-button type="primary" size="large" block @click="goToHome">
-            返回首页
+          <!-- 专属权益 -->
+          <div class="exclusive-benefits">
+            <div class="benefits-header">
+              <GiftOutlined class="gift-icon" />
+              <span class="benefits-title">专属权益已解锁</span>
+            </div>
+            <div class="benefits-grid">
+              <div class="benefit-card">
+                <div class="benefit-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                  <GiftOutlined />
+                </div>
+                <div class="benefit-title">新人礼包</div>
+                <div class="benefit-desc">200积分</div>
+              </div>
+              <div class="benefit-card">
+                <div class="benefit-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                  <TagOutlined />
+                </div>
+                <div class="benefit-title">专属优惠</div>
+                <div class="benefit-desc">5张优惠券</div>
+              </div>
+              <div class="benefit-card">
+                <div class="benefit-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                  <TrophyOutlined />
+                </div>
+                <div class="benefit-title">会员等级</div>
+                <div class="benefit-desc">黄金会员</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 快捷操作 -->
+          <div class="quick-actions">
+            <div class="action-title">推荐操作</div>
+            <div class="action-buttons">
+              <div class="action-btn" @click="goToSubsidy">
+                <div class="action-icon" style="background: #FF6B35;">
+                  <DollarOutlined />
+                </div>
+                <div class="action-text">
+                  <div class="action-name">申请补贴</div>
+                  <div class="action-desc">最高1万元</div>
+                </div>
+                <RightOutlined class="action-arrow" />
+              </div>
+              <div class="action-btn" @click="goToCoupons">
+                <div class="action-icon" style="background: #F7931E;">
+                  <TagOutlined />
+                </div>
+                <div class="action-text">
+                  <div class="action-name">领取消费券</div>
+                  <div class="action-desc">多种优惠可选</div>
+                </div>
+                <RightOutlined class="action-arrow" />
+              </div>
+              <div class="action-btn" @click="goToLottery">
+                <div class="action-icon" style="background: #52C41A;">
+                  <GiftOutlined />
+                </div>
+                <div class="action-text">
+                  <div class="action-name">参与抽奖</div>
+                  <div class="action-desc">100%中奖</div>
+                </div>
+                <RightOutlined class="action-arrow" />
+              </div>
+            </div>
+          </div>
+
+          <a-button type="primary" size="large" block @click="goToHome" class="home-btn">
+            完成
           </a-button>
         </div>
       </div>
@@ -332,7 +407,11 @@ import {
   UserOutlined,
   CheckCircleOutlined,
   HistoryOutlined,
-  RightOutlined
+  RightOutlined,
+  GiftOutlined,
+  TagOutlined,
+  TrophyOutlined,
+  DollarOutlined
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
@@ -518,8 +597,23 @@ const submitAuth = () => {
   }, 2000)
 }
 
+// 认证证书编号
+const certNumber = ref(String(Date.now()).slice(-8))
+
 const goToHome = () => {
   router.push('/')
+}
+
+const goToSubsidy = () => {
+  router.push('/gov-subsidy')
+}
+
+const goToCoupons = () => {
+  router.push('/coupons')
+}
+
+const goToLottery = () => {
+  router.push('/lottery')
 }
 
 const showAuthRecord = () => {
@@ -1067,6 +1161,396 @@ onUnmounted(() => {
   border-radius: 4px;
   font-size: 12px;
   color: #FF4D4F;
+}
+
+/* 认证成功页面优化 */
+.auth-success {
+  position: relative;
+  padding: 20px 0;
+}
+
+/* 成功动画效果 */
+.success-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  animation: confetti-fall 3s ease-in-out infinite;
+}
+
+.confetti:nth-child(1) {
+  left: 10%;
+  animation-delay: 0s;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.confetti:nth-child(2) {
+  left: 30%;
+  animation-delay: 0.5s;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.confetti:nth-child(3) {
+  left: 50%;
+  animation-delay: 1s;
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.confetti:nth-child(4) {
+  left: 70%;
+  animation-delay: 1.5s;
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.confetti:nth-child(5) {
+  left: 90%;
+  animation-delay: 2s;
+  background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(400px) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* 认证徽章 */
+.auth-badge {
+  position: relative;
+  margin: 20px auto;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  animation: badge-pulse 2s ease-in-out infinite;
+  position: relative;
+  z-index: 2;
+}
+
+.badge-circle .result-icon {
+  font-size: 60px;
+  color: white;
+}
+
+.badge-rays {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+  animation: rays-rotate 8s linear infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes rays-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.result-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 16px 0 8px;
+}
+
+.result-desc {
+  font-size: 14px;
+  color: #999;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* 认证证书卡片 */
+.certificate-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.certificate-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: certificate-glow 6s ease-in-out infinite;
+}
+
+@keyframes certificate-glow {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-20%, -20%);
+  }
+}
+
+.certificate-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.cert-icon {
+  font-size: 24px;
+  color: white;
+}
+
+.cert-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.certificate-body {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.certificate-body .info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.certificate-body .info-row:last-child {
+  border-bottom: none;
+}
+
+.certificate-body .info-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.certificate-body .info-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.certificate-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.cert-number {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Courier New', monospace;
+}
+
+.cert-seal {
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  font-size: 12px;
+  color: white;
+  font-weight: 500;
+}
+
+/* 专属权益 */
+.exclusive-benefits {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.benefits-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.gift-icon {
+  font-size: 20px;
+  color: #667eea;
+}
+
+.benefits-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.benefit-card {
+  text-align: center;
+  padding: 16px 8px;
+  background: #F7F8FA;
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.benefit-card:active {
+  transform: scale(0.95);
+}
+
+.benefit-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  color: white;
+  font-size: 24px;
+}
+
+.benefit-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.benefit-desc {
+  font-size: 12px;
+  color: #999;
+}
+
+/* 快捷操作 */
+.quick-actions {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.action-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #F7F8FA;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.action-btn:active {
+  transform: scale(0.98);
+  background: #EBEDF0;
+}
+
+.action-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.action-text {
+  flex: 1;
+}
+
+.action-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.action-desc {
+  font-size: 12px;
+  color: #999;
+}
+
+.action-arrow {
+  font-size: 16px;
+  color: #D9D9D9;
+}
+
+.home-btn {
+  margin-top: 8px;
 }
 </style>
 
