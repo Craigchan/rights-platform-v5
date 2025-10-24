@@ -111,7 +111,9 @@ export const useSubsidyStore = defineStore('subsidy', () => {
       color: '#FF6B35',
       amount: 10000,
       requiredHelpers: 10,
-      description: '购买新能源汽车,旧车回收最高补贴1万元'
+      description: '购买新能源汽车,旧车回收最高补贴1万元',
+      totalQuota: 1000,
+      usedQuota: 234
     },
     {
       id: 2,
@@ -121,17 +123,21 @@ export const useSubsidyStore = defineStore('subsidy', () => {
       color: '#F7931E',
       amount: 500,
       requiredHelpers: 5,
-      description: '购买智能家电,旧家电回收最高补贴500元'
+      description: '购买智能家电,旧家电回收最高补贴500元',
+      totalQuota: 2000,
+      usedQuota: 567
     },
     {
       id: 3,
       type: 'furniture',
       name: '家具换新补贴',
-      icon: '🛋️',
+      icon: '🛌️',
       color: '#00A8E8',
       amount: 800,
       requiredHelpers: 8,
-      description: '购买环保家具,最高补贴800元'
+      description: '购买环保家具,最高补贴800元',
+      totalQuota: 1500,
+      usedQuota: 423
     },
     {
       id: 4,
@@ -141,7 +147,9 @@ export const useSubsidyStore = defineStore('subsidy', () => {
       color: '#52C41A',
       amount: 1000,
       requiredHelpers: 10,
-      description: '厨卫改造升级,最高补贴1000元'
+      description: '厨卫改造升级,最高补贴1000元',
+      totalQuota: 1200,
+      usedQuota: 389
     }
   ])
 
