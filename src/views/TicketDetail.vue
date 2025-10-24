@@ -9,7 +9,7 @@
 
     <!-- 票根图片 -->
     <div class="ticket-image-section">
-      <img :src="ticket.image" alt="票根图片" class="ticket-image" />
+      <img v-img-fallback :src="ticket.image" alt="票根图片" class="ticket-image" />
       <div class="status-badge" :class="ticket.status">
         {{ getStatusText(ticket.status) }}
       </div>

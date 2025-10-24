@@ -166,7 +166,7 @@
       <div class="benefits-grid">
         <div class="benefit-card" v-for="benefit in benefits" :key="benefit.id" @click="goToBenefit(benefit)">
           <div class="benefit-image">
-            <img :src="benefit.image" :alt="benefit.title" />
+            <img v-img-fallback :src="benefit.image" :alt="benefit.title" />
             <div class="benefit-tag" v-if="benefit.tag">{{ benefit.tag }}</div>
           </div>
           <div class="benefit-content">
@@ -252,7 +252,7 @@
       <div class="products-grid">
         <div class="product-card" v-for="product in products" :key="product.id" @click="goToProduct(product)">
           <div class="product-image">
-            <img :src="product.image" :alt="product.name" />
+            <img v-lazy-img="product.image" :alt="product.name" />
             <div class="product-badge" v-if="product.badge">{{ product.badge }}</div>
           </div>
           <h3 class="product-name">{{ product.name }}</h3>

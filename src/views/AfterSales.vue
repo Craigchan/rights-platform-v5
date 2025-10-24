@@ -82,7 +82,7 @@
           :key="index"
           class="upload-item"
         >
-          <img :src="image" alt="">
+          <img v-img-fallback :src="image" alt="">
           <div class="delete-btn" @click="deleteImage(index)">
             <CloseCircleFilled />
           </div>

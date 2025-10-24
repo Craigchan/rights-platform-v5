@@ -25,7 +25,7 @@
             class="item-checkbox"
           />
           <div class="item-image" @click="goToProduct(item)">
-            <img :src="item.image" :alt="item.name" />
+            <img v-img-fallback :src="item.image" :alt="item.name" />
           </div>
           <div class="item-info">
             <h3 class="item-name" @click="goToProduct(item)">{{ item.name }}</h3>
@@ -109,7 +109,7 @@
             @click="goToProduct(item)"
           >
             <div class="recommend-image">
-              <img :src="item.image" :alt="item.name" />
+              <img v-img-fallback :src="item.image" :alt="item.name" />
             </div>
             <p class="recommend-name">{{ item.name }}</p>
             <div class="recommend-footer">

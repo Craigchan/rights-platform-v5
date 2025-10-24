@@ -77,7 +77,7 @@
               class="result-item"
               @click="handleResultClick(item)"
             >
-              <img :src="item.image" :alt="item.name" class="result-image" />
+              <img v-img-fallback :src="item.image" :alt="item.name" class="result-image" />
               <div class="result-info">
                 <h4 class="result-name" v-html="highlightKeyword(item.name)"></h4>
                 <p class="result-desc">{{ item.desc }}</p>
@@ -105,7 +105,7 @@
               class="result-item"
               @click="handleResultClick(item)"
             >
-              <img :src="item.image" :alt="item.name" class="result-image" />
+              <img v-img-fallback :src="item.image" :alt="item.name" class="result-image" />
               <div class="result-info">
                 <h4 class="result-name" v-html="highlightKeyword(item.name)"></h4>
                 <p class="result-desc">{{ item.desc }}</p>
@@ -131,7 +131,7 @@
               class="result-item"
               @click="handleResultClick(item)"
             >
-              <img :src="item.image" :alt="item.name" class="result-image" />
+              <img v-img-fallback :src="item.image" :alt="item.name" class="result-image" />
               <div class="result-info">
                 <h4 class="result-name" v-html="highlightKeyword(item.name)"></h4>
                 <p class="result-desc">{{ item.desc }}</p>

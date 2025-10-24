@@ -47,7 +47,7 @@
     <div v-else class="ticket-form">
       <!-- 图片预览 -->
       <div class="image-preview">
-        <img :src="uploadedImage" alt="票根图片" />
+        <img v-img-fallback :src="uploadedImage" alt="票根图片" />
         <div class="change-image" @click="handleChangeImage">
           <EditOutlined /> 更换图片
         </div>

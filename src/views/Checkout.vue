@@ -40,7 +40,7 @@
         <div class="goods-list">
           <div class="goods-item" v-for="item in checkoutData.items" :key="item.id">
             <div class="goods-image">
-              <img :src="item.image" :alt="item.name" />
+              <img v-img-fallback :src="item.image" :alt="item.name" />
             </div>
             <div class="goods-info">
               <h3 class="goods-name">{{ item.name }}</h3>

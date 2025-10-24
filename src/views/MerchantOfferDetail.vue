@@ -20,7 +20,7 @@
     <div class="merchant-banner">
       <a-carousel autoplay :dots="true" effect="fade">
         <div v-for="(image, index) in merchantData.images" :key="index" class="banner-slide">
-          <img :src="image" :alt="`商家图片${index + 1}`" />
+          <img v-img-fallback :src="image" :alt="`商家图片${index + 1}`" />
         </div>
       </a-carousel>
       <div class="banner-overlay">
@@ -178,8 +178,7 @@
         <div class="detail-section">
           <div class="detail-subtitle">环境展示</div>
           <div class="detail-images">
-            <img 
-              v-for="(img, index) in merchantData.detailImages" 
+            <img v-img-fallback v-for="(img, index) in merchantData.detailImages" 
               :key="index"
               :src="img" 
               :alt="`环境图${index + 1}`"
@@ -245,7 +244,7 @@
           class="review-card"
         >
           <div class="review-header">
-            <img :src="review.avatar" alt="用户头像" class="review-avatar" />
+            <img v-img-fallback :src="review.avatar" alt="用户头像" class="review-avatar" />
             <div class="review-user">
               <div class="user-name">{{ review.username }}</div>
               <div class="review-meta">
@@ -256,8 +255,7 @@
           </div>
           <div class="review-content">{{ review.content }}</div>
           <div v-if="review.images && review.images.length" class="review-images">
-            <img 
-              v-for="(img, index) in review.images" 
+            <img v-img-fallback v-for="(img, index) in review.images" 
               :key="index"
               :src="img" 
               :alt="`评价图${index + 1}`"
@@ -293,7 +291,7 @@
           class="product-card"
           @click="viewProduct(product)"
         >
-          <img :src="product.image" :alt="product.name" class="product-image" />
+          <img v-img-fallback :src="product.image" :alt="product.name" class="product-image" />
           <div class="product-name">{{ product.name }}</div>
           <div class="product-price">¥{{ product.price }}</div>
           <div class="product-sales">已售{{ product.sales }}份</div>
@@ -313,7 +311,7 @@
           class="similar-card"
           @click="viewMerchant(merchant)"
         >
-          <img :src="merchant.image" :alt="merchant.name" class="similar-image" />
+          <img v-img-fallback :src="merchant.image" :alt="merchant.name" class="similar-image" />
           <div class="similar-info">
             <div class="similar-name">{{ merchant.name }}</div>
             <div class="similar-meta">
@@ -376,7 +374,7 @@
           <!-- 商家信息 -->
           <div class="merchant-info">
             <div class="merchant-logo">
-              <img :src="merchantData.images[0]" alt="商家Logo" />
+              <img v-img-fallback :src="merchantData.images[0]" alt="商家Logo" />
             </div>
             <div class="merchant-name">{{ merchantData.name }}</div>
             <div class="merchant-address">{{ merchantData.address }}</div>
@@ -384,7 +382,7 @@
 
           <!-- 二维码区域 -->
           <div class="qrcode-container">
-            <img v-if="qrCodeUrl" :src="qrCodeUrl" alt="核销二维码" class="qrcode-image" />
+            <img v-img-fallback v-if="qrCodeUrl" :src="qrCodeUrl" alt="核销二维码" class="qrcode-image" />
             <a-spin v-else size="large" />
           </div>
 

@@ -20,7 +20,7 @@
     <div class="banner-carousel">
       <a-carousel autoplay :dots="{ className: 'custom-dots' }">
         <div v-for="(image, index) in merchant.images" :key="index" class="carousel-item">
-          <img :src="image" :alt="`商家图片${index + 1}`" />
+          <img v-img-fallback :src="image" :alt="`商家图片${index + 1}`" />
         </div>
       </a-carousel>
       <div class="banner-overlay">
@@ -136,7 +136,7 @@
           class="product-card"
           @click="viewProduct(product)"
         >
-          <img :src="product.image" :alt="product.name" />
+          <img v-img-fallback :src="product.image" :alt="product.name" />
           <div class="product-info">
             <div class="product-name">{{ product.name }}</div>
             <div class="product-price">
@@ -194,7 +194,7 @@
       <div class="review-list">
         <div v-for="review in filteredReviews" :key="review.id" class="review-item">
           <div class="review-header">
-            <img :src="review.userAvatar" :alt="review.userName" class="user-avatar" />
+            <img v-img-fallback :src="review.userAvatar" :alt="review.userName" class="user-avatar" />
             <div class="user-info">
               <div class="user-name">{{ review.userName }}</div>
               <a-rate :value="review.rating" disabled size="small" />
@@ -203,8 +203,7 @@
           </div>
           <div class="review-content">{{ review.content }}</div>
           <div v-if="review.images && review.images.length > 0" class="review-images">
-            <img
-              v-for="(image, index) in review.images"
+            <img v-img-fallback v-for="(image, index) in review.images"
               :key="index"
               :src="image"
               :alt="`评价图片${index + 1}`"
@@ -335,7 +334,7 @@
       @cancel="closePreview"
     >
       <div class="image-preview">
-        <img :src="previewImages[previewIndex]" alt="预览图片" />
+        <img v-img-fallback :src="previewImages[previewIndex]" alt="预览图片" />
         <div class="preview-controls">
           <a-button 
             v-if="previewIndex > 0" 

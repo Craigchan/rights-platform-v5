@@ -21,7 +21,7 @@
     <div class="banner-section">
       <a-carousel autoplay :autoplay-speed="4000" class="banner-carousel">
         <div v-for="(item, index) in banners" :key="index" class="banner-item">
-          <img :src="item.image" :alt="item.title" class="banner-image" />
+          <img v-lazy-img="item.image" :alt="item.title" class="banner-image" />
           <div class="banner-overlay">
             <h3 class="banner-title">{{ item.title }}</h3>
             <p class="banner-subtitle">{{ item.subtitle }}</p>
@@ -92,7 +92,7 @@
         <div class="flash-sale-products">
           <div v-for="product in flashSaleProducts.slice(0, 3)" :key="product.id" class="flash-product">
             <div class="product-image">
-              <img :src="product.image" :alt="product.name" />
+              <img v-img-fallback :src="product.image" :alt="product.name" />
               <div class="discount-tag">{{ product.discount }}折</div>
             </div>
             <div class="product-info">
@@ -113,7 +113,7 @@
       <div class="zone-layout">
         <!-- 左侧大卡片 -->
         <div class="zone-main" @click="goToZone(mainZone)">
-          <img :src="mainZone.image" :alt="mainZone.name" class="zone-bg" />
+          <img v-img-fallback :src="mainZone.image" :alt="mainZone.name" class="zone-bg" />
           <div class="zone-overlay">
             <div class="zone-badge">本周主打</div>
             <div class="zone-name">{{ mainZone.name }}</div>
@@ -128,7 +128,7 @@
             class="zone-item-small"
             @click="goToZone(zone)"
           >
-            <img :src="zone.image" :alt="zone.name" class="zone-bg" />
+            <img v-img-fallback :src="zone.image" :alt="zone.name" class="zone-bg" />
             <div class="zone-overlay">
               <div class="zone-name">{{ zone.name }}</div>
               <div class="zone-desc">{{ zone.desc }}</div>
@@ -156,7 +156,7 @@
           class="activity-card gov-activity"
           @click="goToActivityDetail(activity)"
         >
-          <img :src="activity.image" :alt="activity.title" class="activity-image" />
+          <img v-lazy-img="activity.image" :alt="activity.title" class="activity-image" />
           <div class="activity-info">
             <h4 class="activity-title">{{ activity.title }}</h4>
             <p class="activity-desc">{{ activity.desc }}</p>
@@ -187,7 +187,7 @@
               @click="goToProductDetail(product)"
             >
               <div class="product-image-wrapper">
-                <img :src="product.image" :alt="product.name" class="product-image" />
+                <img v-lazy-img="product.image" :alt="product.name" class="product-image" />
                 <span v-if="product.tag" class="product-tag">{{ product.tag }}</span>
               </div>
               <div class="product-info">

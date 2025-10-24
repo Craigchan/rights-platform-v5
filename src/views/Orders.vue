@@ -51,7 +51,7 @@
             class="product-item"
           >
             <div class="product-image" :style="{ background: product.color }">
-              <img v-if="product.image" :src="product.image" alt="">
+              <img v-img-fallback v-if="product.image" :src="product.image" alt="">
             </div>
             <div class="product-info">
               <div class="product-name">{{ product.name }}</div>

@@ -10,7 +10,7 @@
     <!-- 商家信息卡片 -->
     <div class="merchant-card">
       <div class="merchant-cover">
-        <img :src="merchantCover" alt="商家封面" />
+        <img v-img-fallback :src="merchantCover" alt="商家封面" />
       </div>
       <div class="merchant-info">
         <div class="merchant-name">{{ merchantName }}</div>

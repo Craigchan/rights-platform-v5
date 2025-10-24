@@ -36,7 +36,7 @@
           </div>
 
           <div class="ticket-image">
-            <img :src="ticket.image" alt="票根图片" />
+            <img v-img-fallback :src="ticket.image" alt="票根图片" />
           </div>
 
           <div class="ticket-info">

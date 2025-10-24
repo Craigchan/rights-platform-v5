@@ -88,7 +88,7 @@
 
     <!-- 空状态提示 -->
     <div class="empty-state" v-else>
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='50' fill='%23f0f0f0'/%3E%3Cpath d='M40 50h40v30H40z' fill='%23d9d9d9'/%3E%3C/svg%3E" alt="empty" class="empty-icon">
+      <img v-img-fallback src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='50' fill='%23f0f0f0'/%3E%3Cpath d='M40 50h40v30H40z' fill='%23d9d9d9'/%3E%3C/svg%3E" alt="empty" class="empty-icon">
       <div class="empty-text">{{ getEmptyText() }}</div>
       <button class="go-get-btn" @click="goToHome" v-if="activeTab === 'unused'">去领券</button>
     </div>

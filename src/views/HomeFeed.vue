@@ -28,7 +28,7 @@
           class="banner-item"
           @click="handleBannerClick(banner)"
         >
-          <img :src="banner.image" :alt="banner.title" class="banner-image" />
+          <img v-img-fallback :src="banner.image" :alt="banner.title" class="banner-image" />
         </div>
       </a-carousel>
     </div>

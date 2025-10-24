@@ -39,7 +39,7 @@
           </div>
 
           <div class="item-image">
-            <img :src="merchant.image" :alt="merchant.name" />
+            <img v-img-fallback :src="merchant.image" :alt="merchant.name" />
           </div>
           <div class="item-info">
             <div class="item-name">{{ merchant.name }}</div>
@@ -70,7 +70,7 @@
           </div>
 
           <div class="item-image">
-            <img :src="product.image" :alt="product.name" />
+            <img v-img-fallback :src="product.image" :alt="product.name" />
           </div>
           <div class="item-info">
             <div class="item-name">{{ product.name }}</div>
@@ -100,7 +100,7 @@
           </div>
 
           <div class="item-image">
-            <img :src="activity.image" :alt="activity.title" />
+            <img v-img-fallback :src="activity.image" :alt="activity.title" />
           </div>
           <div class="item-info">
             <div class="item-name">{{ activity.title }}</div>
