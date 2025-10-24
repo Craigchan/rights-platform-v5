@@ -57,6 +57,9 @@ export interface SubsidyApplication {
 }
 
 export const useSubsidyStore = defineStore('subsidy', () => {
+  // 已申领的补贴资格
+  const claimedQualifications = ref<SubsidyType[]>([])
+
   // 用户的补贴申请列表
   const myApplications = ref<SubsidyApplication[]>([
     {
@@ -274,6 +277,7 @@ export const useSubsidyStore = defineStore('subsidy', () => {
     myApplications,
     availableSubsidies,
     myHelpedApplications,
+    claimedQualifications,
 
     // 计算属性
     pendingApplications,
