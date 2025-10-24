@@ -13,6 +13,11 @@ export interface UserInfo {
   isVerified: boolean
   address?: string
   email?: string
+  realNameInfo?: {
+    realName: string
+    idCard: string
+    verifiedAt: string
+  }
 }
 
 // 票根拼图
@@ -115,6 +120,7 @@ export const useUserStore = defineStore('user', () => {
   const userPoints = computed(() => userInfo.value?.points || 0)
   const userLevel = computed(() => userInfo.value?.level || 0)
   const isVerified = computed(() => userInfo.value?.isVerified || false)
+  const isRealNameVerified = computed(() => !!userInfo.value?.realNameInfo)
   
   // 用户等级名称
   const levelName = computed(() => {
@@ -314,6 +320,7 @@ export const useUserStore = defineStore('user', () => {
     userPoints,
     userLevel,
     isVerified,
+    isRealNameVerified,
     levelName,
     levelProgress,
     

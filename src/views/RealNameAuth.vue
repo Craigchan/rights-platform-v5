@@ -599,9 +599,11 @@ const submitAuth = () => {
     
     // 更新用户认证状态
     if (userStore.userInfo) {
-      userStore.userInfo.certified = true
-      userStore.userInfo.realName = formData.value.realName
-      userStore.userInfo.idCard = formData.value.idCard
+      userStore.userInfo.realNameInfo = {
+        realName: formData.value.realName,
+        idCard: formData.value.idCard,
+        verifiedAt: new Date().toISOString()
+      }
     }
     
     // 发放新人礼包积分
