@@ -73,12 +73,6 @@
 
     <!-- 补贴政策列表 -->
     <div v-if="currentTab === 'policies'" class="content-section">
-      <!-- 商家推荐 -->
-      <MerchantRecommend 
-        v-if="authStatus.certified && selectedSubsidyType"
-        :subsidy-type="selectedSubsidyType"
-        :limit="3"
-      />
       <div 
         v-for="policy in subsidyStore.availableSubsidies" 
         :key="policy.id"
@@ -157,7 +151,47 @@
       </div>
     </div>
 
-    <!-- 我的申请列表 -->
+      <!-- 推荐商家 -->
+    <div v-if="currentTab === 'merchants'" class="content-section merchants-section">
+      <!-- 未认证提示 -->
+      <a-empty 
+        v-if="!authStatus.certified" 
+        description="请先完成实名认证后查看商家推荐"
+      >
+        <a-button type="primary" @click="router.push('/profile')">
+          去认证
+        </a-button>
+      </a-empty>
+
+      <!-- 补贴类型选择 -->
+      <div v-else class="merchant-filter">
+        <div class="filter-title">
+          <ShopOutlined /> 选择补贴类型查看对应商家
+        </div>
+        <div class="subsidy-type-selector">
+          <div 
+            v-for="subsidy in subsidyStore.availableSubsidies" 
+            :key="subsidy.id"
+            class="type-option"
+            :class="{ active: selectedSubsidyType === subsidy.type }"
+            @click="selectedSubsidyType = subsidy.type"
+          >
+            <span class="type-icon">{{ subsidy.icon }}</span>
+            <span class="type-name">{{ subsidy.name }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 商家推荐列表 -->
+      <MerchantRecommend 
+        v-if="authStatus.certified && selectedSubsidyType"
+        :subsidy-type="selectedSubsidyType"
+        :limit="10"
+        class="merchant-list-full"
+      />
+    </div>
+
+    <!-- 我的申请 -->
     <div v-if="currentTab === 'myApplications'" class="content-section">
       <div 
         v-for="application in subsidyStore.myApplications" 
@@ -285,7 +319,8 @@ import {
   FileTextOutlined,
   ExclamationCircleOutlined,
   PhoneOutlined,
-  RightOutlined
+  RightOutlined,
+  ShopOutlined
 } from '@ant-design/icons-vue'
 import { useSubsidyStore } from '@/stores/subsidy'
 import { useUserStore } from '@/stores/user'
@@ -335,6 +370,7 @@ const authStatus = computed(() => {
 // Tab 配置
 const tabs = computed(() => [
   { id: 'policies', name: '补贴政策', badge: 0 },
+  { id: 'merchants', name: '推荐商家', badge: 0 },
   { id: 'myApplications', name: '我的申请', badge: subsidyStore.statistics.pending },
   { id: 'guide', name: '申请指南', badge: 0 }
 ])
@@ -1117,6 +1153,77 @@ const onApplicationComplete = () => {
 .contact-value {
   color: #333;
   font-weight: 500;
+}
+
+/* 推荐商家tab样式 */
+.merchants-section {
+  padding: 0;
+}
+
+.merchant-filter {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.filter-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subsidy-type-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.type-option {
+  background: #f5f5f5;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.type-option:hover {
+  background: #e6f4ff;
+  border-color: #91caff;
+  transform: translateY(-2px);
+}
+
+.type-option.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: white;
+}
+
+.type-icon {
+  font-size: 24px;
+}
+
+.type-option.active .type-icon {
+  filter: brightness(0) invert(1);
+}
+
+.type-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.merchant-list-full {
+  /* MerchantRecommend组件已有样式 */
 }
 </style>
 
